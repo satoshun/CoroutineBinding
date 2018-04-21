@@ -13,6 +13,9 @@ object Vers {
 object Libs {
   val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jre7:${Vers.kotlin}"
   val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Vers.couroutine}"
+  val ui_coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Vers.couroutine}"
+
+  val support_annotations = "com.android.support:support-annotations:${Vers.support_lib}"
 
   val viewmodel = "android.arch.lifecycle:viewmodel:1.1.1"
   val livedata = "android.arch.lifecycle:livedata:1.1.1"
