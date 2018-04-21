@@ -1,7 +1,7 @@
-package com.github.satoshun.coroutinebinding
+package com.github.satoshun.coroutinebinding.example
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {

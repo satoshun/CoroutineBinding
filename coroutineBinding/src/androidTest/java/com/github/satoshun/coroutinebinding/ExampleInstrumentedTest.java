@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding2;
+package com.github.satoshun.coroutinebinding;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -6,7 +6,7 @@ android {
   compileSdkVersion Vers.compile_sdk
 
   defaultConfig {
-    applicationId "com.github.satoshun.arch.lifecycle.example"
+    applicationId "com.github.satoshun.coroutinebinding.example"
     minSdkVersion Vers.min_sdk
     targetSdkVersion Vers.target_sdk
     versionCode 1
@@ -22,7 +22,10 @@ android {
 }
 
 dependencies {
+  project(':coroutinebinding')
+
   implementation Libs.kotlin
+
   implementation 'com.android.support:appcompat-v7:27.1.1'
   implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
@@ -32,3 +35,8 @@ dependencies {
   androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 
+kotlin {
+  experimental {
+    coroutines 'enable'
+  }
+}
