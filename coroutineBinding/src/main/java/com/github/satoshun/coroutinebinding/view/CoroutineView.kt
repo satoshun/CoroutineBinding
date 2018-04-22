@@ -160,9 +160,21 @@ inline fun View.layoutChanges(): ReceiveChannel<Unit> = cancelableChannel {
 //@CheckResult
 //inline fun View.layoutChangeEvents(): Deferred<ViewLayoutChangeEvent> = TODO()
 //
-//@CheckResult
-//inline fun View.longClicks(): Deferred<Unit> = TODO()
-//
+
+/**
+ * todo
+ */
+@CheckResult
+inline fun View.longClicks(): ReceiveChannel<Unit> = cancelableChannel {
+  val listener = View.OnLongClickListener {
+    safeOffer(Unit)
+  }
+  onAfterClosed = {
+    setOnLongClickListener(null)
+  }
+  setOnLongClickListener(listener)
+}
+
 //@CheckResult
 //inline fun View.longClicks(handled: Callable<Boolean>): Deferred<Unit> = TODO()
 //
