@@ -176,29 +176,41 @@ inline fun View.longClicks(): ReceiveChannel<Unit> = cancelableChannel {
 }
 
 //@CheckResult
-//inline fun View.longClicks(handled: Callable<Boolean>): Deferred<Unit> = TODO()
+//inline fun View.longClicks(handled: Callable<Boolean>): ReceiveChannel<Unit> = TODO()
 //
 //@CheckResult
-//inline fun View.preDraws(proceedDrawingPass: Callable<Boolean>): Deferred<Unit> = TODO()
-//
+//inline fun View.preDraws(proceedDrawingPass: Callable<Boolean>): ReceiveChannel<Unit> = TODO()
 //@RequiresApi(23)
 //@CheckResult
-//inline fun View.scrollChangeEvents(): Deferred<ViewScrollChangeEvent> = TODO()
+//inline fun View.scrollChangeEvents(): ReceiveChannel<ViewScrollChangeEvent> = TODO()
 //
 //@CheckResult
-//inline fun View.systemUiVisibilityChanges(): Deferred<Int> = TODO()
+//inline fun View.systemUiVisibilityChanges(): ReceiveChannel<Int> = TODO()
+//
+
+/**
+ * todo
+ */
+@CheckResult
+inline fun View.touches(): ReceiveChannel<MotionEvent> = cancelableChannel {
+  val listener = View.OnTouchListener { _, motionEvent ->
+    safeOffer(motionEvent)
+  }
+  onAfterClosed = {
+    setOnTouchListener(null)
+  }
+  setOnTouchListener(listener)
+}
+
 //
 //@CheckResult
-//inline fun View.touches(): Deferred<MotionEvent> = TODO()
+//inline fun View.touches(handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> = TODO()
 //
 //@CheckResult
-//inline fun View.touches(handled: Predicate<in MotionEvent>): Deferred<MotionEvent> = TODO()
+//inline fun View.keys(): ReceiveChannel<KeyEvent> = TODO()
 //
 //@CheckResult
-//inline fun View.keys(): Deferred<KeyEvent> = TODO()
-//
-//@CheckResult
-//inline fun View.keys(handled: Predicate<in KeyEvent>): Deferred<KeyEvent> = TODO()
+//inline fun View.keys(handled: Predicate<in KeyEvent>): ReceiveChannel<KeyEvent> = TODO()
 //
 //@CheckResult
 //inline fun View.visibility(): Consumer<in Boolean> = TODO()
