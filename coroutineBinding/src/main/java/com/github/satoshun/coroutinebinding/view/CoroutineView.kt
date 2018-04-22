@@ -5,6 +5,7 @@ package com.github.satoshun.coroutinebinding.view
 import android.support.annotation.CheckResult
 import android.support.annotation.RequiresApi
 import android.view.DragEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import com.github.satoshun.coroutinebinding.cancelableChannel
@@ -120,9 +121,17 @@ inline fun View.globalLayouts(): ReceiveChannel<Unit> = cancelableChannel {
   viewTreeObserver.addOnGlobalLayoutListener(listener)
 }
 
-//
-//@CheckResult
-//inline fun View.hovers(): Deferred<MotionEvent> = TODO()
+@CheckResult
+inline fun View.hovers(): ReceiveChannel<MotionEvent> = cancelableChannel {
+  val listener = View.OnHoverListener { _, motionEvent ->
+    safeOffer(motionEvent)
+  }
+  onAfterClosed = {
+    setOnHoverListener(null)
+  }
+  setOnHoverListener(listener)
+}
+
 //
 //@CheckResult
 //inline fun View.hovers(handled: Predicate<in MotionEvent>): Deferred<MotionEvent> = TODO()
