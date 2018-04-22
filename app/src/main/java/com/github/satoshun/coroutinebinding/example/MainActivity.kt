@@ -3,7 +3,7 @@ package com.github.satoshun.coroutinebinding.example
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.github.satoshun.coroutinebinding.attaches
+import com.github.satoshun.coroutinebinding.view.attaches
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay

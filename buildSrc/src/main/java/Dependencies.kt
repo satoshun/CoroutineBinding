@@ -30,4 +30,5 @@ object Libs {
   val support_v4 = "com.android.support:support-v4:${Vers.support_lib}"
 
   val truth = "com.google.truth:truth:0.39"
+  val mockito_kotlin = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
 }

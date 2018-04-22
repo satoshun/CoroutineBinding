@@ -1,15 +1,15 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.github.satoshun.coroutinebinding
+package com.github.satoshun.coroutinebinding.view
 
 import android.support.annotation.CheckResult
 import android.view.View
-import kotlinx.coroutines.experimental.channels.Channel
+import com.github.satoshun.coroutinebinding.OnCancelableChannel
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 @CheckResult
 inline fun View.attaches(): ReceiveChannel<Unit> {
-  val channel = Channel<Unit>()
+  val channel = OnCancelableChannel<Unit>()
   val listener = object : View.OnAttachStateChangeListener {
     override fun onViewDetachedFromWindow(v: View) {
       // do nothing
@@ -21,8 +21,10 @@ inline fun View.attaches(): ReceiveChannel<Unit> {
       }
     }
   }
+  channel.onAfterClosed = {
+    removeOnAttachStateChangeListener(listener)
+  }
   addOnAttachStateChangeListener(listener)
-  // todo removeOnAttachStateChangeListener
   return channel
 }
 

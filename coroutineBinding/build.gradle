@@ -10,6 +10,8 @@ android {
     versionCode 1
     versionName "1.0"
 
+    multiDexEnabled true // for test
+
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
@@ -28,4 +30,6 @@ dependencies {
   androidTestImplementation Libs.junit
   androidTestImplementation Libs.support_test
   androidTestImplementation Libs.espresso
+  androidTestImplementation Libs.truth
+  androidTestImplementation Libs.mockito_kotlin
 }
