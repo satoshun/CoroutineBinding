@@ -62,4 +62,25 @@ class CoroutineViewTest {
     detaches.cancel()
     view.verify().removeOnAttachStateChangeListener(any())
   }
+
+  @Test
+  fun clicks__do_event() {
+    launch(UI) {
+      val clicks = rule.activity.view.clicks()
+
+      Truth.assertThat(clicks.isEmpty).isTrue()
+      rule.activity.view.performClick()
+      Truth.assertThat(clicks.receive()).isEqualTo(Unit)
+    }
+  }
+
+  @Ignore("AndroidTest doesn't work mockito + final")
+  @Test
+  fun clicks__do_removeOnAttachStateChangeListener_when_cancel() {
+    val view: View = mock {}
+    val detaches = view.detaches()
+    view.verify().addOnAttachStateChangeListener(any())
+    detaches.cancel()
+    view.verify().removeOnAttachStateChangeListener(any())
+  }
 }

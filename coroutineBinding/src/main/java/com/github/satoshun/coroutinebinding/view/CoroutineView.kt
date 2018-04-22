@@ -5,6 +5,7 @@ package com.github.satoshun.coroutinebinding.view
 import android.support.annotation.CheckResult
 import android.view.View
 import com.github.satoshun.coroutinebinding.OnCancelableChannel
+import com.github.satoshun.coroutinebinding.canSend
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
@@ -19,7 +20,7 @@ inline fun View.attaches(): ReceiveChannel<Unit> {
     }
 
     override fun onViewAttachedToWindow(v: View) {
-      if (!channel.isClosedForSend) {
+      if (channel.canSend) {
         channel.offer(Unit)
       }
     }
@@ -39,7 +40,7 @@ inline fun View.detaches(): ReceiveChannel<Unit> {
   val channel = OnCancelableChannel<Unit>()
   val listener = object : View.OnAttachStateChangeListener {
     override fun onViewDetachedFromWindow(v: View) {
-      if (!channel.isClosedForSend) {
+      if (channel.canSend) {
         channel.offer(Unit)
       }
     }
@@ -55,9 +56,24 @@ inline fun View.detaches(): ReceiveChannel<Unit> {
   return channel
 }
 
-//@CheckResult
-//inline fun View.clicks(): Deferred<Unit> = TODO()
-//
+/**
+ * todo
+ */
+@CheckResult
+inline fun View.clicks(): ReceiveChannel<Unit> {
+  val channel = OnCancelableChannel<Unit>()
+  val listener = View.OnClickListener {
+    if (channel.canSend) {
+      channel.offer(Unit)
+    }
+  }
+  channel.onAfterClosed = {
+    setOnClickListener(null)
+  }
+  setOnClickListener(listener)
+  return channel
+}
+
 //@CheckResult
 //inline fun View.drags(): Deferred<DragEvent> = TODO()
 //
