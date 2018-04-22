@@ -7,6 +7,9 @@ import android.view.View
 import com.github.satoshun.coroutinebinding.OnCancelableChannel
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
+/**
+ * todo
+ */
 @CheckResult
 inline fun View.attaches(): ReceiveChannel<Unit> {
   val channel = OnCancelableChannel<Unit>()
@@ -28,13 +31,30 @@ inline fun View.attaches(): ReceiveChannel<Unit> {
   return channel
 }
 
-//
-//@CheckResult
-//inline fun View.attachEvents(): Deferred<ViewAttachEvent> = TODO()
-//
-//@CheckResult
-//inline fun View.detaches(): Deferred<Unit> = TODO()
-//
+/**
+ * todo
+ */
+@CheckResult
+inline fun View.detaches(): ReceiveChannel<Unit> {
+  val channel = OnCancelableChannel<Unit>()
+  val listener = object : View.OnAttachStateChangeListener {
+    override fun onViewDetachedFromWindow(v: View) {
+      if (!channel.isClosedForSend) {
+        channel.offer(Unit)
+      }
+    }
+
+    override fun onViewAttachedToWindow(v: View) {
+      // do nothing
+    }
+  }
+  channel.onAfterClosed = {
+    removeOnAttachStateChangeListener(listener)
+  }
+  addOnAttachStateChangeListener(listener)
+  return channel
+}
+
 //@CheckResult
 //inline fun View.clicks(): Deferred<Unit> = TODO()
 //
