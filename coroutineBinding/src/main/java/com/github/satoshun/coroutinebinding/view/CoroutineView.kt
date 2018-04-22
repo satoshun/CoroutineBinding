@@ -109,8 +109,17 @@ inline fun View.focusChanges(): ReceiveChannel<Boolean> = cancelableChannel {
   onFocusChangeListener = listener
 }
 
-//@CheckResult
-//inline fun View.globalLayouts(): Deferred<Unit> = TODO()
+@CheckResult
+inline fun View.globalLayouts(): ReceiveChannel<Unit> = cancelableChannel {
+  val listener = ViewTreeObserver.OnGlobalLayoutListener {
+    safeOffer(Unit)
+  }
+  onAfterClosed = {
+    viewTreeObserver.addOnGlobalLayoutListener(listener)
+  }
+  viewTreeObserver.addOnGlobalLayoutListener(listener)
+}
+
 //
 //@CheckResult
 //inline fun View.hovers(): Deferred<MotionEvent> = TODO()
