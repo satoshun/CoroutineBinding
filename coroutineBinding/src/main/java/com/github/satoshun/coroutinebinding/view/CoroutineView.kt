@@ -118,10 +118,22 @@ inline fun View.draws(): ReceiveChannel<Unit> {
   return channel
 }
 
-//
-//@CheckResult
-//inline fun View.focusChanges(): InitialValueObservable<Boolean> = TODO()
-//
+/**
+ * todo
+ */
+@CheckResult
+inline fun View.focusChanges(): ReceiveChannel<Boolean> {
+  val channel = OnCancelableChannel<Boolean>()
+  val listener = View.OnFocusChangeListener { _, hasFocus ->
+    if (channel.canSend) channel.offer(hasFocus)
+  }
+  channel.onAfterClosed = {
+    onFocusChangeListener = null
+  }
+  onFocusChangeListener = listener
+  return channel
+}
+
 //@CheckResult
 //inline fun View.globalLayouts(): Deferred<Unit> = TODO()
 //
