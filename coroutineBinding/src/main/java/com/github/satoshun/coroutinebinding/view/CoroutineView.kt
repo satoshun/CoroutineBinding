@@ -3,6 +3,7 @@
 package com.github.satoshun.coroutinebinding.view
 
 import android.support.annotation.CheckResult
+import android.view.DragEvent
 import android.view.View
 import com.github.satoshun.coroutinebinding.OnCancelableChannel
 import com.github.satoshun.coroutinebinding.canSend
@@ -74,8 +75,24 @@ inline fun View.clicks(): ReceiveChannel<Unit> {
   return channel
 }
 
-//@CheckResult
-//inline fun View.drags(): Deferred<DragEvent> = TODO()
+@CheckResult
+inline fun View.drags(): ReceiveChannel<DragEvent> {
+  val channel = OnCancelableChannel<DragEvent>()
+  val listener = View.OnDragListener { _, dragEvent ->
+    if (channel.canSend) {
+      channel.offer(dragEvent)
+      true
+    } else {
+      false
+    }
+  }
+  channel.onAfterClosed = {
+    setOnDragListener(null)
+  }
+  setOnDragListener(listener)
+  return channel
+}
+
 //
 //@CheckResult
 //inline fun View.drags(handled: Predicate<in DragEvent>): Deferred<DragEvent> = TODO()
