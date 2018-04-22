@@ -3,8 +3,10 @@
 package com.github.satoshun.coroutinebinding.view
 
 import android.support.annotation.CheckResult
+import android.support.annotation.RequiresApi
 import android.view.DragEvent
 import android.view.View
+import android.view.ViewTreeObserver
 import com.github.satoshun.coroutinebinding.OnCancelableChannel
 import com.github.satoshun.coroutinebinding.canSend
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -96,10 +98,26 @@ inline fun View.drags(): ReceiveChannel<DragEvent> {
 //
 //@CheckResult
 //inline fun View.drags(handled: Predicate<in DragEvent>): Deferred<DragEvent> = TODO()
-//
-//@RequiresApi(16)
-//@CheckResult
-//inline fun View.draws(): Deferred<Unit> = TODO()
+
+/**
+ * todo
+ */
+@RequiresApi(16)
+@CheckResult
+inline fun View.draws(): ReceiveChannel<Unit> {
+  val channel = OnCancelableChannel<Unit>()
+  val listener = ViewTreeObserver.OnDrawListener {
+    if (channel.canSend) {
+      channel.offer(Unit)
+    }
+  }
+  channel.onAfterClosed = {
+    viewTreeObserver.removeOnDrawListener(listener)
+  }
+  viewTreeObserver.addOnDrawListener(listener)
+  return channel
+}
+
 //
 //@CheckResult
 //inline fun View.focusChanges(): InitialValueObservable<Boolean> = TODO()
