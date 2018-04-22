@@ -5,6 +5,7 @@ package com.github.satoshun.coroutinebinding.view
 import android.support.annotation.CheckResult
 import android.support.annotation.RequiresApi
 import android.view.DragEvent
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
@@ -206,8 +207,20 @@ inline fun View.touches(): ReceiveChannel<MotionEvent> = cancelableChannel {
 //@CheckResult
 //inline fun View.touches(handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> = TODO()
 //
-//@CheckResult
-//inline fun View.keys(): ReceiveChannel<KeyEvent> = TODO()
+/**
+ * todo
+ */
+@CheckResult
+inline fun View.keys(): ReceiveChannel<KeyEvent> = cancelableChannel {
+  val listener = View.OnKeyListener { _, _, event ->
+    safeOffer(event)
+  }
+  onAfterClosed = {
+    setOnKeyListener(null)
+  }
+  setOnKeyListener(listener)
+}
+
 //
 //@CheckResult
 //inline fun View.keys(handled: Predicate<in KeyEvent>): ReceiveChannel<KeyEvent> = TODO()
