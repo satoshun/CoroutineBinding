@@ -7,92 +7,73 @@ import android.support.annotation.RequiresApi
 import android.view.DragEvent
 import android.view.View
 import android.view.ViewTreeObserver
-import com.github.satoshun.coroutinebinding.OnCancelableChannel
-import com.github.satoshun.coroutinebinding.canSend
+import com.github.satoshun.coroutinebinding.cancelableChannel
+import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
  * todo
  */
 @CheckResult
-inline fun View.attaches(): ReceiveChannel<Unit> {
-  val channel = OnCancelableChannel<Unit>()
+inline fun View.attaches(): ReceiveChannel<Unit> = cancelableChannel {
   val listener = object : View.OnAttachStateChangeListener {
     override fun onViewDetachedFromWindow(v: View) {
       // do nothing
     }
 
     override fun onViewAttachedToWindow(v: View) {
-      if (channel.canSend) {
-        channel.offer(Unit)
-      }
+      safeOffer(Unit)
     }
   }
-  channel.onAfterClosed = {
+  onAfterClosed = {
     removeOnAttachStateChangeListener(listener)
   }
   addOnAttachStateChangeListener(listener)
-  return channel
 }
 
 /**
  * todo
  */
 @CheckResult
-inline fun View.detaches(): ReceiveChannel<Unit> {
-  val channel = OnCancelableChannel<Unit>()
+inline fun View.detaches(): ReceiveChannel<Unit> = cancelableChannel {
   val listener = object : View.OnAttachStateChangeListener {
     override fun onViewDetachedFromWindow(v: View) {
-      if (channel.canSend) {
-        channel.offer(Unit)
-      }
+      safeOffer(Unit)
     }
 
     override fun onViewAttachedToWindow(v: View) {
       // do nothing
     }
   }
-  channel.onAfterClosed = {
+  onAfterClosed = {
     removeOnAttachStateChangeListener(listener)
   }
   addOnAttachStateChangeListener(listener)
-  return channel
 }
 
 /**
  * todo
  */
 @CheckResult
-inline fun View.clicks(): ReceiveChannel<Unit> {
-  val channel = OnCancelableChannel<Unit>()
+inline fun View.clicks(): ReceiveChannel<Unit> = cancelableChannel {
   val listener = View.OnClickListener {
-    if (channel.canSend) {
-      channel.offer(Unit)
-    }
+    safeOffer(Unit)
   }
-  channel.onAfterClosed = {
+  onAfterClosed = {
     setOnClickListener(null)
   }
   setOnClickListener(listener)
-  return channel
 }
 
 @CheckResult
-inline fun View.drags(): ReceiveChannel<DragEvent> {
-  val channel = OnCancelableChannel<DragEvent>()
+inline fun View.drags(): ReceiveChannel<DragEvent> = cancelableChannel {
   val listener = View.OnDragListener { _, dragEvent ->
-    if (channel.canSend) {
-      channel.offer(dragEvent)
-      true
-    } else {
-      false
-    }
+    safeOffer(dragEvent)
   }
-  channel.onAfterClosed = {
+  onAfterClosed = {
     setOnDragListener(null)
   }
   setOnDragListener(listener)
-  return channel
 }
 
 //
@@ -104,34 +85,28 @@ inline fun View.drags(): ReceiveChannel<DragEvent> {
  */
 @RequiresApi(16)
 @CheckResult
-inline fun View.draws(): ReceiveChannel<Unit> {
-  val channel = OnCancelableChannel<Unit>()
+inline fun View.draws(): ReceiveChannel<Unit> = cancelableChannel {
   val listener = ViewTreeObserver.OnDrawListener {
-    if (channel.canSend) {
-      channel.offer(Unit)
-    }
+    safeOffer(Unit)
   }
-  channel.onAfterClosed = {
+  onAfterClosed = {
     viewTreeObserver.removeOnDrawListener(listener)
   }
   viewTreeObserver.addOnDrawListener(listener)
-  return channel
 }
 
 /**
  * todo
  */
 @CheckResult
-inline fun View.focusChanges(): ReceiveChannel<Boolean> {
-  val channel = OnCancelableChannel<Boolean>()
+inline fun View.focusChanges(): ReceiveChannel<Boolean> = cancelableChannel {
   val listener = View.OnFocusChangeListener { _, hasFocus ->
-    if (channel.canSend) channel.offer(hasFocus)
+    safeOffer(hasFocus)
   }
-  channel.onAfterClosed = {
+  onAfterClosed = {
     onFocusChangeListener = null
   }
   onFocusChangeListener = listener
-  return channel
 }
 
 //@CheckResult
