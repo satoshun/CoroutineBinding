@@ -110,6 +110,9 @@ inline fun View.focusChanges(): ReceiveChannel<Boolean> = cancelableChannel {
   onFocusChangeListener = listener
 }
 
+/**
+ * todo
+ */
 @CheckResult
 inline fun View.globalLayouts(): ReceiveChannel<Unit> = cancelableChannel {
   val listener = ViewTreeObserver.OnGlobalLayoutListener {
@@ -121,6 +124,9 @@ inline fun View.globalLayouts(): ReceiveChannel<Unit> = cancelableChannel {
   viewTreeObserver.addOnGlobalLayoutListener(listener)
 }
 
+/**
+ * todo
+ */
 @CheckResult
 inline fun View.hovers(): ReceiveChannel<MotionEvent> = cancelableChannel {
   val listener = View.OnHoverListener { _, motionEvent ->
@@ -135,9 +141,21 @@ inline fun View.hovers(): ReceiveChannel<MotionEvent> = cancelableChannel {
 //
 //@CheckResult
 //inline fun View.hovers(handled: Predicate<in MotionEvent>): Deferred<MotionEvent> = TODO()
-//
-//@CheckResult
-//inline fun View.layoutChanges(): Deferred<Unit> = RxView.layoutChanges(this).map(VoidToUnit)
+
+/**
+ * todo
+ */
+@CheckResult
+inline fun View.layoutChanges(): ReceiveChannel<Unit> = cancelableChannel {
+  val listener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+    safeOffer(Unit)
+  }
+  onAfterClosed = {
+    removeOnLayoutChangeListener(listener)
+  }
+  addOnLayoutChangeListener(listener)
+}
+
 //
 //@CheckResult
 //inline fun View.layoutChangeEvents(): Deferred<ViewLayoutChangeEvent> = TODO()
