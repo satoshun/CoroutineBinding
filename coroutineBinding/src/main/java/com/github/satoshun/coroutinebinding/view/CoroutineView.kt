@@ -13,6 +13,8 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
+private typealias Predicate<T> = (T) -> Boolean
+
 /**
  * todo
  */
@@ -68,19 +70,22 @@ inline fun View.clicks(): ReceiveChannel<Unit> = cancelableChannel {
 }
 
 @CheckResult
-inline fun View.drags(): ReceiveChannel<DragEvent> = cancelableChannel {
+inline fun View.drags(): ReceiveChannel<DragEvent> = drags { true }
+
+@CheckResult
+inline fun View.drags(crossinline handled: Predicate<in DragEvent>): ReceiveChannel<DragEvent> = cancelableChannel {
   val listener = View.OnDragListener { _, dragEvent ->
-    safeOffer(dragEvent)
+    if (handled(dragEvent)) {
+      safeOffer(dragEvent)
+    } else {
+      false
+    }
   }
   onAfterClosed = {
     setOnDragListener(null)
   }
   setOnDragListener(listener)
 }
-
-//
-//@CheckResult
-//inline fun View.drags(handled: Predicate<in DragEvent>): Deferred<DragEvent> = TODO()
 
 /**
  * todo
