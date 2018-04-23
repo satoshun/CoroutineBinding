@@ -247,9 +247,16 @@ inline fun View.systemUiVisibilityChanges(): ReceiveChannel<Int> = cancelableCha
  * todo
  */
 @CheckResult
-inline fun View.touches(): ReceiveChannel<MotionEvent> = cancelableChannel {
+inline fun View.touches(): ReceiveChannel<MotionEvent> = touches { true }
+
+@CheckResult
+inline fun View.touches(crossinline handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> = cancelableChannel {
   val listener = View.OnTouchListener { _, motionEvent ->
-    safeOffer(motionEvent)
+    if (handled(motionEvent)) {
+      safeOffer(motionEvent)
+    } else {
+      false
+    }
   }
   onAfterClosed = {
     setOnTouchListener(null)
@@ -257,17 +264,20 @@ inline fun View.touches(): ReceiveChannel<MotionEvent> = cancelableChannel {
   setOnTouchListener(listener)
 }
 
-//
-//@CheckResult
-//inline fun View.touches(handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> = TODO()
-//
 /**
  * todo
  */
 @CheckResult
-inline fun View.keys(): ReceiveChannel<KeyEvent> = cancelableChannel {
+inline fun View.keys(): ReceiveChannel<KeyEvent> = keys { true }
+
+@CheckResult
+inline fun View.keys(crossinline handled: Predicate<in KeyEvent>): ReceiveChannel<KeyEvent> = cancelableChannel {
   val listener = View.OnKeyListener { _, _, event ->
-    safeOffer(event)
+    if (handled(event)) {
+      safeOffer(event)
+    } else {
+      false
+    }
   }
   onAfterClosed = {
     setOnKeyListener(null)
@@ -275,10 +285,6 @@ inline fun View.keys(): ReceiveChannel<KeyEvent> = cancelableChannel {
   setOnKeyListener(listener)
 }
 
-//
-//@CheckResult
-//inline fun View.keys(handled: Predicate<in KeyEvent>): ReceiveChannel<KeyEvent> = TODO()
-//
 //@CheckResult
 //inline fun View.visibility(): Consumer<in Boolean> = TODO()
 //
