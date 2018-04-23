@@ -184,10 +184,17 @@ inline fun View.longClicks(): ReceiveChannel<Unit> = cancelableChannel {
 //@RequiresApi(23)
 //@CheckResult
 //inline fun View.scrollChangeEvents(): ReceiveChannel<ViewScrollChangeEvent> = TODO()
-//
-//@CheckResult
-//inline fun View.systemUiVisibilityChanges(): ReceiveChannel<Int> = TODO()
-//
+
+@CheckResult
+inline fun View.systemUiVisibilityChanges(): ReceiveChannel<Int> = cancelableChannel {
+  val listener = View.OnSystemUiVisibilityChangeListener {
+    safeOffer(it)
+  }
+  onAfterClosed = {
+    setOnSystemUiVisibilityChangeListener(listener)
+  }
+  setOnSystemUiVisibilityChangeListener(listener)
+}
 
 /**
  * todo
