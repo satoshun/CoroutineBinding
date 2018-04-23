@@ -180,6 +180,9 @@ inline fun View.longClicks(): ReceiveChannel<Unit> = cancelableChannel {
 //inline fun View.longClicks(handled: Callable<Boolean>): ReceiveChannel<Unit> = TODO()
 //
 
+/**
+ * todo
+ */
 @CheckResult
 inline fun View.preDraws(crossinline proceedDrawingPass: () -> Boolean): ReceiveChannel<Unit> = cancelableChannel {
   val listener = ViewTreeObserver.OnPreDrawListener {
@@ -195,10 +198,28 @@ inline fun View.preDraws(crossinline proceedDrawingPass: () -> Boolean): Receive
   viewTreeObserver.addOnPreDrawListener(listener)
 }
 
-//@RequiresApi(23)
-//@CheckResult
-//inline fun View.scrollChangeEvents(): ReceiveChannel<ViewScrollChangeEvent> = TODO()
+@RequiresApi(23)
+@CheckResult
+inline fun View.scrollChangeEvents(): ReceiveChannel<ViewScrollChangeEvent> = cancelableChannel {
+  val listener = View.OnScrollChangeListener { _, scrollX, scrollY, oldScrollX, oldScrollY ->
+    safeOffer(ViewScrollChangeEvent(scrollX, scrollY, oldScrollX, oldScrollY))
+  }
+  onAfterClosed = {
+    setOnScrollChangeListener(null)
+  }
+  setOnScrollChangeListener(listener)
+}
 
+data class ViewScrollChangeEvent(
+    val scrollX: Int,
+    val scrollY: Int,
+    val oldScrollX: Int,
+    val oldScrollY: Int
+)
+
+/**
+ * todo
+ */
 @CheckResult
 inline fun View.systemUiVisibilityChanges(): ReceiveChannel<Int> = cancelableChannel {
   val listener = View.OnSystemUiVisibilityChangeListener {
