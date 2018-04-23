@@ -179,8 +179,22 @@ inline fun View.longClicks(): ReceiveChannel<Unit> = cancelableChannel {
 //@CheckResult
 //inline fun View.longClicks(handled: Callable<Boolean>): ReceiveChannel<Unit> = TODO()
 //
-//@CheckResult
-//inline fun View.preDraws(proceedDrawingPass: Callable<Boolean>): ReceiveChannel<Unit> = TODO()
+
+@CheckResult
+inline fun View.preDraws(crossinline proceedDrawingPass: () -> Boolean): ReceiveChannel<Unit> = cancelableChannel {
+  val listener = ViewTreeObserver.OnPreDrawListener {
+    if (safeOffer(Unit)) {
+      proceedDrawingPass()
+    } else {
+      true
+    }
+  }
+  onAfterClosed = {
+    viewTreeObserver.removeOnPreDrawListener(listener)
+  }
+  viewTreeObserver.addOnPreDrawListener(listener)
+}
+
 //@RequiresApi(23)
 //@CheckResult
 //inline fun View.scrollChangeEvents(): ReceiveChannel<ViewScrollChangeEvent> = TODO()
