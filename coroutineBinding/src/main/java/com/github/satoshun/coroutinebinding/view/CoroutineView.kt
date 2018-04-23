@@ -156,25 +156,11 @@ inline fun View.hovers(crossinline handled: Predicate<in MotionEvent>): ReceiveC
  * todo
  */
 @CheckResult
-inline fun View.layoutChanges(): ReceiveChannel<Unit> = cancelableChannel {
-  val listener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-    safeOffer(Unit)
-  }
-  onAfterClosed = {
-    removeOnLayoutChangeListener(listener)
-  }
-  addOnLayoutChangeListener(listener)
-}
+inline fun View.layoutChanges(): ReceiveChannel<Unit> = layoutChangeEvents { _, _, _, _, _, _, _, _ -> Unit }
 
 @CheckResult
-inline fun View.layoutChangeEvents(): ReceiveChannel<ViewLayoutChangeEvent> = cancelableChannel {
-  val listener = View.OnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-    safeOffer(ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom))
-  }
-  onAfterClosed = {
-    removeOnLayoutChangeListener(listener)
-  }
-  addOnLayoutChangeListener(listener)
+inline fun View.layoutChangeEvents(): ReceiveChannel<ViewLayoutChangeEvent> = layoutChangeEvents { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+  ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
 }
 
 data class ViewLayoutChangeEvent(
@@ -187,6 +173,19 @@ data class ViewLayoutChangeEvent(
     val oldRight: Int,
     val oldBottom: Int
 )
+
+@CheckResult
+inline fun <T> View.layoutChangeEvents(
+    crossinline creator: (Int, Int, Int, Int, Int, Int, Int, Int) -> T
+): ReceiveChannel<T> = cancelableChannel {
+  val listener = View.OnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+    safeOffer(creator(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom))
+  }
+  onAfterClosed = {
+    removeOnLayoutChangeListener(listener)
+  }
+  addOnLayoutChangeListener(listener)
+}
 
 /**
  * todo
