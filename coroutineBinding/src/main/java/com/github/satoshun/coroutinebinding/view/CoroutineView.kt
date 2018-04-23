@@ -166,10 +166,27 @@ inline fun View.layoutChanges(): ReceiveChannel<Unit> = cancelableChannel {
   addOnLayoutChangeListener(listener)
 }
 
-//
-//@CheckResult
-//inline fun View.layoutChangeEvents(): Deferred<ViewLayoutChangeEvent> = TODO()
-//
+@CheckResult
+inline fun View.layoutChangeEvents(): ReceiveChannel<ViewLayoutChangeEvent> = cancelableChannel {
+  val listener = View.OnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+    safeOffer(ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom))
+  }
+  onAfterClosed = {
+    removeOnLayoutChangeListener(listener)
+  }
+  addOnLayoutChangeListener(listener)
+}
+
+data class ViewLayoutChangeEvent(
+    val left: Int,
+    val top: Int,
+    val right: Int,
+    val bottom: Int,
+    val oldLeft: Int,
+    val oldTop: Int,
+    val oldRight: Int,
+    val oldBottom: Int
+)
 
 /**
  * todo
@@ -284,9 +301,3 @@ inline fun View.keys(crossinline handled: Predicate<in KeyEvent>): ReceiveChanne
   }
   setOnKeyListener(listener)
 }
-
-//@CheckResult
-//inline fun View.visibility(): Consumer<in Boolean> = TODO()
-//
-//@CheckResult
-//inline fun View.visibility(visibilityWhenFalse: Int): Consumer<in Boolean> = TODO()
