@@ -13,6 +13,7 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
+private typealias Callable = () -> Boolean
 private typealias Predicate<T> = (T) -> Boolean
 
 /**
@@ -174,19 +175,22 @@ inline fun View.layoutChanges(): ReceiveChannel<Unit> = cancelableChannel {
  * todo
  */
 @CheckResult
-inline fun View.longClicks(): ReceiveChannel<Unit> = cancelableChannel {
+inline fun View.longClicks(): ReceiveChannel<Unit> = longClicks { true }
+
+@CheckResult
+inline fun View.longClicks(crossinline handled: Callable): ReceiveChannel<Unit> = cancelableChannel {
   val listener = View.OnLongClickListener {
-    safeOffer(Unit)
+    if (handled()) {
+      safeOffer(Unit)
+    } else {
+      false
+    }
   }
   onAfterClosed = {
     setOnLongClickListener(null)
   }
   setOnLongClickListener(listener)
 }
-
-//@CheckResult
-//inline fun View.longClicks(handled: Callable<Boolean>): ReceiveChannel<Unit> = TODO()
-//
 
 /**
  * todo
