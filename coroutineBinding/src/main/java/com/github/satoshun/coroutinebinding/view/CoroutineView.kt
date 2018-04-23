@@ -134,19 +134,22 @@ inline fun View.globalLayouts(): ReceiveChannel<Unit> = cancelableChannel {
  * todo
  */
 @CheckResult
-inline fun View.hovers(): ReceiveChannel<MotionEvent> = cancelableChannel {
+inline fun View.hovers(): ReceiveChannel<MotionEvent> = hovers { true }
+
+@CheckResult
+inline fun View.hovers(crossinline handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> = cancelableChannel {
   val listener = View.OnHoverListener { _, motionEvent ->
-    safeOffer(motionEvent)
+    if (handled(motionEvent)) {
+      safeOffer(motionEvent)
+    } else {
+      false
+    }
   }
   onAfterClosed = {
     setOnHoverListener(null)
   }
   setOnHoverListener(listener)
 }
-
-//
-//@CheckResult
-//inline fun View.hovers(handled: Predicate<in MotionEvent>): Deferred<MotionEvent> = TODO()
 
 /**
  * todo
