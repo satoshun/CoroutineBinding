@@ -53,3 +53,13 @@ data class AdapterViewItemSelectionEvent(
     val position: Int,
     val id: Long
 ) : AdapterViewSelectionEvent()
+
+inline fun <T : Adapter> AdapterView<T>.itemClicks(): ReceiveChannel<Int> = cancelableChannel {
+  val listener = AdapterView.OnItemClickListener { _, _, position, _ ->
+    safeOffer(position)
+  }
+  onAfterClosed = {
+    setOnItemClickListener(null)
+  }
+  setOnItemClickListener(listener)
+}
