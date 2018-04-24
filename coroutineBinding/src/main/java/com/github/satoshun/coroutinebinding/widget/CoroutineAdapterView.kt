@@ -24,3 +24,32 @@ inline fun <T : Adapter> AdapterView<T>.itemSelections(): ReceiveChannel<Int> = 
   }
   setOnItemSelectedListener(listener)
 }
+
+inline fun <T : Adapter> AdapterView<T>.selectionEvents(): ReceiveChannel<AdapterViewSelectionEvent> = cancelableChannel {
+  val listener = object : AdapterView.OnItemSelectedListener {
+    override fun onNothingSelected(parent: AdapterView<*>) {
+      safeOffer(AdapterViewNothingSelectionEvent(parent))
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>, selectedView: View, position: Int, id: Long) {
+      safeOffer(AdapterViewItemSelectionEvent(parent, selectedView, position, id))
+    }
+  }
+  onAfterClosed = {
+    setOnItemSelectedListener(null)
+  }
+  setOnItemSelectedListener(listener)
+}
+
+sealed class AdapterViewSelectionEvent {
+  abstract val parent: AdapterView<*>
+}
+
+class AdapterViewNothingSelectionEvent(override val parent: AdapterView<*>) : AdapterViewSelectionEvent()
+
+data class AdapterViewItemSelectionEvent(
+    override val parent: AdapterView<*>,
+    val selectedView: View,
+    val position: Int,
+    val id: Long
+) : AdapterViewSelectionEvent()
