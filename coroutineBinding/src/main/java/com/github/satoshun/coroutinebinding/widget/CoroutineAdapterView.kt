@@ -90,3 +90,26 @@ inline fun <T : Adapter> AdapterView<T>.itemLongClicks(crossinline handled: Call
   }
   setOnItemLongClickListener(listener)
 }
+
+inline fun <T : Adapter> AdapterView<T>.itemLongClickEvents(): ReceiveChannel<AdapterViewItemLongClickEvent> = itemLongClickEvents { true }
+
+inline fun <T : Adapter> AdapterView<T>.itemLongClickEvents(crossinline handled: Callable): ReceiveChannel<AdapterViewItemLongClickEvent> = cancelableChannel {
+  val listener = AdapterView.OnItemLongClickListener { parent, view, position, id ->
+    if (handled()) {
+      safeOffer(AdapterViewItemLongClickEvent(parent, view, position, id))
+    } else {
+      false
+    }
+  }
+  onAfterClosed = {
+    setOnItemLongClickListener(null)
+  }
+  setOnItemLongClickListener(listener)
+}
+
+data class AdapterViewItemLongClickEvent(
+    val view: AdapterView<*>,
+    val clickedView: View,
+    val position: Int,
+    val id: Long
+)
