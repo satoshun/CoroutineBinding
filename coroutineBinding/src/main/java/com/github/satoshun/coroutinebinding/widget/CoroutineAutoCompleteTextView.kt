@@ -2,7 +2,6 @@
 
 package com.github.satoshun.coroutinebinding.widget
 
-import android.view.View
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import com.github.satoshun.coroutinebinding.cancelableChannel
@@ -21,10 +20,3 @@ inline fun AutoCompleteTextView.itemClickEvents(): ReceiveChannel<AdapterViewIte
   }
   onItemClickListener = listener
 }
-
-data class AdapterViewItemClickEvent(
-  val view: AdapterView<*>,
-  val clickedView: View,
-  val position: Int,
-  val id: Long
-)

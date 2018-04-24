@@ -63,3 +63,13 @@ inline fun <T : Adapter> AdapterView<T>.itemClicks(): ReceiveChannel<Int> = canc
   }
   setOnItemClickListener(listener)
 }
+
+inline fun <T : Adapter> AdapterView<T>.itemClickEvents(): ReceiveChannel<AdapterViewItemClickEvent> = cancelableChannel {
+  val listener = AdapterView.OnItemClickListener { parent, view, position, id ->
+    safeOffer(AdapterViewItemClickEvent(parent, view, position, id))
+  }
+  onAfterClosed = {
+    setOnItemClickListener(null)
+  }
+  setOnItemClickListener(listener)
+}
