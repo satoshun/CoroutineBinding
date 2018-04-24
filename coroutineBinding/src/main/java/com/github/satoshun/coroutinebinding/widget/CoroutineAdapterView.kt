@@ -73,3 +73,13 @@ inline fun <T : Adapter> AdapterView<T>.itemClickEvents(): ReceiveChannel<Adapte
   }
   setOnItemClickListener(listener)
 }
+
+inline fun <T : Adapter> AdapterView<T>.itemLongClicks(): ReceiveChannel<Int> = cancelableChannel {
+  val listener = AdapterView.OnItemLongClickListener { _, _, position, _ ->
+    safeOffer(position)
+  }
+  onAfterClosed = {
+    setOnItemLongClickListener(null)
+  }
+  setOnItemLongClickListener(listener)
+}
