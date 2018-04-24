@@ -13,8 +13,8 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
-private typealias Callable = () -> Boolean
-private typealias Predicate<T> = (T) -> Boolean
+internal typealias Callable = () -> Boolean
+internal typealias Predicate<T> = (T) -> Boolean
 
 /**
  * todo

@@ -7,6 +7,7 @@ import android.widget.Adapter
 import android.widget.AdapterView
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
+import com.github.satoshun.coroutinebinding.view.Callable
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 inline fun <T : Adapter> AdapterView<T>.itemSelections(): ReceiveChannel<Int> = cancelableChannel {
@@ -74,9 +75,15 @@ inline fun <T : Adapter> AdapterView<T>.itemClickEvents(): ReceiveChannel<Adapte
   setOnItemClickListener(listener)
 }
 
-inline fun <T : Adapter> AdapterView<T>.itemLongClicks(): ReceiveChannel<Int> = cancelableChannel {
+inline fun <T : Adapter> AdapterView<T>.itemLongClicks(): ReceiveChannel<Int> = itemLongClicks { true }
+
+inline fun <T : Adapter> AdapterView<T>.itemLongClicks(crossinline handled: Callable): ReceiveChannel<Int> = cancelableChannel {
   val listener = AdapterView.OnItemLongClickListener { _, _, position, _ ->
-    safeOffer(position)
+    if (handled()) {
+      safeOffer(position)
+    } else {
+      false
+    }
   }
   onAfterClosed = {
     setOnItemLongClickListener(null)
