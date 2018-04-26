@@ -10,54 +10,25 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * todo
  */
-inline fun SeekBar.changes(): ReceiveChannel<Int> = cancelableChannel {
-  val listener = object : SeekBar.OnSeekBarChangeListener {
-    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-      safeOffer(progress)
-    }
-
-    override fun onStartTrackingTouch(seekBar: SeekBar) {
-    }
-
-    override fun onStopTrackingTouch(seekBar: SeekBar) {
-    }
-  }
-  onAfterClosed = {
-    setOnSeekBarChangeListener(null)
-  }
-  setOnSeekBarChangeListener(listener)
-}
+inline fun SeekBar.changes(): ReceiveChannel<Int> = changes(null)
 
 /**
  * todo
  */
-inline fun SeekBar.userChanges(): ReceiveChannel<Int> = cancelableChannel {
-  val listener = object : SeekBar.OnSeekBarChangeListener {
-    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-      if (fromUser) {
-        safeOffer(progress)
-      }
-    }
-
-    override fun onStartTrackingTouch(seekBar: SeekBar) {
-    }
-
-    override fun onStopTrackingTouch(seekBar: SeekBar) {
-    }
-  }
-  onAfterClosed = {
-    setOnSeekBarChangeListener(null)
-  }
-  setOnSeekBarChangeListener(listener)
-}
+inline fun SeekBar.userChanges(): ReceiveChannel<Int> = changes(true)
 
 /**
  * todo
  */
-inline fun SeekBar.systemChanges(): ReceiveChannel<Int> = cancelableChannel {
+inline fun SeekBar.systemChanges(): ReceiveChannel<Int> = changes(false)
+
+/**
+ * todo
+ */
+inline fun SeekBar.changes(shouldBeFromUser: Boolean?): ReceiveChannel<Int> = cancelableChannel {
   val listener = object : SeekBar.OnSeekBarChangeListener {
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-      if (!fromUser) {
+      if (shouldBeFromUser == null || shouldBeFromUser == fromUser) {
         safeOffer(progress)
       }
     }
