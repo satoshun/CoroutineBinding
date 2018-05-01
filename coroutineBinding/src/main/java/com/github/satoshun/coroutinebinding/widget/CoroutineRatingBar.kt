@@ -11,7 +11,7 @@ inline fun RatingBar.ratingChanges(): ReceiveChannel<Float> = cancelableChannel 
   val listener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
     safeOffer(rating)
   }
-  onAfterClosed = {
+  it {
     onRatingBarChangeListener = null
   }
   onRatingBarChangeListener = listener
@@ -21,7 +21,7 @@ inline fun RatingBar.ratingChangeEvents(): ReceiveChannel<RatingBarChangeEvent> 
   val listener = RatingBar.OnRatingBarChangeListener { ratingBar, rating, fromUser ->
     safeOffer(RatingBarChangeEvent(ratingBar, rating, fromUser))
   }
-  onAfterClosed = {
+  it {
     onRatingBarChangeListener = null
   }
   onRatingBarChangeListener = listener

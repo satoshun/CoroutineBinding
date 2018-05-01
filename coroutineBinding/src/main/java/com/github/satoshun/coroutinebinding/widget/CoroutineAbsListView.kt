@@ -9,7 +9,7 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * todo
+ * Create an channel of scroll events on [AbsListView]
  */
 inline fun AbsListView.scrollEvents(): ReceiveChannel<AbsListViewScrollEvent> = cancelableChannel {
   val listener = object : AbsListView.OnScrollListener {
@@ -34,7 +34,7 @@ inline fun AbsListView.scrollEvents(): ReceiveChannel<AbsListViewScrollEvent> = 
       ))
     }
   }
-  onAfterClosed = {
+  it {
     setOnScrollListener(null)
   }
   setOnScrollListener(listener)

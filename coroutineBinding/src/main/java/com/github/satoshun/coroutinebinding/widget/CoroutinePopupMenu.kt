@@ -11,11 +11,11 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * todo
  */
-inline fun PopupMenu.itemClicks(): ReceiveChannel<MenuItem> = cancelableChannel {
+inline fun PopupMenu.itemClicks(): ReceiveChannel<MenuItem> = cancelableChannel { onAfterClosed ->
   val listener = PopupMenu.OnMenuItemClickListener {
     safeOffer(it)
   }
-  onAfterClosed = {
+  onAfterClosed {
     setOnMenuItemClickListener(null)
   }
   setOnMenuItemClickListener(listener)
@@ -24,11 +24,11 @@ inline fun PopupMenu.itemClicks(): ReceiveChannel<MenuItem> = cancelableChannel 
 /**
  * todo
  */
-inline fun PopupMenu.dismisses(): ReceiveChannel<Unit> = cancelableChannel {
+inline fun PopupMenu.dismisses(): ReceiveChannel<Unit> = cancelableChannel { onAfterClosed ->
   val listener = PopupMenu.OnDismissListener {
     safeOffer(Unit)
   }
-  onAfterClosed = {
+  onAfterClosed {
     setOnDismissListener(null)
   }
   setOnDismissListener(listener)

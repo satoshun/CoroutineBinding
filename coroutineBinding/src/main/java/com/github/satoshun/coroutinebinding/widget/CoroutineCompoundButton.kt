@@ -10,11 +10,11 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * todo
  */
-inline fun CompoundButton.checkedChanges(): ReceiveChannel<Boolean> = cancelableChannel {
+inline fun CompoundButton.checkedChanges(): ReceiveChannel<Boolean> = cancelableChannel { onAfterClosed ->
   val listener = CompoundButton.OnCheckedChangeListener { _, isChecked ->
     safeOffer(isChecked)
   }
-  onAfterClosed = {
+  onAfterClosed {
     setOnCheckedChangeListener(null)
   }
   setOnCheckedChangeListener(listener)

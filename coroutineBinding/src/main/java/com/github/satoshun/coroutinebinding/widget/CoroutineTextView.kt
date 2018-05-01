@@ -27,7 +27,7 @@ inline fun TextView.editorActions(crossinline handled: Predicate<Int>): ReceiveC
       false
     }
   }
-  onAfterClosed = {
+  it {
     setOnEditorActionListener(null)
   }
   setOnEditorActionListener(listener)
@@ -48,7 +48,7 @@ inline fun TextView.editorActionEvents(
       false
     }
   }
-  onAfterClosed = {
+  it {
     setOnEditorActionListener(null)
   }
   setOnEditorActionListener(listener)
@@ -75,7 +75,7 @@ inline fun TextView.textChanges(): ReceiveChannel<CharSequence> = cancelableChan
       safeOffer(s)
     }
   }
-  onAfterClosed = {
+  it {
     removeTextChangedListener(listener)
   }
   addTextChangedListener(listener)
@@ -96,7 +96,7 @@ inline fun TextView.textChangeEvents(): ReceiveChannel<TextViewTextChangeEvent> 
       safeOffer(TextViewTextChangeEvent(this@textChangeEvents, s, start, before, count))
     }
   }
-  onAfterClosed = {
+  it {
     removeTextChangedListener(listener)
   }
   addTextChangedListener(listener)
@@ -125,7 +125,7 @@ inline fun TextView.beforeTextChangeEvents(): ReceiveChannel<TextViewBeforeTextC
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
     }
   }
-  onAfterClosed = {
+  it {
     removeTextChangedListener(listener)
   }
   addTextChangedListener(listener)
@@ -154,7 +154,7 @@ inline fun TextView.afterTextChangeEvents(): ReceiveChannel<TextViewAfterTextCha
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
     }
   }
-  onAfterClosed = {
+  it {
     removeTextChangedListener(listener)
   }
   addTextChangedListener(listener)

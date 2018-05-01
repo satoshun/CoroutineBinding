@@ -17,10 +17,10 @@ internal typealias Callable = () -> Boolean
 internal typealias Predicate<T> = (T) -> Boolean
 
 /**
- * todo
+ * Create an channel of to emit on [View] attach events.
  */
 @CheckResult
-inline fun View.attaches(): ReceiveChannel<Unit> = cancelableChannel {
+inline fun View.attaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) {
   val listener = object : View.OnAttachStateChangeListener {
     override fun onViewDetachedFromWindow(v: View) {
       // do nothing
@@ -30,17 +30,17 @@ inline fun View.attaches(): ReceiveChannel<Unit> = cancelableChannel {
       safeOffer(Unit)
     }
   }
-  onAfterClosed = {
+  it {
     removeOnAttachStateChangeListener(listener)
   }
   addOnAttachStateChangeListener(listener)
 }
 
 /**
- * todo
+ * Create an channel of to emit on [View] detach events.
  */
 @CheckResult
-inline fun View.detaches(): ReceiveChannel<Unit> = cancelableChannel {
+inline fun View.detaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) {
   val listener = object : View.OnAttachStateChangeListener {
     override fun onViewDetachedFromWindow(v: View) {
       safeOffer(Unit)
@@ -50,7 +50,7 @@ inline fun View.detaches(): ReceiveChannel<Unit> = cancelableChannel {
       // do nothing
     }
   }
-  onAfterClosed = {
+  it {
     removeOnAttachStateChangeListener(listener)
   }
   addOnAttachStateChangeListener(listener)
@@ -64,7 +64,7 @@ inline fun View.clicks(): ReceiveChannel<Unit> = cancelableChannel {
   val listener = View.OnClickListener {
     safeOffer(Unit)
   }
-  onAfterClosed = {
+  it {
     setOnClickListener(null)
   }
   setOnClickListener(listener)
@@ -82,7 +82,7 @@ inline fun View.drags(crossinline handled: Predicate<in DragEvent>): ReceiveChan
       false
     }
   }
-  onAfterClosed = {
+  it {
     setOnDragListener(null)
   }
   setOnDragListener(listener)
@@ -97,7 +97,7 @@ inline fun View.draws(): ReceiveChannel<Unit> = cancelableChannel {
   val listener = ViewTreeObserver.OnDrawListener {
     safeOffer(Unit)
   }
-  onAfterClosed = {
+  it {
     viewTreeObserver.removeOnDrawListener(listener)
   }
   viewTreeObserver.addOnDrawListener(listener)
@@ -111,7 +111,7 @@ inline fun View.focusChanges(): ReceiveChannel<Boolean> = cancelableChannel {
   val listener = View.OnFocusChangeListener { _, hasFocus ->
     safeOffer(hasFocus)
   }
-  onAfterClosed = {
+  it {
     onFocusChangeListener = null
   }
   onFocusChangeListener = listener
@@ -125,7 +125,7 @@ inline fun View.globalLayouts(): ReceiveChannel<Unit> = cancelableChannel {
   val listener = ViewTreeObserver.OnGlobalLayoutListener {
     safeOffer(Unit)
   }
-  onAfterClosed = {
+  it {
     viewTreeObserver.addOnGlobalLayoutListener(listener)
   }
   viewTreeObserver.addOnGlobalLayoutListener(listener)
@@ -146,7 +146,7 @@ inline fun View.hovers(crossinline handled: Predicate<in MotionEvent>): ReceiveC
       false
     }
   }
-  onAfterClosed = {
+  it {
     setOnHoverListener(null)
   }
   setOnHoverListener(listener)
@@ -181,7 +181,7 @@ inline fun <T> View.layoutChangeEvents(
   val listener = View.OnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
     safeOffer(creator(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom))
   }
-  onAfterClosed = {
+  it {
     removeOnLayoutChangeListener(listener)
   }
   addOnLayoutChangeListener(listener)
@@ -202,7 +202,7 @@ inline fun View.longClicks(crossinline handled: Callable): ReceiveChannel<Unit> 
       false
     }
   }
-  onAfterClosed = {
+  it {
     setOnLongClickListener(null)
   }
   setOnLongClickListener(listener)
@@ -220,7 +220,7 @@ inline fun View.preDraws(crossinline proceedDrawingPass: () -> Boolean): Receive
       true
     }
   }
-  onAfterClosed = {
+  it {
     viewTreeObserver.removeOnPreDrawListener(listener)
   }
   viewTreeObserver.addOnPreDrawListener(listener)
@@ -232,7 +232,7 @@ inline fun View.scrollChangeEvents(): ReceiveChannel<ViewScrollChangeEvent> = ca
   val listener = View.OnScrollChangeListener { _, scrollX, scrollY, oldScrollX, oldScrollY ->
     safeOffer(ViewScrollChangeEvent(scrollX, scrollY, oldScrollX, oldScrollY))
   }
-  onAfterClosed = {
+  it {
     setOnScrollChangeListener(null)
   }
   setOnScrollChangeListener(listener)
@@ -253,7 +253,7 @@ inline fun View.systemUiVisibilityChanges(): ReceiveChannel<Int> = cancelableCha
   val listener = View.OnSystemUiVisibilityChangeListener {
     safeOffer(it)
   }
-  onAfterClosed = {
+  it {
     setOnSystemUiVisibilityChangeListener(listener)
   }
   setOnSystemUiVisibilityChangeListener(listener)
@@ -274,7 +274,7 @@ inline fun View.touches(crossinline handled: Predicate<in MotionEvent>): Receive
       false
     }
   }
-  onAfterClosed = {
+  it {
     setOnTouchListener(null)
   }
   setOnTouchListener(listener)
@@ -295,7 +295,7 @@ inline fun View.keys(crossinline handled: Predicate<in KeyEvent>): ReceiveChanne
       false
     }
   }
-  onAfterClosed = {
+  it {
     setOnKeyListener(null)
   }
   setOnKeyListener(listener)

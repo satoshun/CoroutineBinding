@@ -39,7 +39,7 @@ inline fun SeekBar.changes(shouldBeFromUser: Boolean?): ReceiveChannel<Int> = ca
     override fun onStopTrackingTouch(seekBar: SeekBar) {
     }
   }
-  onAfterClosed = {
+  it {
     setOnSeekBarChangeListener(null)
   }
   setOnSeekBarChangeListener(listener)
@@ -62,26 +62,26 @@ inline fun SeekBar.changeEvents(): ReceiveChannel<SeekBarChangeEvent> = cancelab
       safeOffer(SeekBarStopChangeEvent(seekBar))
     }
   }
-  onAfterClosed = {
+  it {
     setOnSeekBarChangeListener(null)
   }
   setOnSeekBarChangeListener(listener)
 }
 
 sealed class SeekBarChangeEvent(
-  open val view: SeekBar
+    open val view: SeekBar
 )
 
 data class SeekBarProgressChangeEvent(
-  override val view: SeekBar,
-  val progress: Int,
-  val fromUser: Boolean
+    override val view: SeekBar,
+    val progress: Int,
+    val fromUser: Boolean
 ) : SeekBarChangeEvent(view)
 
 data class SeekBarStartChangeEvent(
-  override val view: SeekBar
+    override val view: SeekBar
 ) : SeekBarChangeEvent(view)
 
 data class SeekBarStopChangeEvent(
-  override val view: SeekBar
+    override val view: SeekBar
 ) : SeekBarChangeEvent(view)

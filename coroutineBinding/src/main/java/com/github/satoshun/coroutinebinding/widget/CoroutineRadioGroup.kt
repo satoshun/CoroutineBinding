@@ -11,7 +11,7 @@ inline fun RadioGroup.checkedChanges(): ReceiveChannel<Int> = cancelableChannel 
   val listener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
     safeOffer(checkedId)
   }
-  onAfterClosed = {
+  it {
     setOnCheckedChangeListener(null)
   }
   setOnCheckedChangeListener(listener)

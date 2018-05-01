@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.github.satoshun.coroutinebinding2.test", appContext.getPackageName());
+        assertEquals("com.github.satoshun.coroutinebinding.test", appContext.getPackageName());
     }
 }

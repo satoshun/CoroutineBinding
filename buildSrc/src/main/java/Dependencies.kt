@@ -2,9 +2,9 @@ object Vers {
   val compile_sdk = 27
   val min_sdk = 15
   val target_sdk = 27
-  val agp = "3.1.1"
+  val agp = "3.2.0-alpha13"
 
-  val kotlin = "1.2.40"
+  val kotlin = "1.2.41"
   val couroutine = "0.22.5"
   val support_lib = "27.1.1"
   val ktlint = "0.21.0"
@@ -31,4 +31,5 @@ object Libs {
 
   val truth = "com.google.truth:truth:0.39"
   val mockito_kotlin = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
+  val multidex = "com.android.support:multidex:1.0.3"
 }

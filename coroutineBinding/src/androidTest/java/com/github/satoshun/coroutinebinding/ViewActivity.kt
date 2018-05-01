@@ -2,18 +2,17 @@ package com.github.satoshun.coroutinebinding
 
 import android.app.Activity
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.FrameLayout
 
 class ViewActivity : Activity() {
   val rootView: ViewGroup get() = findViewById(android.R.id.content)
-  lateinit var view: View
+  lateinit var view: ViewGroup
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    view = TextView(this)
+    view = FrameLayout(this)
     setContentView(view)
   }
 }

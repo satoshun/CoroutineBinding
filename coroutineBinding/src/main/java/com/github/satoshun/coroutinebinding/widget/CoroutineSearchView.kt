@@ -17,16 +17,16 @@ inline fun SearchView.queryTextChangeEvents(): ReceiveChannel<SearchViewQueryTex
       return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, newText, false))
     }
   }
-  onAfterClosed = {
+  it {
     setOnQueryTextListener(null)
   }
   setOnQueryTextListener(listener)
 }
 
 data class SearchViewQueryTextEvent(
-  val view: SearchView,
-  val queryText: CharSequence,
-  val isSubmitted: Boolean
+    val view: SearchView,
+    val queryText: CharSequence,
+    val isSubmitted: Boolean
 )
 
 inline fun SearchView.queryTextChanges(): ReceiveChannel<CharSequence> = cancelableChannel {
@@ -39,7 +39,7 @@ inline fun SearchView.queryTextChanges(): ReceiveChannel<CharSequence> = cancela
       return safeOffer(newText)
     }
   }
-  onAfterClosed = {
+  it {
     setOnQueryTextListener(null)
   }
   setOnQueryTextListener(listener)

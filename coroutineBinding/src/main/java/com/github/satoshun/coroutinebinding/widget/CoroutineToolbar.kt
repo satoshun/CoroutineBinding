@@ -18,7 +18,7 @@ inline fun Toolbar.itemClicks(): ReceiveChannel<MenuItem> = cancelableChannel {
   val listener = Toolbar.OnMenuItemClickListener {
     safeOffer(it)
   }
-  onAfterClosed = {
+  it {
     setOnMenuItemClickListener(null)
   }
   setOnMenuItemClickListener(listener)
@@ -32,7 +32,7 @@ inline fun Toolbar.navigationClicks(): ReceiveChannel<Unit> = cancelableChannel 
   val listener = View.OnClickListener {
     safeOffer(Unit)
   }
-  onAfterClosed = {
+  it {
     setOnClickListener(null)
   }
   setOnClickListener(listener)

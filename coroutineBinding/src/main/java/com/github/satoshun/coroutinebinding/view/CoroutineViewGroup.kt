@@ -21,7 +21,7 @@ inline fun ViewGroup.changeEvents(): ReceiveChannel<ViewGroupHierarchyChangeEven
       safeOffer(ViewGroupHierarchyChildViewRemoveEvent(this@changeEvents, child))
     }
   }
-  onAfterClosed = {
+  it {
     setOnHierarchyChangeListener(null)
   }
   setOnHierarchyChangeListener(listener)

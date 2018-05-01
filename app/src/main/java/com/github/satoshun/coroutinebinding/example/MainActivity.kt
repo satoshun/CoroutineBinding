@@ -3,6 +3,7 @@ package com.github.satoshun.coroutinebinding.example
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.TextView
 import com.github.satoshun.coroutinebinding.view.attaches
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
@@ -15,10 +16,17 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    val text = TextView(this)
+
     launch(UI) {
       for (attach in text.attaches()) {
         Log.d("attach", attach.toString())
       }
+    }
+
+    launch(UI) {
+      val attach = text.attaches().receive()
+      Log.d("attach from receive", attach.toString())
     }
 
     launch(UI) {

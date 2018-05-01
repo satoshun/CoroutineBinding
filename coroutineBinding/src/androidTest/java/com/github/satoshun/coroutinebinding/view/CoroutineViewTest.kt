@@ -1,81 +1,74 @@
 package com.github.satoshun.coroutinebinding.view
 
+import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
 import android.view.View
+import android.widget.TextView
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.verify
 import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class CoroutineViewTest {
 
   @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
 
-  @Test
-  fun attaches__do_event() {
-    launch(UI) {
-      val attaches = rule.activity.view.attaches()
-
-      Truth.assertThat(attaches.isEmpty).isTrue()
-      rule.activity.rootView.removeView(rule.activity.view)
-      Truth.assertThat(attaches.isEmpty).isTrue()
-      rule.activity.rootView.addView(rule.activity.view)
-      Truth.assertThat(attaches.receive()).isNotNull()
-    }
+  @Test @UiThreadTest
+  fun attaches() = runBlocking<Unit> {
+    val child = TextView(rule.activity)
+    val attaches = child.attaches(1)
+    rule.activity.view.addView(child)
+    Truth.assertThat(attaches.poll()).isNotNull()
   }
 
-  @Ignore("AndroidTest doesn't work mockito + final")
-  @Test
-  fun attaches__do_removeOnAttachStateChangeListener_when_cancel() {
-    val view: View = mock {}
-    val attaches = view.attaches()
-    view.verify().addOnAttachStateChangeListener(any())
+  @Test @UiThreadTest
+  fun attaches__with_cancel() = runBlocking<Unit> {
+    val child = TextView(rule.activity)
+    val attaches = child.attaches(1)
     attaches.cancel()
-    view.verify().removeOnAttachStateChangeListener(any())
+    rule.activity.view.addView(child)
+    Truth.assertThat(attaches.poll()).isNull()
   }
 
-  @Test
-  fun detaches__do_event() {
-    launch(UI) {
-      val detaches = rule.activity.view.detaches()
-
-      Truth.assertThat(detaches.isEmpty).isTrue()
-      rule.activity.rootView.removeView(rule.activity.view)
-      Truth.assertThat(detaches.receive()).isEqualTo(Unit)
-      rule.activity.rootView.addView(rule.activity.view)
-      Truth.assertThat(detaches.isEmpty).isNotNull()
-    }
+  @Test @UiThreadTest
+  fun detaches() = runBlocking<Unit> {
+    val child = TextView(rule.activity)
+    val detaches = child.detaches(1)
+    rule.activity.view.addView(child)
+    rule.activity.view.removeView(child)
+    Truth.assertThat(detaches.poll()).isNotNull()
   }
 
-  @Ignore("AndroidTest doesn't work mockito + final")
-  @Test
-  fun detaches__do_removeOnAttachStateChangeListener_when_cancel() {
-    val view: View = mock {}
-    val detaches = view.detaches()
-    view.verify().addOnAttachStateChangeListener(any())
+  @Test @UiThreadTest
+  fun detaches__with_cancel() = runBlocking<Unit> {
+    val child = TextView(rule.activity)
+    val detaches = child.detaches(1)
+    rule.activity.view.addView(child)
     detaches.cancel()
-    view.verify().removeOnAttachStateChangeListener(any())
+    rule.activity.view.removeView(child)
+    Truth.assertThat(detaches.poll()).isNull()
   }
 
+  @Ignore
   @Test
-  fun clicks__do_event() {
-    launch(UI) {
-      val clicks = rule.activity.view.clicks()
+  fun clicks__do_event() = runBlocking<Unit> {
+    val clicks = rule.activity.view.clicks()
 
-      Truth.assertThat(clicks.isEmpty).isTrue()
-      rule.activity.view.performClick()
-      Truth.assertThat(clicks.receive()).isEqualTo(Unit)
-    }
+    Truth.assertThat(clicks.isEmpty).isTrue()
+    rule.activity.view.performClick()
+    Truth.assertThat(clicks.receive()).isEqualTo(Unit)
   }
 
   @Ignore("AndroidTest doesn't work mockito + final")
-  @Test
+  @Test @UiThreadTest
   fun clicks__do_removeOnAttachStateChangeListener_when_cancel() {
     val view: View = mock {}
     val detaches = view.detaches()

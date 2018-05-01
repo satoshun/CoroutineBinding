@@ -6,13 +6,13 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
-fun <T : Adapter> T.dataChanges(): ReceiveChannel<T> = cancelableChannel {
+fun <T : Adapter> T.dataChanges(): ReceiveChannel<T> = cancelableChannel { onAfterClosed ->
   val listener = object : DataSetObserver() {
     override fun onChanged() {
       safeOffer(this@dataChanges)
     }
   }
-  onAfterClosed = {
+  onAfterClosed {
     registerDataSetObserver(null)
   }
   registerDataSetObserver(listener)

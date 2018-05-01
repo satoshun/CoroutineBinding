@@ -15,7 +15,7 @@ inline fun AutoCompleteTextView.itemClickEvents(): ReceiveChannel<AdapterViewIte
   val listener = AdapterView.OnItemClickListener { parent, view, position, id ->
     safeOffer(AdapterViewItemClickEvent(parent, view, position, id))
   }
-  onAfterClosed = {
+  it {
     onItemClickListener = null
   }
   onItemClickListener = listener

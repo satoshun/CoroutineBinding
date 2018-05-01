@@ -20,7 +20,7 @@ inline fun <T : Adapter> AdapterView<T>.itemSelections(): ReceiveChannel<Int> = 
       safeOffer(position)
     }
   }
-  onAfterClosed = {
+  it {
     setOnItemSelectedListener(null)
   }
   setOnItemSelectedListener(listener)
@@ -36,7 +36,7 @@ inline fun <T : Adapter> AdapterView<T>.selectionEvents(): ReceiveChannel<Adapte
       safeOffer(AdapterViewItemSelectionEvent(parent, selectedView, position, id))
     }
   }
-  onAfterClosed = {
+  it {
     setOnItemSelectedListener(null)
   }
   setOnItemSelectedListener(listener)
@@ -59,7 +59,7 @@ inline fun <T : Adapter> AdapterView<T>.itemClicks(): ReceiveChannel<Int> = canc
   val listener = AdapterView.OnItemClickListener { _, _, position, _ ->
     safeOffer(position)
   }
-  onAfterClosed = {
+  it {
     setOnItemClickListener(null)
   }
   setOnItemClickListener(listener)
@@ -69,7 +69,7 @@ inline fun <T : Adapter> AdapterView<T>.itemClickEvents(): ReceiveChannel<Adapte
   val listener = AdapterView.OnItemClickListener { parent, view, position, id ->
     safeOffer(AdapterViewItemClickEvent(parent, view, position, id))
   }
-  onAfterClosed = {
+  it {
     setOnItemClickListener(null)
   }
   setOnItemClickListener(listener)
@@ -85,7 +85,7 @@ inline fun <T : Adapter> AdapterView<T>.itemLongClicks(crossinline handled: Call
       false
     }
   }
-  onAfterClosed = {
+  it {
     setOnItemLongClickListener(null)
   }
   setOnItemLongClickListener(listener)
@@ -101,7 +101,7 @@ inline fun <T : Adapter> AdapterView<T>.itemLongClickEvents(crossinline handled:
       false
     }
   }
-  onAfterClosed = {
+  it {
     setOnItemLongClickListener(null)
   }
   setOnItemLongClickListener(listener)
