@@ -3,15 +3,10 @@ package com.github.satoshun.coroutinebinding.view
 import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import android.view.View
 import android.widget.TextView
 import com.github.satoshun.coroutinebinding.ViewActivity
-import com.github.satoshun.coroutinebinding.verify
 import com.google.common.truth.Truth
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -57,23 +52,19 @@ class CoroutineViewTest {
     Truth.assertThat(detaches.poll()).isNull()
   }
 
-  @Ignore
-  @Test
-  fun clicks__do_event() = runBlocking<Unit> {
-    val clicks = rule.activity.view.clicks()
+  @Test @UiThreadTest
+  fun clicks() = runBlocking<Unit> {
+    val clicks = rule.activity.view.clicks(1)
 
-    Truth.assertThat(clicks.isEmpty).isTrue()
     rule.activity.view.performClick()
-    Truth.assertThat(clicks.receive()).isEqualTo(Unit)
+    Truth.assertThat(clicks.poll()).isNotNull()
   }
 
-  @Ignore("AndroidTest doesn't work mockito + final")
   @Test @UiThreadTest
-  fun clicks__do_removeOnAttachStateChangeListener_when_cancel() {
-    val view: View = mock {}
-    val detaches = view.detaches()
-    view.verify().addOnAttachStateChangeListener(any())
-    detaches.cancel()
-    view.verify().removeOnAttachStateChangeListener(any())
+  fun clicks__with_cancel() {
+    val clicks = rule.activity.view.clicks(1)
+    clicks.cancel()
+    rule.activity.view.performClick()
+    Truth.assertThat(clicks.poll()).isNull()
   }
 }

@@ -57,10 +57,10 @@ inline fun View.detaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableCh
 }
 
 /**
- * todo
+ * Create an channel of to emit on [View] click events.
  */
 @CheckResult
-inline fun View.clicks(): ReceiveChannel<Unit> = cancelableChannel {
+inline fun View.clicks(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) {
   val listener = View.OnClickListener {
     safeOffer(Unit)
   }
