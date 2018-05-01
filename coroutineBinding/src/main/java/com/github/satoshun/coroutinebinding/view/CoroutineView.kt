@@ -70,11 +70,20 @@ inline fun View.clicks(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChan
   setOnClickListener(listener)
 }
 
+/**
+ * Create an channel of [DragEvent] for drags on [View]
+ */
 @CheckResult
-inline fun View.drags(): ReceiveChannel<DragEvent> = drags { true }
+inline fun View.drags(capacity: Int = 0): ReceiveChannel<DragEvent> = drags(capacity) { true }
 
+/**
+ * Create an channel of [DragEvent] for drags on [View]
+ */
 @CheckResult
-inline fun View.drags(crossinline handled: Predicate<in DragEvent>): ReceiveChannel<DragEvent> = cancelableChannel {
+inline fun View.drags(
+    capacity: Int = 0,
+    crossinline handled: Predicate<in DragEvent>
+): ReceiveChannel<DragEvent> = cancelableChannel(capacity) {
   val listener = View.OnDragListener { _, dragEvent ->
     if (handled(dragEvent)) {
       safeOffer(dragEvent)
@@ -89,11 +98,11 @@ inline fun View.drags(crossinline handled: Predicate<in DragEvent>): ReceiveChan
 }
 
 /**
- * todo
+ * Create an channel for draws on [View]
  */
 @RequiresApi(16)
 @CheckResult
-inline fun View.draws(): ReceiveChannel<Unit> = cancelableChannel {
+inline fun View.draws(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) {
   val listener = ViewTreeObserver.OnDrawListener {
     safeOffer(Unit)
   }
@@ -104,10 +113,10 @@ inline fun View.draws(): ReceiveChannel<Unit> = cancelableChannel {
 }
 
 /**
- * todo
+ * Create an channel of booleans representing the focus of [View].
  */
 @CheckResult
-inline fun View.focusChanges(): ReceiveChannel<Boolean> = cancelableChannel {
+inline fun View.focusChanges(capacity: Int = 0): ReceiveChannel<Boolean> = cancelableChannel(capacity) {
   val listener = View.OnFocusChangeListener { _, hasFocus ->
     safeOffer(hasFocus)
   }

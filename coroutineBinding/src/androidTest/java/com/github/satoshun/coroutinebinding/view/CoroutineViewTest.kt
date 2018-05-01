@@ -61,10 +61,29 @@ class CoroutineViewTest {
   }
 
   @Test @UiThreadTest
-  fun clicks__with_cancel() {
+  fun clicks__with_cancel() = runBlocking<Unit> {
     val clicks = rule.activity.view.clicks(1)
     clicks.cancel()
     rule.activity.view.performClick()
     Truth.assertThat(clicks.poll()).isNull()
+  }
+
+  @Test @UiThreadTest
+  fun focusChanges() = runBlocking<Unit> {
+    val focus = rule.activity.view.focusChanges(1)
+    rule.activity.view.isFocusable = true
+    rule.activity.view.requestFocus()
+    Truth.assertThat(focus.poll()).isTrue()
+    rule.activity.view.clearFocus()
+    Truth.assertThat(focus.poll()).isFalse()
+  }
+
+  @Test @UiThreadTest
+  fun focusChanges__with_cancel() = runBlocking<Unit> {
+    val focus = rule.activity.view.focusChanges(1)
+    rule.activity.view.isFocusable = true
+    focus.cancel()
+    rule.activity.view.requestFocus()
+    Truth.assertThat(focus.poll()).isNull()
   }
 }
