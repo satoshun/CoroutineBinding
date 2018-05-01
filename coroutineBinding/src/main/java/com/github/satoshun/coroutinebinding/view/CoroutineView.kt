@@ -127,10 +127,10 @@ inline fun View.focusChanges(capacity: Int = 0): ReceiveChannel<Boolean> = cance
 }
 
 /**
- * todo
+ * Create an channel of booleans representing the focus of [View].
  */
 @CheckResult
-inline fun View.globalLayouts(): ReceiveChannel<Unit> = cancelableChannel {
+inline fun View.globalLayouts(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) {
   val listener = ViewTreeObserver.OnGlobalLayoutListener {
     safeOffer(Unit)
   }

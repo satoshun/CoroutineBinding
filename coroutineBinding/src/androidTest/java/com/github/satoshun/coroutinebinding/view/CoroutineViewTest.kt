@@ -22,12 +22,8 @@ class CoroutineViewTest {
     val attaches = child.attaches(1)
     rule.activity.view.addView(child)
     Truth.assertThat(attaches.poll()).isNotNull()
-  }
+    rule.activity.view.removeView(child)
 
-  @Test @UiThreadTest
-  fun attaches__with_cancel() = runBlocking<Unit> {
-    val child = TextView(rule.activity)
-    val attaches = child.attaches(1)
     attaches.cancel()
     rule.activity.view.addView(child)
     Truth.assertThat(attaches.poll()).isNull()
@@ -40,14 +36,9 @@ class CoroutineViewTest {
     rule.activity.view.addView(child)
     rule.activity.view.removeView(child)
     Truth.assertThat(detaches.poll()).isNotNull()
-  }
 
-  @Test @UiThreadTest
-  fun detaches__with_cancel() = runBlocking<Unit> {
-    val child = TextView(rule.activity)
-    val detaches = child.detaches(1)
-    rule.activity.view.addView(child)
     detaches.cancel()
+    rule.activity.view.addView(child)
     rule.activity.view.removeView(child)
     Truth.assertThat(detaches.poll()).isNull()
   }
@@ -58,11 +49,7 @@ class CoroutineViewTest {
 
     rule.activity.view.performClick()
     Truth.assertThat(clicks.poll()).isNotNull()
-  }
 
-  @Test @UiThreadTest
-  fun clicks__with_cancel() = runBlocking<Unit> {
-    val clicks = rule.activity.view.clicks(1)
     clicks.cancel()
     rule.activity.view.performClick()
     Truth.assertThat(clicks.poll()).isNull()
@@ -76,14 +63,20 @@ class CoroutineViewTest {
     Truth.assertThat(focus.poll()).isTrue()
     rule.activity.view.clearFocus()
     Truth.assertThat(focus.poll()).isFalse()
-  }
 
-  @Test @UiThreadTest
-  fun focusChanges__with_cancel() = runBlocking<Unit> {
-    val focus = rule.activity.view.focusChanges(1)
-    rule.activity.view.isFocusable = true
     focus.cancel()
     rule.activity.view.requestFocus()
     Truth.assertThat(focus.poll()).isNull()
+  }
+
+  @Test @UiThreadTest
+  fun globalLayouts() = runBlocking<Unit> {
+    val layouts = rule.activity.view.globalLayouts(1)
+    rule.activity.view.viewTreeObserver.dispatchOnGlobalLayout()
+    Truth.assertThat(layouts.poll()).isNotNull()
+
+    layouts.cancel()
+    rule.activity.view.viewTreeObserver.dispatchOnGlobalLayout()
+    Truth.assertThat(layouts.poll()).isNull()
   }
 }
