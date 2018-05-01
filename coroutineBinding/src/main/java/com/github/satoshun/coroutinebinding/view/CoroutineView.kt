@@ -141,13 +141,19 @@ inline fun View.globalLayouts(capacity: Int = 0): ReceiveChannel<Unit> = cancela
 }
 
 /**
- * todo
+ * Create an channel of hover events for [View].
  */
 @CheckResult
-inline fun View.hovers(): ReceiveChannel<MotionEvent> = hovers { true }
+inline fun View.hovers(capacity: Int = 0): ReceiveChannel<MotionEvent> = hovers(capacity) { true }
 
+/**
+ * Create an channel of hover events for [View].
+ */
 @CheckResult
-inline fun View.hovers(crossinline handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> = cancelableChannel {
+inline fun View.hovers(
+    capacity: Int = 0,
+    crossinline handled: Predicate<in MotionEvent>
+): ReceiveChannel<MotionEvent> = cancelableChannel(capacity) {
   val listener = View.OnHoverListener { _, motionEvent ->
     if (handled(motionEvent)) {
       safeOffer(motionEvent)
@@ -162,13 +168,16 @@ inline fun View.hovers(crossinline handled: Predicate<in MotionEvent>): ReceiveC
 }
 
 /**
- * todo
+ * Create an channel of layoutChange events for [View].
  */
 @CheckResult
-inline fun View.layoutChanges(): ReceiveChannel<Unit> = layoutChangeEvents { _, _, _, _, _, _, _, _ -> Unit }
+inline fun View.layoutChanges(capacity: Int = 0): ReceiveChannel<Unit> = layoutChangeEvents(capacity) { _, _, _, _, _, _, _, _ -> Unit }
 
+/**
+ * Create an channel of layoutChange events for [View].
+ */
 @CheckResult
-inline fun View.layoutChangeEvents(): ReceiveChannel<ViewLayoutChangeEvent> = layoutChangeEvents { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+inline fun View.layoutChangeEvents(capacity: Int = 0): ReceiveChannel<ViewLayoutChangeEvent> = layoutChangeEvents(capacity) { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
   ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
 }
 
@@ -185,8 +194,9 @@ data class ViewLayoutChangeEvent(
 
 @CheckResult
 inline fun <T> View.layoutChangeEvents(
+    capacity: Int = 0,
     crossinline creator: (Int, Int, Int, Int, Int, Int, Int, Int) -> T
-): ReceiveChannel<T> = cancelableChannel {
+): ReceiveChannel<T> = cancelableChannel(capacity) {
   val listener = View.OnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
     safeOffer(creator(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom))
   }
@@ -197,10 +207,10 @@ inline fun <T> View.layoutChangeEvents(
 }
 
 /**
- * todo
+ * Create an channel of longClick events for [View].
  */
 @CheckResult
-inline fun View.longClicks(): ReceiveChannel<Unit> = longClicks { true }
+inline fun View.longClicks(capacity: Int = 0): ReceiveChannel<Unit> = longClicks { true }
 
 @CheckResult
 inline fun View.longClicks(crossinline handled: Callable): ReceiveChannel<Unit> = cancelableChannel {

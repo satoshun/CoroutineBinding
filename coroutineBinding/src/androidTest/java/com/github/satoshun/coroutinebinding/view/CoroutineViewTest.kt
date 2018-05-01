@@ -7,6 +7,7 @@ import android.widget.TextView
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.google.common.truth.Truth
 import kotlinx.coroutines.experimental.runBlocking
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -78,5 +79,38 @@ class CoroutineViewTest {
     layouts.cancel()
     rule.activity.view.viewTreeObserver.dispatchOnGlobalLayout()
     Truth.assertThat(layouts.poll()).isNull()
+  }
+
+  @Ignore("todo")
+  @Test @UiThreadTest
+  fun hovers() = runBlocking<Unit> {
+    val hovers = rule.activity.view.hovers(1)
+  }
+
+  @Test @UiThreadTest
+  fun layoutChanges() = runBlocking<Unit> {
+    val layoutChange = rule.activity.view.layoutChanges(1)
+    rule.activity.view.layout(0, 0, 0, 0)
+    Truth.assertThat(layoutChange.poll()).isNotNull()
+
+    layoutChange.cancel()
+    rule.activity.view.layout(0, 0, 0, 0)
+    Truth.assertThat(layoutChange.poll()).isNull()
+  }
+
+  @Test @UiThreadTest
+  fun layoutChangeEvents() = runBlocking<Unit> {
+    val layoutChange = rule.activity.view.layoutChangeEvents(1)
+    rule.activity.view.layout(0, 0, 0, 100)
+    Truth.assertThat(layoutChange.poll()).isEqualTo(
+        ViewLayoutChangeEvent(
+            0, 0, 0, 100,
+            0, 0, 0, 0
+        )
+    )
+
+    layoutChange.cancel()
+    rule.activity.view.layout(0, 0, 0, 0)
+    Truth.assertThat(layoutChange.poll()).isNull()
   }
 }
