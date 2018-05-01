@@ -192,6 +192,9 @@ data class ViewLayoutChangeEvent(
     val oldBottom: Int
 )
 
+/**
+ * Create an channel of layoutChange events for [View].
+ */
 @CheckResult
 inline fun <T> View.layoutChangeEvents(
     capacity: Int = 0,
@@ -210,10 +213,16 @@ inline fun <T> View.layoutChangeEvents(
  * Create an channel of longClick events for [View].
  */
 @CheckResult
-inline fun View.longClicks(capacity: Int = 0): ReceiveChannel<Unit> = longClicks { true }
+inline fun View.longClicks(capacity: Int = 0): ReceiveChannel<Unit> = longClicks(capacity) { true }
 
+/**
+ * Create an channel of longClick events for [View].
+ */
 @CheckResult
-inline fun View.longClicks(crossinline handled: Callable): ReceiveChannel<Unit> = cancelableChannel {
+inline fun View.longClicks(
+    capacity: Int = 0,
+    crossinline handled: Callable
+): ReceiveChannel<Unit> = cancelableChannel(capacity) {
   val listener = View.OnLongClickListener {
     if (handled()) {
       safeOffer(Unit)
@@ -228,10 +237,13 @@ inline fun View.longClicks(crossinline handled: Callable): ReceiveChannel<Unit> 
 }
 
 /**
- * todo
+ * Create an channel for pre-draws on [View].
  */
 @CheckResult
-inline fun View.preDraws(crossinline proceedDrawingPass: () -> Boolean): ReceiveChannel<Unit> = cancelableChannel {
+inline fun View.preDraws(
+    capacity: Int = 0,
+    crossinline proceedDrawingPass: () -> Boolean
+): ReceiveChannel<Unit> = cancelableChannel(capacity) {
   val listener = ViewTreeObserver.OnPreDrawListener {
     if (safeOffer(Unit)) {
       proceedDrawingPass()
