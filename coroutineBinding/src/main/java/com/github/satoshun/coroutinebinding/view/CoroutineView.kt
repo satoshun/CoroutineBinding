@@ -257,6 +257,9 @@ inline fun View.preDraws(
   viewTreeObserver.addOnPreDrawListener(listener)
 }
 
+/**
+ * todo
+ */
 @RequiresApi(23)
 @CheckResult
 inline fun View.scrollChangeEvents(): ReceiveChannel<ViewScrollChangeEvent> = cancelableChannel {
@@ -277,27 +280,33 @@ data class ViewScrollChangeEvent(
 )
 
 /**
- * todo
+ * Create an channel for systemUiVisibilityChanges on [View].
  */
 @CheckResult
-inline fun View.systemUiVisibilityChanges(): ReceiveChannel<Int> = cancelableChannel {
+inline fun View.systemUiVisibilityChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) {
   val listener = View.OnSystemUiVisibilityChangeListener {
     safeOffer(it)
   }
   it {
-    setOnSystemUiVisibilityChangeListener(listener)
+    setOnSystemUiVisibilityChangeListener(null)
   }
   setOnSystemUiVisibilityChangeListener(listener)
 }
 
 /**
- * todo
+ * Create an channel of touch events for [View].
  */
 @CheckResult
-inline fun View.touches(): ReceiveChannel<MotionEvent> = touches { true }
+inline fun View.touches(capacity: Int = 0): ReceiveChannel<MotionEvent> = touches(capacity) { true }
 
+/**
+ * Create an channel of touch events for [View].
+ */
 @CheckResult
-inline fun View.touches(crossinline handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> = cancelableChannel {
+inline fun View.touches(
+    capacity: Int = 0,
+    crossinline handled: Predicate<in MotionEvent>
+): ReceiveChannel<MotionEvent> = cancelableChannel(capacity) {
   val listener = View.OnTouchListener { _, motionEvent ->
     if (handled(motionEvent)) {
       safeOffer(motionEvent)
@@ -312,13 +321,19 @@ inline fun View.touches(crossinline handled: Predicate<in MotionEvent>): Receive
 }
 
 /**
- * todo
+ * Create an channel of key events for [View].
  */
 @CheckResult
-inline fun View.keys(): ReceiveChannel<KeyEvent> = keys { true }
+inline fun View.keys(capacity: Int = 0): ReceiveChannel<KeyEvent> = keys(capacity) { true }
 
+/**
+ * Create an channel of key events for [View].
+ */
 @CheckResult
-inline fun View.keys(crossinline handled: Predicate<in KeyEvent>): ReceiveChannel<KeyEvent> = cancelableChannel {
+inline fun View.keys(
+    capacity: Int = 0,
+    crossinline handled: Predicate<in KeyEvent>
+): ReceiveChannel<KeyEvent> = cancelableChannel(capacity) {
   val listener = View.OnKeyListener { _, _, event ->
     if (handled(event)) {
       safeOffer(event)

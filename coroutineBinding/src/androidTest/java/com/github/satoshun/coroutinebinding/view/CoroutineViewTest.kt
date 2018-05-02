@@ -3,10 +3,13 @@ package com.github.satoshun.coroutinebinding.view
 import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.google.common.truth.Truth
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Ignore
 import org.junit.Rule
@@ -57,6 +60,18 @@ class CoroutineViewTest {
     clicks.cancel()
     view.performClick()
     Truth.assertThat(clicks.poll()).isNull()
+  }
+
+  @Ignore("todo")
+  @Test @UiThreadTest
+  fun drags() = runBlocking<Unit> {
+    val drags = view.drags(1)
+  }
+
+  @Ignore("todo")
+  @Test @UiThreadTest
+  fun draws() = runBlocking<Unit> {
+    val draws = view.draws(1)
   }
 
   @Test @UiThreadTest
@@ -140,5 +155,40 @@ class CoroutineViewTest {
     preDraws.cancel()
     view.viewTreeObserver.dispatchOnPreDraw();
     Truth.assertThat(preDraws.poll()).isNull()
+  }
+
+  @Test
+  fun systemUiVisibilityChanges() = runBlocking<Unit> {
+    val systemUiVisibilityChanges = runBlocking(UI) {
+      val systemUiVisibilityChanges = view.systemUiVisibilityChanges(1)
+      rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+      systemUiVisibilityChanges
+    }
+
+    Truth.assertThat(systemUiVisibilityChanges.receive()).isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+
+    runBlocking(UI) {
+      rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+    }
+    Truth.assertThat(systemUiVisibilityChanges.receive()).isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE)
+
+    systemUiVisibilityChanges.cancel()
+    runBlocking(UI) {
+      rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+    }
+    delay(100)
+    Truth.assertThat(systemUiVisibilityChanges.poll()).isNull()
+  }
+
+  @Ignore("todo")
+  @Test @UiThreadTest
+  fun touches() = runBlocking<Unit> {
+    val touches = view.touches(1)
+  }
+
+  @Ignore("todo")
+  @Test @UiThreadTest
+  fun keys() = runBlocking<Unit> {
+    val keys = view.keys(1)
   }
 }
