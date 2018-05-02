@@ -3,10 +3,15 @@ package com.github.satoshun.coroutinebinding.view
 import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import com.github.satoshun.coroutinebinding.ViewActivity
+import com.github.satoshun.coroutinebinding.isEqualTo
+import com.github.satoshun.coroutinebinding.isNotNull
+import com.github.satoshun.coroutinebinding.isNull
 import com.google.common.truth.Truth
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
@@ -150,11 +155,11 @@ class CoroutineViewTest {
   fun preDraws() = runBlocking<Unit> {
     val preDraws = view.preDraws(1) { true }
     view.viewTreeObserver.dispatchOnPreDraw();
-    Truth.assertThat(preDraws.poll()).isNotNull()
+    preDraws.poll().isNotNull()
 
     preDraws.cancel()
     view.viewTreeObserver.dispatchOnPreDraw();
-    Truth.assertThat(preDraws.poll()).isNull()
+    preDraws.poll().isNull()
   }
 
   @Test
@@ -165,19 +170,19 @@ class CoroutineViewTest {
       systemUiVisibilityChanges
     }
 
-    Truth.assertThat(systemUiVisibilityChanges.receive()).isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+    systemUiVisibilityChanges.receive().isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
 
     runBlocking(UI) {
       rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
     }
-    Truth.assertThat(systemUiVisibilityChanges.receive()).isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE)
+    systemUiVisibilityChanges.receive().isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE)
 
     systemUiVisibilityChanges.cancel()
     runBlocking(UI) {
       rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
     }
     delay(100)
-    Truth.assertThat(systemUiVisibilityChanges.poll()).isNull()
+    systemUiVisibilityChanges.poll().isNull()
   }
 
   @Ignore("todo")
@@ -186,9 +191,26 @@ class CoroutineViewTest {
     val touches = view.touches(1)
   }
 
-  @Ignore("todo")
-  @Test @UiThreadTest
+  @Test
   fun keys() = runBlocking<Unit> {
-    val keys = view.keys(1)
+    val editView = runBlocking(UI) {
+      EditText(rule.activity).also {
+        view.addView(it)
+      }
+    }
+    val keys = runBlocking(UI) {
+      editView.keys(1).also {
+        editView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R))
+      }
+    }
+    val event = keys.receive()
+    event.action.isEqualTo(KeyEvent.ACTION_DOWN)
+    event.keyCode.isEqualTo(KeyEvent.KEYCODE_R)
+
+    keys.cancel()
+    runBlocking(UI) {
+      editView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R))
+    }
+    keys.poll().isNull()
   }
 }
