@@ -11,7 +11,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * Create an channel of scroll events on [AbsListView]
  */
-inline fun AbsListView.scrollEvents(): ReceiveChannel<AbsListViewScrollEvent> = cancelableChannel {
+inline fun AbsListView.scrollEvents(capacity: Int = 0): ReceiveChannel<AbsListViewScrollEvent> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = object : AbsListView.OnScrollListener {
     private var currentScrollState = SCROLL_STATE_IDLE
 
@@ -34,7 +34,7 @@ inline fun AbsListView.scrollEvents(): ReceiveChannel<AbsListViewScrollEvent> = 
       ))
     }
   }
-  it {
+  onAfterClosed {
     setOnScrollListener(null)
   }
   setOnScrollListener(listener)

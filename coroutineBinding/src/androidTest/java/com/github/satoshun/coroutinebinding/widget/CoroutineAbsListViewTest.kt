@@ -9,10 +9,11 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import com.github.satoshun.coroutinebinding.ViewActivity
-import com.google.common.truth.Truth
+import com.github.satoshun.coroutinebinding.isEqualTo
+import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.uiRunBlocking
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
@@ -30,17 +31,26 @@ class CoroutineAbsListViewTest {
     rule.activity.rootView.addView(listView)
   }
 
-  @Test @UiThreadTest @Ignore
+  @Test
   fun scrollEvents() = runBlocking<Unit> {
-    val scrollEvents = listView.scrollEvents()
+    val scrollEvents = uiRunBlocking {
+      listView.scrollEvents(1)
+    }
     val event = scrollEvents.receive()
-    Truth.assertThat(event.totalItemCount).isEqualTo(100)
-    Truth.assertThat(event.firstVisibleItem).isEqualTo(0)
+    event.totalItemCount.isEqualTo(100)
+    event.firstVisibleItem.isEqualTo(0)
 
-    listView.smoothScrollByOffset(10)
+    uiRunBlocking {
+      listView.smoothScrollByOffset(10)
+    }
     val next = scrollEvents.receive()
-    Truth.assertThat(next.totalItemCount).isEqualTo(100)
-    Truth.assertThat(next.firstVisibleItem).isEqualTo(0)
+    next.totalItemCount.isEqualTo(100)
+
+    scrollEvents.cancel()
+    uiRunBlocking {
+      listView.smoothScrollByOffset(10)
+    }
+    scrollEvents.poll().isNull()
   }
 }
 
