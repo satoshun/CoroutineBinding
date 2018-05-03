@@ -36,7 +36,7 @@ class CoroutineAdapterViewTest {
 
   @Test
   fun itemSelections() = runBlocking<Unit> {
-    val itemSelections = spinner.itemSelections(1)
+    val itemSelections = spinner.itemSelections()
 
     uiRunBlocking { spinner.setSelection(2) }
     itemSelections.receive().isEqualTo(2)
@@ -51,7 +51,7 @@ class CoroutineAdapterViewTest {
 
   @Test
   fun selectionEvents() = runBlocking<Unit> {
-    val selectionEvents = listView.selectionEvents(1)
+    val selectionEvents = listView.selectionEvents()
 
     uiRunBlocking { listView.setSelection(2) }
     (selectionEvents.receive() as AdapterViewItemSelectionEvent).position.isEqualTo(2)
