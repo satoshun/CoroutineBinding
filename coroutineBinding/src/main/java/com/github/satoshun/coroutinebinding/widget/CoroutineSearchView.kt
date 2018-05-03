@@ -7,7 +7,10 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
-inline fun SearchView.queryTextChangeEvents(): ReceiveChannel<SearchViewQueryTextEvent> = cancelableChannel {
+/**
+ * Create an channel which emits the query text change events.
+ */
+inline fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<SearchViewQueryTextEvent> = cancelableChannel(capacity) {
   val listener = object : SearchView.OnQueryTextListener {
     override fun onQueryTextSubmit(query: String): Boolean {
       return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, query, true))
@@ -29,7 +32,10 @@ data class SearchViewQueryTextEvent(
     val isSubmitted: Boolean
 )
 
-inline fun SearchView.queryTextChanges(): ReceiveChannel<CharSequence> = cancelableChannel {
+/**
+ * Create an channel which emits the query text change events.
+ */
+inline fun SearchView.queryTextChanges(capacity: Int = 0): ReceiveChannel<CharSequence> = cancelableChannel(capacity) {
   val listener = object : SearchView.OnQueryTextListener {
     override fun onQueryTextSubmit(query: String): Boolean {
       return false
