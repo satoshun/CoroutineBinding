@@ -28,7 +28,7 @@ class CoroutineSearchViewTest {
 
   @Test
   fun queryTextChangeEvents() = runBlocking<Unit> {
-    val queryTextChangeEvents = uiRunBlocking { searchView.queryTextChangeEvents() }
+    val queryTextChangeEvents = uiRunBlocking { searchView.queryTextChangeEvents(2) }
 
     uiLaunch { searchView.setQuery("init", false) }
     queryTextChangeEvents.receive().queryText.isEqualTo("init")
@@ -44,6 +44,11 @@ class CoroutineSearchViewTest {
 
     // submit
     uiLaunch { searchView.setQuery("HHH", true) }
+    queryTextChangeEvents.receive().let {
+      it.queryText.isEqualTo("HHH")
+      it.isSubmitted.isFalse()
+    }
+    // submission
     queryTextChangeEvents.receive().let {
       it.queryText.isEqualTo("HHH")
       it.isSubmitted.isTrue()
