@@ -61,7 +61,7 @@ class CoroutineSearchViewTest {
 
   @Test
   fun queryTextChanges() = runBlocking<Unit> {
-    val queryTextChanges = uiRunBlocking { searchView.queryTextChanges() }
+    val queryTextChanges = uiRunBlocking { searchView.queryTextChanges(1) }
 
     uiLaunch { searchView.setQuery("init", false) }
     queryTextChanges.receive().isEqualTo("init")

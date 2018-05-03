@@ -12,14 +12,17 @@ import com.github.satoshun.coroutinebinding.view.Predicate
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * todo
+ * Create an channel of editorActions events.
  */
-inline fun TextView.editorActions(): ReceiveChannel<Int> = editorActions { true }
+inline fun TextView.editorActions(capacity: Int = 0): ReceiveChannel<Int> = editorActions(capacity) { true }
 
 /**
- * todo
+ * Create an channel of editorActions events.
  */
-inline fun TextView.editorActions(crossinline handled: Predicate<Int>): ReceiveChannel<Int> = cancelableChannel {
+inline fun TextView.editorActions(
+    capacity: Int = 0,
+    crossinline handled: Predicate<Int>
+): ReceiveChannel<Int> = cancelableChannel(capacity) {
   val listener = TextView.OnEditorActionListener { _, actionId, _ ->
     if (handled(actionId)) {
       safeOffer(actionId)
@@ -33,14 +36,18 @@ inline fun TextView.editorActions(crossinline handled: Predicate<Int>): ReceiveC
   setOnEditorActionListener(listener)
 }
 
-inline fun TextView.editorActionEvents(): ReceiveChannel<TextViewEditorActionEvent> = editorActionEvents { true }
+/**
+ * Create an channel of editorActions events.
+ */
+inline fun TextView.editorActionEvents(capacity: Int = 0): ReceiveChannel<TextViewEditorActionEvent> = editorActionEvents(capacity) { true }
 
 /**
- * todo
+ * Create an channel of editorActions events.
  */
 inline fun TextView.editorActionEvents(
+    capacity: Int = 0,
     crossinline handled: Predicate<Int>
-): ReceiveChannel<TextViewEditorActionEvent> = cancelableChannel {
+): ReceiveChannel<TextViewEditorActionEvent> = cancelableChannel(capacity) {
   val listener = TextView.OnEditorActionListener { v, actionId, event ->
     if (handled(actionId)) {
       safeOffer(TextViewEditorActionEvent(v, actionId, event))
@@ -57,13 +64,13 @@ inline fun TextView.editorActionEvents(
 data class TextViewEditorActionEvent(
     val view: TextView,
     val actionId: Int,
-    val keyEvent: KeyEvent
+    val keyEvent: KeyEvent?
 )
 
 /**
- * todo
+ * Create an channel of text change events.
  */
-inline fun TextView.textChanges(): ReceiveChannel<CharSequence> = cancelableChannel {
+inline fun TextView.textChanges(capacity: Int = 0): ReceiveChannel<CharSequence> = cancelableChannel(capacity) {
   val listener = object : TextWatcher {
     override fun afterTextChanged(s: Editable?) {
     }
@@ -82,9 +89,9 @@ inline fun TextView.textChanges(): ReceiveChannel<CharSequence> = cancelableChan
 }
 
 /**
- * todo
+ * Create an channel of text change events.
  */
-inline fun TextView.textChangeEvents(): ReceiveChannel<TextViewTextChangeEvent> = cancelableChannel {
+inline fun TextView.textChangeEvents(capacity: Int = 0): ReceiveChannel<TextViewTextChangeEvent> = cancelableChannel(capacity) {
   val listener = object : TextWatcher {
     override fun afterTextChanged(s: Editable?) {
     }
@@ -111,9 +118,9 @@ data class TextViewTextChangeEvent(
 )
 
 /**
- * todo
+ * Create an channel of before text change events.
  */
-inline fun TextView.beforeTextChangeEvents(): ReceiveChannel<TextViewBeforeTextChangeEvent> = cancelableChannel {
+inline fun TextView.beforeTextChangeEvents(capacity: Int = 0): ReceiveChannel<TextViewBeforeTextChangeEvent> = cancelableChannel(capacity) {
   val listener = object : TextWatcher {
     override fun afterTextChanged(s: Editable?) {
     }
@@ -140,9 +147,9 @@ data class TextViewBeforeTextChangeEvent(
 )
 
 /**
- * todo
+ * Create an channel of after text change events.
  */
-inline fun TextView.afterTextChangeEvents(): ReceiveChannel<TextViewAfterTextChangeEvent> = cancelableChannel {
+inline fun TextView.afterTextChangeEvents(capacity: Int = 0): ReceiveChannel<TextViewAfterTextChangeEvent> = cancelableChannel(capacity) {
   val listener = object : TextWatcher {
     override fun afterTextChanged(s: Editable?) {
       safeOffer(TextViewAfterTextChangeEvent(this@afterTextChangeEvents, s))

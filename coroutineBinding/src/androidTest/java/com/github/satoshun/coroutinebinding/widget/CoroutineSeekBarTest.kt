@@ -28,7 +28,7 @@ class CoroutineSeekBarTest {
   fun changes() = runBlocking<Unit> {
     // todo system action
 
-    val changes = uiRunBlocking { seekBar.changes() }
+    val changes = uiRunBlocking { seekBar.changes(1) }
 
     uiLaunch { seekBar.progress = 85 }
     changes.receive().isEqualTo(85)
