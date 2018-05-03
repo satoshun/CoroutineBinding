@@ -9,19 +9,19 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * todo
+ * Create an channel of hierarchy change events for [ViewGroup].
  */
-inline fun ViewGroup.changeEvents(): ReceiveChannel<ViewGroupHierarchyChangeEvent> = cancelableChannel {
+inline fun ViewGroup.changeEvents(capacity: Int = 0): ReceiveChannel<ViewGroupHierarchyChangeEvent> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = object : ViewGroup.OnHierarchyChangeListener {
     override fun onChildViewRemoved(parent: View, child: View) {
-      safeOffer(ViewGroupHierarchyChildViewAddEvent(this@changeEvents, child))
+      safeOffer(ViewGroupHierarchyChildViewRemoveEvent(this@changeEvents, child))
     }
 
     override fun onChildViewAdded(parent: View, child: View) {
-      safeOffer(ViewGroupHierarchyChildViewRemoveEvent(this@changeEvents, child))
+      safeOffer(ViewGroupHierarchyChildViewAddEvent(this@changeEvents, child))
     }
   }
-  it {
+  onAfterClosed {
     setOnHierarchyChangeListener(null)
   }
   setOnHierarchyChangeListener(listener)

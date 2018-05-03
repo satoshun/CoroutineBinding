@@ -6,18 +6,15 @@ import com.google.common.truth.Truth
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.runBlocking
+import kotlin.reflect.KClass
 
-inline fun Any?.isNull() {
-  Truth.assertThat(this).isNull()
-}
+inline fun Any?.isNull() = Truth.assertThat(this).isNull()
 
-inline fun Any?.isNotNull() {
-  Truth.assertThat(this).isNotNull()
-}
+inline fun Any?.isNotNull() = Truth.assertThat(this).isNotNull()
 
-inline fun Any?.isEqualTo(other: Any?) {
-  Truth.assertThat(this).isEqualTo(other)
-}
+inline fun Any?.isEqualTo(other: Any?) = Truth.assertThat(this).isEqualTo(other)
+
+inline fun Any?.isInstanceOf(other: KClass<*>) = Truth.assertThat(this).isInstanceOf(other.java)
 
 inline fun <T> T.verify() = com.nhaarman.mockito_kotlin.verify(this)
 
