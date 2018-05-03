@@ -12,7 +12,9 @@ import android.widget.ListView
 import android.widget.TextView
 import com.google.common.truth.Truth
 import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import kotlin.reflect.KClass
 
@@ -31,7 +33,11 @@ inline fun Boolean?.isFalse() = Truth.assertThat(this).isFalse()
 inline fun <T> T.verify() = com.nhaarman.mockito_kotlin.verify(this)
 
 inline fun <T> uiRunBlocking(noinline block: suspend CoroutineScope.() -> T): T {
-  return runBlocking(UI, block)
+  return runBlocking(context = UI, block = block)
+}
+
+inline fun uiLaunch(noinline block: suspend CoroutineScope.() -> Unit): Job {
+  return launch(context = UI, block = block)
 }
 
 inline fun ActivityTestRule<out Activity>.createListView(): Pair<ListView, ListAdapter> {

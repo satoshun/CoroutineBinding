@@ -7,9 +7,19 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
-inline fun RadioGroup.checkedChanges(): ReceiveChannel<Int> = cancelableChannel {
-  val listener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
-    safeOffer(checkedId)
+/**
+ * Create an channel which emits the checked events.
+ */
+inline fun RadioGroup.checkedChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) {
+  val listener = object : RadioGroup.OnCheckedChangeListener {
+    var lastChecked = -1
+
+    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+      if (lastChecked != checkedId) {
+        lastChecked = checkedId
+        safeOffer(checkedId)
+      }
+    }
   }
   it {
     setOnCheckedChangeListener(null)
