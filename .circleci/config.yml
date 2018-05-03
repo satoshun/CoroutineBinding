@@ -1,6 +1,30 @@
 version: 2
+references:
+  workspace: &workspace
+    ~/workspace
+  attach_debug_workspace: &attach_debug_workspace
+    attach_workspace:
+      at: *workspace
+  persist_debug_workspace: &persist_debug_workspace
+    persist_to_workspace:
+      root: *workspace
+      paths:
+        - app/build/intermediates
+        - app/build/outputs/androidTest-results
+        - app/build/outputs/apk
+        - app/build/test-results
+        - coroutineBinding/build/intermediates
+        - coroutineBinding/build/outputs/androidTest-results
+        - coroutineBinding/build/outputs/apk
+        - coroutineBinding/build/test-results
+  persist_firebase_workspace: &persist_firebase_workspace
+    persist_to_workspace:
+      root: *workspace
+      paths:
+        - firebase
 jobs:
   build:
+    working_directory: *workspace
     docker:
       - image: circleci/android:api-27-alpha
     environment:
@@ -18,7 +42,9 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutineBinding/build.gradle" }}
       - run:
           name: Build
-          command: ./gradlew test
+          command: ./gradlew :app:assembleDebug :coroutineBinding:assembleAndroidTest
+      - *persist_debug_workspace
+
   test_api_v25:
     docker:
       - image: circleci/android:api-27-alpha
@@ -49,11 +75,37 @@ jobs:
           vdestination: reports
       - store_test_results:
           path: app/build/test-results
+  firebase_test:
+    working_directory: *workspace
+    docker:
+      - image: google/cloud-sdk:latest
+    steps:
+      - *attach_debug_workspace
+      - run:
+          name: Create secret json
+          command: echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/client-secret.json
+      - run:
+          name: Set Project id
+          command: gcloud config set project $PROJECT_ID
+      - run:
+          name: Gcloud Login
+          command: gcloud auth activate-service-account $ACCOUNT --key-file ${HOME}/client-secret.json
+      - run:
+          name: Run test
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutineBinding/build/outputs/apk/androidTest/debug/coroutineBinding-debug-androidTest.apk --timeout 10m
+      # - *persist_firebase_workspace
+      - store_artifacts:
+          path: firebase/
+          destination: /firebase/
+
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
+      - firebase_test:
+          requires:
+            - build
       ## todo
       # - test_api_v25:
       #     requires:
