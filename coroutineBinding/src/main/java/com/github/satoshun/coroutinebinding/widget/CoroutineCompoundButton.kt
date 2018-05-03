@@ -8,9 +8,9 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * todo
+ * Create an channel of booleans representing the checked state of [CompoundButton].
  */
-inline fun CompoundButton.checkedChanges(): ReceiveChannel<Boolean> = cancelableChannel { onAfterClosed ->
+inline fun CompoundButton.checkedChanges(capacity: Int = 0): ReceiveChannel<Boolean> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = CompoundButton.OnCheckedChangeListener { _, isChecked ->
     safeOffer(isChecked)
   }

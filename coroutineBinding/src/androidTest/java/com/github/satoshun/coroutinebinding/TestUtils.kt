@@ -24,6 +24,10 @@ inline fun Any?.isEqualTo(other: Any?) = Truth.assertThat(this).isEqualTo(other)
 
 inline fun Any?.isInstanceOf(other: KClass<*>) = Truth.assertThat(this).isInstanceOf(other.java)
 
+inline fun Boolean?.isTrue() = Truth.assertThat(this).isTrue()
+
+inline fun Boolean?.isFalse() = Truth.assertThat(this).isFalse()
+
 inline fun <T> T.verify() = com.nhaarman.mockito_kotlin.verify(this)
 
 inline fun <T> uiRunBlocking(noinline block: suspend CoroutineScope.() -> T): T {

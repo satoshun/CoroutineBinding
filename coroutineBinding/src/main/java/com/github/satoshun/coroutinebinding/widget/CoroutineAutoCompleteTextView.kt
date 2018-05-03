@@ -9,9 +9,9 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * todo
+ * Create an channel of item click events on [AutoCompleteTextView]
  */
-inline fun AutoCompleteTextView.itemClickEvents(): ReceiveChannel<AdapterViewItemClickEvent> = cancelableChannel {
+inline fun AutoCompleteTextView.itemClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemClickEvent> = cancelableChannel(capacity) {
   val listener = AdapterView.OnItemClickListener { parent, view, position, id ->
     safeOffer(AdapterViewItemClickEvent(parent, view, position, id))
   }

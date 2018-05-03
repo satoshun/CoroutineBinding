@@ -12,7 +12,12 @@ class ViewActivity : Activity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    view = FrameLayout(this)
+    view = FrameLayout(this).apply {
+      layoutParams = ViewGroup.LayoutParams(
+          ViewGroup.LayoutParams.MATCH_PARENT,
+          ViewGroup.LayoutParams.MATCH_PARENT
+      )
+    }
     setContentView(view)
   }
 }

@@ -9,9 +9,9 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * todo
+ * Create an channel which emits the clicked item in [PopupMenu]s menu.
  */
-inline fun PopupMenu.itemClicks(): ReceiveChannel<MenuItem> = cancelableChannel { onAfterClosed ->
+inline fun PopupMenu.itemClicks(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = PopupMenu.OnMenuItemClickListener {
     safeOffer(it)
   }
@@ -22,9 +22,9 @@ inline fun PopupMenu.itemClicks(): ReceiveChannel<MenuItem> = cancelableChannel 
 }
 
 /**
- * todo
+ * Create an channel which emits the dismiss events.
  */
-inline fun PopupMenu.dismisses(): ReceiveChannel<Unit> = cancelableChannel { onAfterClosed ->
+inline fun PopupMenu.dismisses(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = PopupMenu.OnDismissListener {
     safeOffer(Unit)
   }
