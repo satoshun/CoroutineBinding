@@ -17,7 +17,6 @@ import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.test.R
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.runBlocking
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
@@ -66,7 +65,6 @@ class CoroutineAutoCompleteTextViewTest {
     onData(startsWith("Twenty"))
         .inRoot(withDecorView(not(`is`(rule.activity.window.decorView))))
         .perform(click())
-    delay(16)
-    itemClickEvents.poll().isNull()
+    itemClickEvents.receiveOrNull().isNull()
   }
 }
