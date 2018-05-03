@@ -54,6 +54,7 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - test_api_v25:
-          requires:
-            - build
+      ## todo
+      # - test_api_v25:
+      #     requires:
+      #       - build
