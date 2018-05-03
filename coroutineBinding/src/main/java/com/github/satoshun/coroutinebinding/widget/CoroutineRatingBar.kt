@@ -7,7 +7,10 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
-inline fun RatingBar.ratingChanges(): ReceiveChannel<Float> = cancelableChannel {
+/**
+ * Create an channel which emits the rating change events.
+ */
+inline fun RatingBar.ratingChanges(capacity: Int = 0): ReceiveChannel<Float> = cancelableChannel(capacity) {
   val listener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
     safeOffer(rating)
   }
@@ -17,7 +20,10 @@ inline fun RatingBar.ratingChanges(): ReceiveChannel<Float> = cancelableChannel 
   onRatingBarChangeListener = listener
 }
 
-inline fun RatingBar.ratingChangeEvents(): ReceiveChannel<RatingBarChangeEvent> = cancelableChannel {
+/**
+ * Create an channel which emits the rating change events.
+ */
+inline fun RatingBar.ratingChangeEvents(capacity: Int = 0): ReceiveChannel<RatingBarChangeEvent> = cancelableChannel(capacity) {
   val listener = RatingBar.OnRatingBarChangeListener { ratingBar, rating, fromUser ->
     safeOffer(RatingBarChangeEvent(ratingBar, rating, fromUser))
   }
