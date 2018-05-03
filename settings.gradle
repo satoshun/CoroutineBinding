@@ -1,2 +1,2 @@
-include ':coroutinebinding'
+include ':coroutineBinding'
 include ':app'

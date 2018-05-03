@@ -22,7 +22,7 @@ android {
 }
 
 dependencies {
-  implementation project(':coroutinebinding')
+  implementation project(':coroutineBinding')
 
   implementation Libs.kotlin
   implementation Libs.coroutine
