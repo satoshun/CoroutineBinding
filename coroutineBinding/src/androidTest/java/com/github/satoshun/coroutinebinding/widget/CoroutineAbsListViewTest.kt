@@ -2,13 +2,10 @@ package com.github.satoshun.coroutinebinding.widget
 
 import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
-import android.view.View
-import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.ListAdapter
 import android.widget.ListView
-import android.widget.TextView
 import com.github.satoshun.coroutinebinding.ViewActivity
+import com.github.satoshun.coroutinebinding.createListView
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.uiRunBlocking
@@ -25,9 +22,9 @@ class CoroutineAbsListViewTest {
 
   @Before @UiThreadTest
   fun setUp() {
-    adapter = MyListAdapter()
-    listView = ListView(rule.activity)
-    listView.adapter = adapter
+    val p = rule.createListView()
+    listView = p.first
+    adapter = p.second
     rule.activity.rootView.addView(listView)
   }
 
@@ -52,22 +49,4 @@ class CoroutineAbsListViewTest {
     }
     scrollEvents.poll().isNull()
   }
-}
-
-private class MyListAdapter : BaseAdapter() {
-  override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-    return TextView(parent.context).apply {
-      text = position.toString()
-    }
-  }
-
-  override fun getItem(position: Int): Any {
-    return position
-  }
-
-  override fun getItemId(position: Int): Long {
-    return position.toLong()
-  }
-
-  override fun getCount(): Int = 100
 }
