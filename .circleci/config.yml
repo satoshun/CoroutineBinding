@@ -13,10 +13,10 @@ references:
         - app/build/outputs/androidTest-results
         - app/build/outputs/apk
         - app/build/test-results
-        - coroutineBinding/build/intermediates
-        - coroutineBinding/build/outputs/androidTest-results
-        - coroutineBinding/build/outputs/apk
-        - coroutineBinding/build/test-results
+        - coroutinebinding/build/intermediates
+        - coroutinebinding/build/outputs/androidTest-results
+        - coroutinebinding/build/outputs/apk
+        - coroutinebinding/build/test-results
   persist_firebase_workspace: &persist_firebase_workspace
     persist_to_workspace:
       root: *workspace
@@ -32,49 +32,18 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutineBinding/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutineBinding/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}
       - run:
           name: Build
-          command: ./gradlew :app:assembleDebug :coroutineBinding:assembleAndroidTest
+          command: ./gradlew :app:assembleDebug :coroutinebinding:assembleAndroidTest
       - *persist_debug_workspace
-
-  test_api_v25:
-    docker:
-      - image: circleci/android:api-27-alpha
-    environment:
-      JVM_OPTS: -Xmx1600m
-    steps:
-      - checkout
-      - run:
-          name: Setup emulator
-          command: sdkmanager "system-images;android-25;google_apis;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-25;google_apis;armeabi-v7a"
-      - run:
-          name: Launch emulator
-          command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
-          background: true
-      - run:
-          name: Wait emulator
-          command: |
-              # wait for it to have booted
-              circle-android wait-for-boot
-              # unlock the emulator screen
-              sleep 30
-              adb shell input keyevent 82
-      - run:
-          name: Run Tests
-          command: ./gradlew :coroutineBinding:connectedDebugAndroidTest
-      - store_artifacts:
-          path: app/build/reports
-          vdestination: reports
-      - store_test_results:
-          path: app/build/test-results
   firebase_test:
     working_directory: *workspace
     docker:
@@ -92,7 +61,7 @@ jobs:
           command: gcloud auth activate-service-account $ACCOUNT --key-file ${HOME}/client-secret.json
       - run:
           name: Run test
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutineBinding/build/outputs/apk/androidTest/debug/coroutineBinding-debug-androidTest.apk --timeout 10m
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding/build/outputs/apk/androidTest/debug/coroutinebinding-debug-androidTest.apk --timeout 10m
       # - *persist_firebase_workspace
       - store_artifacts:
           path: firebase/
@@ -106,7 +75,3 @@ workflows:
       - firebase_test:
           requires:
             - build
-      ## todo
-      # - test_api_v25:
-      #     requires:
-      #       - build
