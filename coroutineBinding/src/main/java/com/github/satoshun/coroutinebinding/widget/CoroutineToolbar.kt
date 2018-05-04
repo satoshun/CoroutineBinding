@@ -11,10 +11,10 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * todo
+ * Create an channel which emits the clicked item in [View]s menu.
  */
 @RequiresApi(21)
-inline fun Toolbar.itemClicks(): ReceiveChannel<MenuItem> = cancelableChannel {
+inline fun Toolbar.itemClicks(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) {
   val listener = Toolbar.OnMenuItemClickListener {
     safeOffer(it)
   }
@@ -25,10 +25,10 @@ inline fun Toolbar.itemClicks(): ReceiveChannel<MenuItem> = cancelableChannel {
 }
 
 /**
- * todo
+ * Create an channel which emits on [View] navigation click events.
  */
 @RequiresApi(21)
-inline fun Toolbar.navigationClicks(): ReceiveChannel<Unit> = cancelableChannel {
+inline fun Toolbar.navigationClicks(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) {
   val listener = View.OnClickListener {
     safeOffer(Unit)
   }
