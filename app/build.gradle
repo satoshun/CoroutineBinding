@@ -29,8 +29,8 @@ dependencies {
   implementation Libs.coroutine
   implementation Libs.ui_coroutine
 
-  implementation 'com.android.support:appcompat-v7:27.1.1'
-  implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+  implementation Libs.appcompat_v7
+  implementation Libs.constraint_layout
 }
 
 kotlin {
