@@ -82,30 +82,23 @@ afterEvaluate { project ->
     sign configurations.archives
   }
 
-  task androidJavadocs(type: Javadoc) {
-    if (!project.plugins.hasPlugin('kotlin-android')) {
-      source = android.sourceSets.main.java.srcDirs
-    }
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    exclude '**/internal/*'
-
-    if (JavaVersion.current().isJava8Compatible()) {
-      options.addStringOption('Xdoclint:none', '-quiet')
-    }
+  dokka {
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/documentation"
   }
 
-  task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+  task dokkaJar(type: Jar, dependsOn: dokka) {
     classifier = 'javadoc'
-    from androidJavadocs.destinationDir
+    from dokka.outputDirectory
   }
 
-  task androidSourcesJar(type: Jar) {
+  task sourcesJar(type: Jar) {
     classifier = 'sources'
-    from android.sourceSets.main.java.sourceFiles
+    from android.sourceSets.main.java.source
   }
 
   artifacts {
-    archives androidSourcesJar
-    archives androidJavadocsJar
+    archives sourcesJar
+    archives dokkaJar
   }
 }
