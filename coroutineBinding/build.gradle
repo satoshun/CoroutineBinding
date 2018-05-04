@@ -38,3 +38,5 @@ dependencies {
 kotlin {
   experimental { coroutines 'enable' }
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
