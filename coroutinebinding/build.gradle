@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+  compileSdkVersion Vers.compile_sdk
+
+  defaultConfig {
+    minSdkVersion Vers.min_sdk
+    targetSdkVersion Vers.target_sdk
+    versionCode 1
+    versionName "1.0"
+
+    multiDexEnabled true // for test
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+
+  libraryVariants.all {
+    it.generateBuildConfig.enabled = false
+  }
+}
+
+dependencies {
+  implementation Libs.kotlin
+  implementation Libs.coroutine
+  implementation Libs.ui_coroutine
+
+  implementation Libs.support_annotations
+
+  androidTestImplementation Libs.junit
+  androidTestImplementation Libs.support_test
+  androidTestImplementation Libs.espresso
+  androidTestImplementation Libs.truth
+  androidTestImplementation Libs.mockito_kotlin
+  androidTestImplementation Libs.multidex
+}
+
+kotlin {
+  experimental { coroutines 'enable' }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
