@@ -26,10 +26,9 @@ android {
 }
 
 dependencies {
-  implementation Libs.kotlin
-  implementation Libs.coroutine
+  api Libs.kotlin
+  api Libs.coroutine
   implementation Libs.ui_coroutine
-
   implementation Libs.support_annotations
 
   androidTestImplementation Libs.junit
