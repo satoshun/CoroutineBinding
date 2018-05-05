@@ -1,2 +1,4 @@
 include ':coroutinebinding'
+include ':coroutinebinding-recyclerview-v7'
+include ':testing-utils'
 include ':app'

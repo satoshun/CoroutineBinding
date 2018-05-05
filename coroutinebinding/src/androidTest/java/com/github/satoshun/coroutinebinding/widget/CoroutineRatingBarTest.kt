@@ -29,10 +29,10 @@ class CoroutineRatingBarTest {
     val ratingChanges = uiRunBlocking { ratingBar.ratingChanges() }
 
     uiLaunch { ratingBar.rating = 1f }
-    ratingChanges.receive().isEqualTo(1f)
+    ratingChanges.receiveOrNull().isEqualTo(1f)
 
     uiLaunch { ratingBar.rating = 3f }
-    ratingChanges.receive().isEqualTo(3f)
+    ratingChanges.receiveOrNull().isEqualTo(3f)
 
     ratingChanges.cancel()
     uiLaunch { ratingBar.rating = 5f }

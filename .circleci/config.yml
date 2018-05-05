@@ -17,11 +17,28 @@ references:
         - coroutinebinding/build/outputs/androidTest-results
         - coroutinebinding/build/outputs/apk
         - coroutinebinding/build/test-results
+        - coroutinebinding-recyclerview-v7/build/intermediates
+        - coroutinebinding-recyclerview-v7/build/outputs/androidTest-results
+        - coroutinebinding-recyclerview-v7/build/outputs/apk
+        - coroutinebinding-recyclerview-v7/build/test-results
   persist_firebase_workspace: &persist_firebase_workspace
     persist_to_workspace:
       root: *workspace
       paths:
         - firebase
+  prepare_firebase_test_1: &prepare_firebase_test_1
+    run:
+      name: Create secret json
+      command: echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/client-secret.json
+  prepare_firebase_test_2: &prepare_firebase_test_2
+    run:
+      name: Set Project id
+      command: gcloud config set project $PROJECT_ID
+  prepare_firebase_test_3: &prepare_firebase_test_3
+    run:
+      name: Gcloud Login
+      command: gcloud auth activate-service-account $ACCOUNT --key-file ${HOME}/client-secret.json
+
 jobs:
   build:
     working_directory: *workspace
@@ -32,17 +49,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}
       - run:
           name: Build
-          command: ./gradlew :app:assembleDebug :coroutinebinding:assembleAndroidTest
+          command: ./gradlew :app:assembleDebug :coroutinebinding:assembleAndroidTest :coroutinebinding-recyclerview-v7:assembleAndroidTest
       - *persist_debug_workspace
   firebase_test:
     working_directory: *workspace
@@ -50,18 +67,29 @@ jobs:
       - image: google/cloud-sdk:latest
     steps:
       - *attach_debug_workspace
-      - run:
-          name: Create secret json
-          command: echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/client-secret.json
-      - run:
-          name: Set Project id
-          command: gcloud config set project $PROJECT_ID
-      - run:
-          name: Gcloud Login
-          command: gcloud auth activate-service-account $ACCOUNT --key-file ${HOME}/client-secret.json
+      - <<: *prepare_firebase_test_1
+      - <<: *prepare_firebase_test_2
+      - <<: *prepare_firebase_test_3
       - run:
           name: Run test
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding/build/outputs/apk/androidTest/debug/coroutinebinding-debug-androidTest.apk --timeout 10m
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding/build/outputs/apk/androidTest/debug/coroutinebinding-debug-androidTest.apk --timeout 5m
+      # - *persist_firebase_workspace
+      - store_artifacts:
+          path: firebase/
+          destination: /firebase/
+
+  firebase_test_recyclerview_v7:
+    working_directory: *workspace
+    docker:
+      - image: google/cloud-sdk:latest
+    steps:
+      - *attach_debug_workspace
+      - <<: *prepare_firebase_test_1
+      - <<: *prepare_firebase_test_2
+      - <<: *prepare_firebase_test_3
+      - run:
+          name: Run test
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding-recyclerview-v7/build/outputs/apk/androidTest/debug/coroutinebinding-recyclerview-v7-debug-androidTest.apk --timeout 5m
       # - *persist_firebase_workspace
       - store_artifacts:
           path: firebase/
@@ -73,5 +101,8 @@ workflows:
     jobs:
       - build
       - firebase_test:
+          requires:
+            - build
+      - firebase_test_recyclerview_v7:
           requires:
             - build

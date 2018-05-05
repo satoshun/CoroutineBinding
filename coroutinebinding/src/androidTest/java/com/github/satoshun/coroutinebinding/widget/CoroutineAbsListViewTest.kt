@@ -25,7 +25,7 @@ class CoroutineAbsListViewTest {
     val p = rule.createListView()
     listView = p.first
     adapter = p.second
-    rule.activity.rootView.addView(listView)
+    rule.activity.view.addView(listView)
   }
 
   @Test

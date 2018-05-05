@@ -1,20 +1,18 @@
-buildscript {
-  repositories {
-    google()
-    jcenter()
+subprojects {
+  buildscript {
+    repositories {
+      jcenter()
+      google()
+    }
   }
-  dependencies {
-    classpath Libs.android_plugin
-    classpath Libs.kotlin_plugin
-    classpath Libs.dokka_plugin
-  }
-}
 
-allprojects {
   repositories {
-    google()
     jcenter()
+    google()
   }
+
+  group = GROUP
+  version = VERSION_NAME
 }
 
 task clean(type: Delete) {

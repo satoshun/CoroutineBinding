@@ -12,9 +12,10 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.uiLaunch
+import com.github.satoshun.coroutinebinding.uiRunBlocking
 import com.google.common.truth.Truth
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Ignore
 import org.junit.Rule
@@ -154,35 +155,28 @@ class CoroutineViewTest {
   @Test @UiThreadTest
   fun preDraws() = runBlocking<Unit> {
     val preDraws = view.preDraws(1) { true }
-    view.viewTreeObserver.dispatchOnPreDraw();
+    view.viewTreeObserver.dispatchOnPreDraw()
     preDraws.poll().isNotNull()
 
     preDraws.cancel()
-    view.viewTreeObserver.dispatchOnPreDraw();
+    view.viewTreeObserver.dispatchOnPreDraw()
     preDraws.poll().isNull()
   }
 
   @Test
   fun systemUiVisibilityChanges() = runBlocking<Unit> {
-    val systemUiVisibilityChanges = runBlocking(UI) {
-      val systemUiVisibilityChanges = view.systemUiVisibilityChanges(1)
-      rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-      systemUiVisibilityChanges
-    }
+    val view = view
+    val systemUiVisibilityChanges = uiRunBlocking { view.systemUiVisibilityChanges() }
 
-    systemUiVisibilityChanges.receive().isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+    uiLaunch { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
+    systemUiVisibilityChanges.receiveOrNull().isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
 
-    runBlocking(UI) {
-      rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-    }
-    systemUiVisibilityChanges.receive().isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE)
+    uiLaunch { view.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE }
+    systemUiVisibilityChanges.receiveOrNull().isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE)
 
     systemUiVisibilityChanges.cancel()
-    runBlocking(UI) {
-      rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-    }
-    delay(100)
-    systemUiVisibilityChanges.poll().isNull()
+    uiLaunch { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
+    systemUiVisibilityChanges.receiveOrNull().isNull()
   }
 
   @Ignore("todo")

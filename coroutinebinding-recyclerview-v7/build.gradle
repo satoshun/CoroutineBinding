@@ -35,8 +35,8 @@ android {
 }
 
 dependencies {
-  api Libs.kotlin
-  api Libs.coroutine
+  api project(':coroutinebinding')
+  api Libs.recyclerview
   implementation Libs.ui_coroutine
   implementation Libs.support_annotations
 
@@ -45,7 +45,6 @@ dependencies {
   androidTestImplementation Libs.support_test
   androidTestImplementation Libs.espresso
   androidTestImplementation Libs.truth
-  androidTestImplementation Libs.mockito_kotlin
   androidTestImplementation Libs.multidex
 }
 

@@ -21,6 +21,7 @@ object Libs {
 
   val appcompat_v7 = "com.android.support:appcompat-v7:${Vers.support_lib}"
   val support_annotations = "com.android.support:support-annotations:${Vers.support_lib}"
+  val recyclerview = "com.android.support:recyclerview-v7:${Vers.support_lib}"
   val constraint_layout = "com.android.support.constraint:constraint-layout:1.1.0"
 
   val viewmodel = "android.arch.lifecycle:viewmodel:1.1.1"
