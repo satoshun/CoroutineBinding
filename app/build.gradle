@@ -1,3 +1,10 @@
+buildscript {
+  dependencies {
+    classpath Libs.android_plugin
+    classpath Libs.kotlin_plugin
+  }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -26,6 +33,7 @@ android {
 
 dependencies {
   implementation project(':coroutinebinding')
+  implementation project(':coroutinebinding-recyclerview-v7')
   // implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:0.0.1'
 
   implementation Libs.kotlin
