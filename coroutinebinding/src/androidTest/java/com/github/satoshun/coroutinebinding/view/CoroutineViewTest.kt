@@ -165,16 +165,17 @@ class CoroutineViewTest {
 
   @Test
   fun systemUiVisibilityChanges() = runBlocking<Unit> {
+    val view = view
     val systemUiVisibilityChanges = uiRunBlocking { view.systemUiVisibilityChanges() }
 
-    uiLaunch { rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
+    uiLaunch { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
     systemUiVisibilityChanges.receiveOrNull().isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
 
-    uiLaunch { rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE }
+    uiLaunch { view.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE }
     systemUiVisibilityChanges.receiveOrNull().isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE)
 
     systemUiVisibilityChanges.cancel()
-    uiLaunch { rule.activity.rootView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
+    uiLaunch { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
     systemUiVisibilityChanges.receiveOrNull().isNull()
   }
 
