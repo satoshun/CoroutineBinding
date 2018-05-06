@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isInstanceOf
+import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.support.v7.ViewActivity
 import com.github.satoshun.coroutinebinding.uiLaunch
@@ -70,6 +71,19 @@ class CoroutineRecyclerViewTest {
     scrollEvents.cancel()
     uiRunBlocking { view.scrollBy(0, 50) }
     scrollEvents.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun scrollStateChanges() = runBlocking<Unit> {
+    uiRunBlocking { view.adapter = Adapter() }
+    val scrollStateChanges = uiRunBlocking { view.scrollStateChanges(1) }
+
+    uiLaunch { view.scrollBy(0, 50) }
+    scrollStateChanges.poll().isNotNull()
+
+    scrollStateChanges.cancel()
+    uiRunBlocking { view.scrollBy(0, -50) }
+    scrollStateChanges.receiveOrNull().isNull()
   }
 }
 

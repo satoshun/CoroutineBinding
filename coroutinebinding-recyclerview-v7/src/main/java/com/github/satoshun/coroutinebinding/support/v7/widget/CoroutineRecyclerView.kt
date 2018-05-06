@@ -65,3 +65,19 @@ data class RecyclerViewScrollEvent(
     val dx: Int,
     val dy: Int
 )
+
+/**
+ * Create an observable of scroll state changed on [RecyclerView].
+ */
+@CheckResult
+inline fun RecyclerView.scrollStateChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) { onAfterClosed ->
+  val listener = object : RecyclerView.OnScrollListener() {
+    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+      safeOffer(newState)
+    }
+  }
+  onAfterClosed {
+    removeOnScrollListener(listener)
+  }
+  addOnScrollListener(listener)
+}
