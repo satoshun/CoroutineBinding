@@ -14,9 +14,9 @@ import com.github.satoshun.coroutinebinding.isInstanceOf
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.support.v7.ViewActivity
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,7 +41,7 @@ class CoroutineRecyclerViewTest {
   }
 
   @Test
-  fun childAttachStateChangeEvents() = runBlocking<Unit> {
+  fun childAttachStateChangeEvents() = testRunBlocking {
     val childAttachStateChangeEvents = uiRunBlocking { view.childAttachStateChangeEvents(1) }
 
     uiLaunch { view.adapter = SimpleAdapter(child) }
@@ -56,7 +56,7 @@ class CoroutineRecyclerViewTest {
   }
 
   @Test
-  fun scrollEvents() = runBlocking<Unit> {
+  fun scrollEvents() = testRunBlocking {
     uiRunBlocking {
       view.adapter = Adapter()
     }
@@ -74,12 +74,15 @@ class CoroutineRecyclerViewTest {
   }
 
   @Test
-  fun scrollStateChanges() = runBlocking<Unit> {
+  fun scrollStateChanges() = testRunBlocking {
     uiRunBlocking { view.adapter = Adapter() }
     val scrollStateChanges = uiRunBlocking { view.scrollStateChanges(1) }
 
-    uiLaunch { view.scrollBy(0, 50) }
-    scrollStateChanges.poll().isNotNull()
+    uiLaunch {
+      view.smoothScrollBy(0, 100)
+      view.stopScroll()
+    }
+    scrollStateChanges.receive().isNotNull()
 
     scrollStateChanges.cancel()
     uiRunBlocking { view.scrollBy(0, -50) }
