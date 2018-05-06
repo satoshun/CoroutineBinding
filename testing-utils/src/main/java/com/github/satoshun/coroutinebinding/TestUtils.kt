@@ -16,6 +16,10 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.withTimeout
+import java.util.concurrent.TimeUnit
+import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.experimental.EmptyCoroutineContext
 import kotlin.reflect.KClass
 
 inline fun Any?.isNull() = Truth.assertThat(this).isNull()
@@ -31,6 +35,15 @@ inline fun Boolean?.isTrue() = Truth.assertThat(this).isTrue()
 inline fun Boolean?.isFalse() = Truth.assertThat(this).isFalse()
 
 inline fun <T> T.verify() = com.nhaarman.mockito_kotlin.verify(this)
+
+inline fun testRunBlocking(
+    context: CoroutineContext = EmptyCoroutineContext,
+    noinline block: suspend CoroutineScope.() -> Unit
+) {
+  return runBlocking(context = context, block = {
+    withTimeout(10, TimeUnit.SECONDS) { block() }
+  })
+}
 
 inline fun <T> uiRunBlocking(noinline block: suspend CoroutineScope.() -> T): T {
   return runBlocking(context = UI, block = block)
