@@ -43,3 +43,25 @@ data class RecyclerViewChildDetachEvent(
     override val view: RecyclerView,
     override val child: View
 ) : RecyclerViewChildAttachStateChangeEvent(view, child)
+
+/**
+ * Create an observable of scroll events on [RecyclerView].
+ */
+@CheckResult
+inline fun RecyclerView.scrollEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewScrollEvent> = cancelableChannel(capacity) { onAfterClosed ->
+  val listener = object : RecyclerView.OnScrollListener() {
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+      safeOffer(RecyclerViewScrollEvent(recyclerView, dx, dy))
+    }
+  }
+  onAfterClosed {
+    removeOnScrollListener(listener)
+  }
+  addOnScrollListener(listener)
+}
+
+data class RecyclerViewScrollEvent(
+    val view: RecyclerView,
+    val dx: Int,
+    val dy: Int
+)
