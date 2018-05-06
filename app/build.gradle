@@ -34,7 +34,8 @@ android {
 dependencies {
   implementation project(':coroutinebinding')
   implementation project(':coroutinebinding-recyclerview-v7')
-  // implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:0.0.1'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:0.0.2'
+  //  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-recyclerview-v7:0.0.2'
 
   implementation Libs.kotlin
   implementation Libs.coroutine
