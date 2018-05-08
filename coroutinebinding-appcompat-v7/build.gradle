@@ -1,0 +1,55 @@
+buildscript {
+  dependencies {
+    classpath Libs.android_plugin
+    classpath Libs.kotlin_plugin
+    classpath Libs.dokka_plugin
+  }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.dokka-android'
+
+android {
+  compileSdkVersion Vers.compile_sdk
+
+  defaultConfig {
+    minSdkVersion Vers.min_sdk
+    targetSdkVersion Vers.target_sdk
+    versionCode 1
+    versionName "1.0"
+
+    multiDexEnabled true // for test
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+
+  libraryVariants.all {
+    it.generateBuildConfig.enabled = false
+  }
+}
+
+dependencies {
+  api project(':coroutinebinding')
+  api Libs.appcompat_v7
+  implementation Libs.ui_coroutine
+  implementation Libs.support_annotations
+
+  androidTestImplementation project(":testing-utils")
+  androidTestImplementation Libs.junit
+  androidTestImplementation Libs.support_test
+  androidTestImplementation Libs.espresso
+  androidTestImplementation Libs.truth
+  androidTestImplementation Libs.multidex
+}
+
+kotlin {
+  experimental { coroutines 'enable' }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
