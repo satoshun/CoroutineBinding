@@ -15,13 +15,10 @@ android {
 
   defaultConfig {
     minSdkVersion Vers.min_sdk
-    targetSdkVersion Vers.target_sdk
-    versionCode 1
-    versionName "1.0"
 
     multiDexEnabled true // for test
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "com.github.satoshun.coroutinebinding.MyTestRunner"
   }
 
   compileOptions {
