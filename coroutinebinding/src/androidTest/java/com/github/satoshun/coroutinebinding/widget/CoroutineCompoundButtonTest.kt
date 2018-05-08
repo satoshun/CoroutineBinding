@@ -8,8 +8,8 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +27,7 @@ class CoroutineCompoundButtonTest {
   }
 
   @Test
-  fun checkedChanges() = runBlocking<Unit> {
+  fun checkedChanges() = testRunBlocking {
     val checkedChanges = uiRunBlocking {
       compoundButton.checkedChanges(1)
     }

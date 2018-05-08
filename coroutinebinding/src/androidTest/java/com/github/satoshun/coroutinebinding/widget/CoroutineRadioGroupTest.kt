@@ -7,9 +7,9 @@ import android.widget.RadioGroup
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -32,7 +32,7 @@ class CoroutineRadioGroupTest {
   }
 
   @Test
-  fun checkedChanges() = runBlocking<Unit> {
+  fun checkedChanges() = testRunBlocking {
     val checkedChanges = uiRunBlocking {
       radioGroup.checkedChanges()
     }

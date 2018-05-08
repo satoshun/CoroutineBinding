@@ -8,8 +8,8 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.createListView
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,7 +29,7 @@ class CoroutineAbsListViewTest {
   }
 
   @Test
-  fun scrollEvents() = runBlocking<Unit> {
+  fun scrollEvents() = testRunBlocking {
     val scrollEvents = uiRunBlocking {
       listView.scrollEvents(1)
     }

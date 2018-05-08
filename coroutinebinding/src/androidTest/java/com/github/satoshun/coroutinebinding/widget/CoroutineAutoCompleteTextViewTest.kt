@@ -16,6 +16,7 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.test.R
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import kotlinx.coroutines.experimental.runBlocking
 import org.hamcrest.CoreMatchers.`is`
@@ -42,7 +43,7 @@ class CoroutineAutoCompleteTextViewTest {
   }
 
   @Test
-  fun itemClickEvents() = runBlocking<Unit> {
+  fun itemClickEvents() = testRunBlocking {
     val itemClickEvents = uiRunBlocking {
       autoCompleteTextView.threshold = 1
       val values = listOf("Two", "Three", "Twenty")

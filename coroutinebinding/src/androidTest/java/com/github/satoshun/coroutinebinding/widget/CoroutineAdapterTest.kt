@@ -7,6 +7,7 @@ import android.widget.BaseAdapter
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Rule
 import org.junit.Test
@@ -15,7 +16,7 @@ class CoroutineAdapterTest {
   @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
 
   @Test
-  fun dataChanges() = runBlocking<Unit> {
+  fun dataChanges() = testRunBlocking {
     val testAdapter = TestAdapter()
     val dataChanges = testAdapter.dataChanges(1)
 

@@ -6,9 +6,9 @@ import android.widget.SeekBar
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,7 +25,7 @@ class CoroutineSeekBarTest {
   }
 
   @Test
-  fun changes() = runBlocking<Unit> {
+  fun changes() = testRunBlocking {
     // todo system action
 
     val changes = uiRunBlocking { seekBar.changes(1) }
@@ -39,19 +39,19 @@ class CoroutineSeekBarTest {
   }
 
   @Test
-  fun userChanges() = runBlocking<Unit> {
+  fun userChanges() = testRunBlocking {
     // todo
     val userChanges = uiRunBlocking { seekBar.userChanges() }
   }
 
   @Test
-  fun systemChanges() = runBlocking<Unit> {
+  fun systemChanges() = testRunBlocking {
     // todo
     val systemChanges = uiRunBlocking { seekBar.systemChanges() }
   }
 
   @Test
-  fun changeEvents() = runBlocking<Unit> {
+  fun changeEvents() = testRunBlocking {
     // todo
     val changeEvents = uiRunBlocking { seekBar.changeEvents() }
   }
