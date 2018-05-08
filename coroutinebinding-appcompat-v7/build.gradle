@@ -33,7 +33,7 @@ android {
 
 dependencies {
   api project(':coroutinebinding')
-  api Libs.recyclerview
+  api Libs.appcompat_v7
   implementation Libs.ui_coroutine
   implementation Libs.support_annotations
 

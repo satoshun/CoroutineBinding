@@ -6,9 +6,9 @@ import android.widget.RatingBar
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,7 +25,7 @@ class CoroutineRatingBarTest {
   }
 
   @Test
-  fun ratingChanges() = runBlocking<Unit> {
+  fun ratingChanges() = testRunBlocking {
     val ratingChanges = uiRunBlocking { ratingBar.ratingChanges() }
 
     uiLaunch { ratingBar.rating = 1f }
@@ -40,7 +40,7 @@ class CoroutineRatingBarTest {
   }
 
   @Test
-  fun ratingChangeEvents() = runBlocking<Unit> {
+  fun ratingChangeEvents() = testRunBlocking {
     val ratingChangeEvents = uiRunBlocking { ratingBar.ratingChangeEvents() }
 
     uiLaunch { ratingBar.rating = 1f }

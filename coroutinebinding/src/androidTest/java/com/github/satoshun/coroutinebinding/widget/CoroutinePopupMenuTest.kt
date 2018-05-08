@@ -7,7 +7,7 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
-import kotlinx.coroutines.experimental.runBlocking
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +23,7 @@ class CoroutinePopupMenuTest {
   }
 
   @Test @UiThreadTest
-  fun itemClicks() = runBlocking<Unit> {
+  fun itemClicks() = testRunBlocking {
     val menu = popupMenu.menu
     val item1 = menu.add(0, 1, 0, "Hi")
     val item2 = menu.add(0, 2, 0, "Hey")
@@ -42,7 +42,7 @@ class CoroutinePopupMenuTest {
   }
 
   @Test @UiThreadTest
-  fun dismisses() = runBlocking<Unit> {
+  fun dismisses() = testRunBlocking {
     val dismisses = popupMenu.dismisses(1)
 
     popupMenu.show()

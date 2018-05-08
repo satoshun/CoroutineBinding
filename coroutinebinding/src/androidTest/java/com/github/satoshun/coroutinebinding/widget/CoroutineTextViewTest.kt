@@ -8,9 +8,9 @@ import android.widget.TextView
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +27,7 @@ class CoroutineTextViewTest {
   }
 
   @Test
-  fun editorActions() = runBlocking<Unit> {
+  fun editorActions() = testRunBlocking {
     val editorActions = uiRunBlocking { textView.editorActions(1) }
 
     uiLaunch { textView.onEditorAction(IME_ACTION_GO) }
@@ -42,7 +42,7 @@ class CoroutineTextViewTest {
   }
 
   @Test
-  fun editorActionEvents() = runBlocking<Unit> {
+  fun editorActionEvents() = testRunBlocking {
     val editorActionEvents = uiRunBlocking { textView.editorActionEvents(1) }
 
     uiLaunch { textView.onEditorAction(IME_ACTION_GO) }
@@ -57,7 +57,7 @@ class CoroutineTextViewTest {
   }
 
   @Test
-  fun textChanges() = runBlocking<Unit> {
+  fun textChanges() = testRunBlocking {
     val textChanges = uiRunBlocking { textView.textChanges(1) }
 
     uiLaunch { textView.text = "HHHHH" }
@@ -72,7 +72,7 @@ class CoroutineTextViewTest {
   }
 
   @Test
-  fun textChangeEvents() = runBlocking<Unit> {
+  fun textChangeEvents() = testRunBlocking {
     val textChangeEvents = uiRunBlocking { textView.textChangeEvents(1) }
 
     uiLaunch { textView.text = "HHHHH" }
@@ -87,7 +87,7 @@ class CoroutineTextViewTest {
   }
 
   @Test
-  fun beforeTextChangeEvents() = runBlocking<Unit> {
+  fun beforeTextChangeEvents() = testRunBlocking {
     val before = uiRunBlocking {
       textView.text = "first"
       textView.beforeTextChangeEvents()
@@ -105,7 +105,7 @@ class CoroutineTextViewTest {
   }
 
   @Test
-  fun afterTextChangeEvents() = runBlocking<Unit> {
+  fun afterTextChangeEvents() = testRunBlocking {
     val after = uiRunBlocking {
       textView.text = "first"
       textView.afterTextChangeEvents(1)

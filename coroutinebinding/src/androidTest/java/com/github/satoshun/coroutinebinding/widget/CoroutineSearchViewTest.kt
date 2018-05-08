@@ -8,9 +8,9 @@ import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +27,7 @@ class CoroutineSearchViewTest {
   }
 
   @Test
-  fun queryTextChangeEvents() = runBlocking<Unit> {
+  fun queryTextChangeEvents() = testRunBlocking {
     val queryTextChangeEvents = uiRunBlocking { searchView.queryTextChangeEvents(2) }
 
     uiLaunch { searchView.setQuery("init", false) }
@@ -60,7 +60,7 @@ class CoroutineSearchViewTest {
   }
 
   @Test
-  fun queryTextChanges() = runBlocking<Unit> {
+  fun queryTextChanges() = testRunBlocking {
     val queryTextChanges = uiRunBlocking { searchView.queryTextChanges(1) }
 
     uiLaunch { searchView.setQuery("init", false) }

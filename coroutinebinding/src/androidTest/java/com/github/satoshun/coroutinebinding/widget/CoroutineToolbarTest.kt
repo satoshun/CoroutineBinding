@@ -10,8 +10,8 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Rule
@@ -34,7 +34,7 @@ class CoroutineToolbarTest {
   }
 
   @Test
-  fun itemClicks() = runBlocking<Unit> {
+  fun itemClicks() = testRunBlocking {
     val (menu, item1, item2) = uiRunBlocking {
       val menu = toolbar.menu
       val item1 = menu.add(0, 1, 0, "Hi")
@@ -56,7 +56,7 @@ class CoroutineToolbarTest {
   }
 
   @Test
-  fun navigationClicks() = runBlocking<Unit> {
+  fun navigationClicks() = testRunBlocking {
     val navigationClicks = uiRunBlocking { toolbar.navigationClicks(1) }
 
     onView(withContentDescription(NAVIGATION_CONTENT_DESCRIPTION))

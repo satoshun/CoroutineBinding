@@ -9,8 +9,8 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.createListView
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,7 +35,7 @@ class CoroutineAdapterViewTest {
   }
 
   @Test
-  fun itemSelections() = runBlocking<Unit> {
+  fun itemSelections() = testRunBlocking {
     val itemSelections = spinner.itemSelections()
 
     uiRunBlocking { spinner.setSelection(2) }
@@ -50,7 +50,7 @@ class CoroutineAdapterViewTest {
   }
 
   @Test
-  fun selectionEvents() = runBlocking<Unit> {
+  fun selectionEvents() = testRunBlocking {
     val selectionEvents = listView.selectionEvents()
 
     uiRunBlocking { listView.setSelection(2) }
@@ -65,7 +65,7 @@ class CoroutineAdapterViewTest {
   }
 
   @Test
-  fun itemClicks() = runBlocking<Unit> {
+  fun itemClicks() = testRunBlocking {
     val itemClicks = listView.itemClicks(1)
 
     uiRunBlocking { listView.performItemClick(listView.getChildAt(2), 2, 2) }
@@ -80,7 +80,7 @@ class CoroutineAdapterViewTest {
   }
 
   @Test
-  fun itemClickEvents() = runBlocking<Unit> {
+  fun itemClickEvents() = testRunBlocking {
     val itemClickEvents = listView.itemClickEvents(1)
 
     uiRunBlocking { listView.performItemClick(listView.getChildAt(2), 2, 2) }
@@ -95,13 +95,13 @@ class CoroutineAdapterViewTest {
   }
 
   @Test
-  fun itemLongClicks() = runBlocking<Unit> {
+  fun itemLongClicks() = testRunBlocking {
     // todo
     val itemLongClicks = listView.itemLongClicks(1)
   }
 
   @Test
-  fun itemLongClickEvents() = runBlocking<Unit> {
+  fun itemLongClickEvents() = testRunBlocking {
     // todo
     val itemLongClickEvents = listView.itemLongClickEvents(1)
   }
