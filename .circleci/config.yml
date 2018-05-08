@@ -17,10 +17,17 @@ references:
         - coroutinebinding/build/outputs/androidTest-results
         - coroutinebinding/build/outputs/apk
         - coroutinebinding/build/test-results
+        - coroutinebinding/build/reports
+        - coroutinebinding-appcompat-v7/build/intermediates
+        - coroutinebinding-appcompat-v7/build/outputs/androidTest-results
+        - coroutinebinding-appcompat-v7/build/outputs/apk
+        - coroutinebinding-appcompat-v7/build/test-results
+        - coroutinebinding-appcompat-v7/build/reports
         - coroutinebinding-recyclerview-v7/build/intermediates
         - coroutinebinding-recyclerview-v7/build/outputs/androidTest-results
         - coroutinebinding-recyclerview-v7/build/outputs/apk
         - coroutinebinding-recyclerview-v7/build/test-results
+        - coroutinebinding-recyclerview-v7/build/reports
   persist_firebase_workspace: &persist_firebase_workspace
     persist_to_workspace:
       root: *workspace
@@ -49,17 +56,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-appcompat-v7/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-appcompat-v7/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}
       - run:
           name: Build
-          command: ./gradlew :app:assembleDebug :coroutinebinding:assembleAndroidTest :coroutinebinding-recyclerview-v7:assembleAndroidTest
+          command: ./gradlew :app:assembleDebug :coroutinebinding:assembleAndroidTest :coroutinebinding-appcompat-v7:assembleAndroidTest :coroutinebinding-recyclerview-v7:assembleAndroidTest
       - *persist_debug_workspace
   firebase_test:
     working_directory: *workspace
@@ -77,7 +84,22 @@ jobs:
       - store_artifacts:
           path: firebase/
           destination: /firebase/
-
+  firebase_test_appcompat_v7:
+    working_directory: *workspace
+    docker:
+      - image: google/cloud-sdk:latest
+    steps:
+      - *attach_debug_workspace
+      - <<: *prepare_firebase_test_1
+      - <<: *prepare_firebase_test_2
+      - <<: *prepare_firebase_test_3
+      - run:
+          name: Run test
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding-appcompat-v7/build/outputs/apk/androidTest/debug/coroutinebinding-appcompat-v7-debug-androidTest.apk --timeout 5m
+      # - *persist_firebase_workspace
+      - store_artifacts:
+          path: firebase/
+          destination: /firebase/
   firebase_test_recyclerview_v7:
     working_directory: *workspace
     docker:
