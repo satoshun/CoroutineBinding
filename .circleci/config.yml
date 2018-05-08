@@ -125,6 +125,9 @@ workflows:
       - firebase_test:
           requires:
             - build
-      - firebase_test_recyclerview_v7:
+      - firebase_test_appcompat_v7:
           requires:
             - build
+      # - firebase_test_recyclerview_v7:
+      #     requires:
+      #       - build
