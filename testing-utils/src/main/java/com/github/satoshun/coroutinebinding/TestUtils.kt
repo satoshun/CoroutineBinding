@@ -23,16 +23,12 @@ import kotlin.coroutines.experimental.EmptyCoroutineContext
 import kotlin.reflect.KClass
 
 inline fun Any?.isNull() = Truth.assertThat(this).isNull()
-
 inline fun Any?.isNotNull() = Truth.assertThat(this).isNotNull()
-
 inline fun Any?.isEqualTo(other: Any?) = Truth.assertThat(this).isEqualTo(other)
-
 inline fun Any?.isInstanceOf(other: KClass<*>) = Truth.assertThat(this).isInstanceOf(other.java)
-
 inline fun Boolean?.isTrue() = Truth.assertThat(this).isTrue()
-
 inline fun Boolean?.isFalse() = Truth.assertThat(this).isFalse()
+inline fun Any?.isSame(other: Any?) = Truth.assertThat(this).isSameAs(other)
 
 inline fun <T> T.verify() = com.nhaarman.mockito_kotlin.verify(this)
 
