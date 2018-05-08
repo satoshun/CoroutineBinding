@@ -4,10 +4,11 @@ import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import android.widget.PopupMenu
 import com.github.satoshun.coroutinebinding.ViewActivity
-import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isSame
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,30 +32,29 @@ class CoroutinePopupMenuTest {
     val itemClicks = popupMenu.itemClicks(1)
 
     menu.performIdentifierAction(2, 0)
-    itemClicks.receive().isEqualTo(item2)
+    itemClicks.receive().isSame(item2)
 
     menu.performIdentifierAction(1, 0)
-    itemClicks.receive().isEqualTo(item1)
+    itemClicks.receive().isSame(item1)
 
     itemClicks.cancel()
     menu.performIdentifierAction(2, 0)
     itemClicks.receiveOrNull().isNull()
   }
 
-  @Test @UiThreadTest
+  @Test
   fun dismisses() = testRunBlocking {
-    val dismisses = popupMenu.dismisses(1)
+    val dismisses = uiRunBlocking { popupMenu.dismisses(1) }
 
-    popupMenu.show()
+    uiRunBlocking { popupMenu.show() }
     dismisses.poll().isNull()
-
-    popupMenu.dismiss()
-    dismisses.poll().isNotNull()
+    uiRunBlocking { popupMenu.dismiss() }
+    dismisses.receiveOrNull().isNotNull()
 
     dismisses.cancel()
 
-    popupMenu.show()
-    popupMenu.dismiss()
-    dismisses.poll().isNull()
+    uiRunBlocking { popupMenu.show() }
+    uiRunBlocking { popupMenu.dismiss() }
+    dismisses.receiveOrNull().isNull()
   }
 }

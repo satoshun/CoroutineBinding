@@ -17,11 +17,11 @@ inline fun <E> cancelableChannel(
 ): ReceiveChannel<E> {
   if (capacity == 0) {
     val channel = OnCancelableChannel<E>()
-    channel.init({ channel.onAfterClosed = it })
+    channel.init { channel.onAfterClosed = it }
     return channel
   }
   val channel = ArrayOnCancelableChannel<E>(capacity)
-  channel.init({ channel.onAfterClosed = it })
+  channel.init { channel.onAfterClosed = it }
   return channel
 }
 

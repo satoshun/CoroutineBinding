@@ -28,22 +28,16 @@ class CoroutineCompoundButtonTest {
 
   @Test
   fun checkedChanges() = testRunBlocking {
-    val checkedChanges = uiRunBlocking {
-      compoundButton.checkedChanges(1)
-    }
+    val checkedChanges = uiRunBlocking { compoundButton.checkedChanges(1) }
 
-    uiRunBlocking {
-      compoundButton.isChecked = true
-    }
+    uiRunBlocking { compoundButton.isChecked = true }
     checkedChanges.receive().isTrue()
 
-    uiRunBlocking {
-      compoundButton.isChecked = false
-    }
+    uiRunBlocking { compoundButton.isChecked = false }
     checkedChanges.receive().isFalse()
 
     checkedChanges.cancel()
-    compoundButton.isChecked = false
+    uiRunBlocking { compoundButton.isChecked = false }
     checkedChanges.receiveOrNull().isNull()
   }
 }

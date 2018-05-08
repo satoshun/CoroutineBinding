@@ -55,11 +55,11 @@ class CoroutinePopupMenuTest {
     dismisses.poll().isNull()
 
     uiRunBlocking { popupMenu.dismiss() }
-    dismisses.poll().isNotNull()
+    dismisses.receiveOrNull().isNotNull()
 
     dismisses.cancel()
     uiRunBlocking { popupMenu.show() }
     uiRunBlocking { popupMenu.dismiss() }
-    dismisses.poll().isNull()
+    dismisses.receiveOrNull().isNull()
   }
 }
