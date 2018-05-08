@@ -1,3 +1,4 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.satoshun.coroutinebinding/coroutinebinding/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.satoshun.coroutinebinding/coroutinebinding)
 [![CircleCI](https://circleci.com/gh/satoshun/CoroutineBinding/tree/master.svg?style=svg)](https://circleci.com/gh/satoshun/CoroutineBinding/tree/master)
 
 # CoroutineBinding
