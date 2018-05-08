@@ -3,6 +3,7 @@ package com.github.satoshun.coroutinebinding.support.v7.widget
 import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.widget.PopupMenu
+import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
 import com.github.satoshun.coroutinebinding.support.v7.ViewActivity
@@ -44,5 +45,21 @@ class CoroutinePopupMenuTest {
     itemClicks.cancel()
     uiLaunch { menu.performIdentifierAction(2, 0) }
     itemClicks.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun dismisses() = testRunBlocking {
+    val dismisses = uiRunBlocking { popupMenu.dismisses(1) }
+
+    uiRunBlocking { popupMenu.show() }
+    dismisses.poll().isNull()
+
+    uiRunBlocking { popupMenu.dismiss() }
+    dismisses.poll().isNotNull()
+
+    dismisses.cancel()
+    uiRunBlocking { popupMenu.show() }
+    uiRunBlocking { popupMenu.dismiss() }
+    dismisses.poll().isNull()
   }
 }
