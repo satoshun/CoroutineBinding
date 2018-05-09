@@ -9,7 +9,7 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * Create an channel which emits the clicked item in views menu.
+ * Create an channel of SearchViewQueryTextEvent query text events on view.
  */
 @CheckResult
 inline fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<SearchViewQueryTextEvent> = cancelableChannel(capacity) { onAfterClosed ->
@@ -33,3 +33,23 @@ data class SearchViewQueryTextEvent(
     val queryText: CharSequence,
     val isSubmitted: Boolean
 )
+
+/**
+ * Create an channel of character sequences for query text changes on view.
+ */
+@CheckResult
+inline fun SearchView.queryTextChange(capacity: Int = 0): ReceiveChannel<CharSequence> = cancelableChannel(capacity) { onAfterClosed ->
+  val listener = object : SearchView.OnQueryTextListener {
+    override fun onQueryTextSubmit(query: String?): Boolean {
+      return false
+    }
+
+    override fun onQueryTextChange(newText: String): Boolean {
+      return safeOffer(newText)
+    }
+  }
+  onAfterClosed {
+    setOnQueryTextListener(null)
+  }
+  setOnQueryTextListener(listener)
+}

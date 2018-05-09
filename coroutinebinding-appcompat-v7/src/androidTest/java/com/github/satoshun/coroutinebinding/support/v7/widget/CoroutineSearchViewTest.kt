@@ -49,4 +49,25 @@ class CoroutineSearchViewTest {
     uiLaunch { searchView.setQuery("Hoi", false) }
     queryTextChangeEvents.receiveOrNull().isNull()
   }
+
+  @Test
+  fun queryTextChange() = testRunBlocking {
+    uiRunBlocking { searchView.setQuery("init", false) }
+    val queryTextChange = uiRunBlocking { searchView.queryTextChange(2) }
+
+    uiLaunch { searchView.setQuery("Hi", false) }
+    queryTextChange.receive().isEqualTo("Hi")
+    uiLaunch { searchView.setQuery("Hoi", false) }
+    queryTextChange.receive().isEqualTo("Hoi")
+    uiLaunch { searchView.setQuery(null, false) }
+    queryTextChange.receive().isEqualTo("")
+
+    uiLaunch { searchView.setQuery("Hello", true) }
+    // change event
+    queryTextChange.receive().isEqualTo("Hello")
+
+    queryTextChange.cancel()
+    uiLaunch { searchView.setQuery("Hoi", false) }
+    queryTextChange.receiveOrNull().isNull()
+  }
 }
