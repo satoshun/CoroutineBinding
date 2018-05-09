@@ -2,7 +2,7 @@
 
 package com.github.satoshun.coroutinebinding.design.widget
 
-import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.NavigationView
 import android.view.MenuItem
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
@@ -11,15 +11,15 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * Create an channel which emits the selected item in view.
  */
-inline fun BottomNavigationView.itemSelections(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) { onAfterClosed ->
-  val listener = BottomNavigationView.OnNavigationItemSelectedListener {
+inline fun NavigationView.itemSelections(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) { onAfterClosed ->
+  val listener = NavigationView.OnNavigationItemSelectedListener {
     safeOffer(it)
     true
   }
   onAfterClosed {
-    setOnNavigationItemSelectedListener(null)
+    setNavigationItemSelectedListener(null)
   }
-  setOnNavigationItemSelectedListener(listener)
+  setNavigationItemSelectedListener(listener)
 
   // emit initial item
   val size = menu.size()

@@ -1,6 +1,6 @@
 package com.github.satoshun.coroutinebinding.design.widget
 
-import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.NavigationView
 import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.view.ContextThemeWrapper
@@ -15,15 +15,15 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class CoroutineBottomNavigationViewTest {
+class CoroutineNavigationViewTest {
   @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
 
-  private lateinit var view: BottomNavigationView
+  private lateinit var view: NavigationView
 
   @Before @UiThreadTest
   fun setUp() {
     val context = ContextThemeWrapper(rule.activity, R.style.Theme_AppCompat)
-    view = BottomNavigationView(context)
+    view = NavigationView(context)
     rule.activity.view.addView(view)
   }
 
