@@ -2,7 +2,7 @@ object Vers {
   val compile_sdk = 27
   val min_sdk = 15
   val target_sdk = 27
-  val agp = "3.2.0-alpha14"
+  val agp = "3.1.2"
 
   val kotlin = "1.2.41"
   val couroutine = "0.22.5"
@@ -19,6 +19,7 @@ object Libs {
   val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Vers.couroutine}"
   val ui_coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Vers.couroutine}"
 
+  val design = "com.android.support:design:${Vers.support_lib}"
   val appcompat_v7 = "com.android.support:appcompat-v7:${Vers.support_lib}"
   val support_annotations = "com.android.support:support-annotations:${Vers.support_lib}"
   val recyclerview = "com.android.support:recyclerview-v7:${Vers.support_lib}"
