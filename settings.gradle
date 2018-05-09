@@ -1,5 +1,6 @@
 include ':coroutinebinding'
 include ':coroutinebinding-appcompat-v7'
 include ':coroutinebinding-recyclerview-v7'
+include ':coroutinebinding-design'
 include ':testing-utils'
 include ':app'
