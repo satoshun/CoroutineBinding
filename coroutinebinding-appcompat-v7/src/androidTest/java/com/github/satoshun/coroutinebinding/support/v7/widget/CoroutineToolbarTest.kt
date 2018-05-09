@@ -1,9 +1,13 @@
 package com.github.satoshun.coroutinebinding.support.v7.widget
 
 import android.support.test.annotation.UiThreadTest
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.matcher.ViewMatchers.withContentDescription
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.view.ContextThemeWrapper
 import android.support.v7.widget.Toolbar
+import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
 import com.github.satoshun.coroutinebinding.support.v7.ViewActivity
@@ -14,6 +18,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+private const val NAVIGATION_CONTENT_DESCRIPTION = "desc"
+
 class CoroutineToolbarTest {
   @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
 
@@ -23,6 +29,8 @@ class CoroutineToolbarTest {
   fun setUp() {
     val context = ContextThemeWrapper(rule.activity, R.style.Theme_AppCompat)
     toolbar = Toolbar(context)
+    toolbar.navigationContentDescription = NAVIGATION_CONTENT_DESCRIPTION
+    toolbar.setNavigationIcon(android.R.drawable.sym_def_app_icon)
     rule.activity.view.addView(toolbar)
   }
 
@@ -47,5 +55,20 @@ class CoroutineToolbarTest {
     itemClicks.cancel()
     uiRunBlocking { menu.performIdentifierAction(2, 0) }
     itemClicks.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun navigationClicks() = testRunBlocking {
+    val navigationClicks = uiRunBlocking { toolbar.navigationClicks(1) }
+
+    onView(withContentDescription(NAVIGATION_CONTENT_DESCRIPTION)).perform(click())
+    navigationClicks.receiveOrNull().isNotNull()
+
+    onView(withContentDescription(NAVIGATION_CONTENT_DESCRIPTION)).perform(click())
+    navigationClicks.receiveOrNull().isNotNull()
+
+    navigationClicks.cancel()
+    onView(withContentDescription(NAVIGATION_CONTENT_DESCRIPTION)).perform(click())
+    navigationClicks.receiveOrNull().isNull()
   }
 }
