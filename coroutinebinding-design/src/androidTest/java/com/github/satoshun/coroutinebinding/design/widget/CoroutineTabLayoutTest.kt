@@ -4,6 +4,7 @@ import android.support.design.widget.TabLayout
 import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import com.github.satoshun.coroutinebinding.design.ViewActivity
+import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
 import com.github.satoshun.coroutinebinding.testRunBlocking
@@ -46,5 +47,22 @@ class CoroutineTabLayoutTest {
     selections.cancel()
     uiRunBlocking { tab1.select() }
     selections.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun selectionEvents() = testRunBlocking {
+    val selectionEvents = uiRunBlocking { view.selectionEvents(2) }
+    selectionEvents.receive().isEqualTo(TabLayoutSelectionSelectedEvent(view, tab1))
+
+    uiRunBlocking { tab2.select() }
+    selectionEvents.receive().isEqualTo(TabLayoutSelectionUnselectedEvent(view, tab1))
+    selectionEvents.receive().isEqualTo(TabLayoutSelectionSelectedEvent(view, tab2))
+    // reselection
+    uiRunBlocking { tab2.select() }
+    selectionEvents.receiveOrNull().isEqualTo(TabLayoutSelectionReselectedEvent(view, tab2))
+
+    selectionEvents.cancel()
+    uiRunBlocking { tab1.select() }
+    selectionEvents.receiveOrNull().isNull()
   }
 }

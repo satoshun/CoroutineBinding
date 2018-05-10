@@ -27,12 +27,13 @@ class CoroutineSwipeDismissBehaviorTest {
   @Before @UiThreadTest
   fun setUp() {
     parent = CoordinatorLayout(rule.activity)
+    view = View(rule.activity)
     view.layoutParams = ViewGroup.LayoutParams(100, 100)
     view.id = 1
     parent.addView(view)
     rule.activity.view.addView(parent)
 
-    uiRunBlocking { (view.layoutParams as CoordinatorLayout.LayoutParams).behavior = SwipeDismissBehavior<View>() }
+    (view.layoutParams as CoordinatorLayout.LayoutParams).behavior = SwipeDismissBehavior<View>()
   }
 
   @Test
