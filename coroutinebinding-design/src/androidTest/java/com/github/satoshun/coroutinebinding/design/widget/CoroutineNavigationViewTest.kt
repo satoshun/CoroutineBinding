@@ -38,6 +38,8 @@ class CoroutineNavigationViewTest {
       )
     }
     val itemSelections = uiRunBlocking { view.itemSelections(1) }
+
+    uiRunBlocking { menu.performIdentifierAction(1, 0) }
     itemSelections.receive().isSame(item1)
 
     uiLaunch { menu.performIdentifierAction(2, 0) }

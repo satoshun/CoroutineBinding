@@ -37,6 +37,7 @@ class CoroutineBottomNavigationViewTest {
           menu.add(0, 2, 0, "Hey")
       )
     }
+    uiRunBlocking { menu.performIdentifierAction(1, 0) }
     val itemSelections = uiRunBlocking { view.itemSelections(1) }
     itemSelections.receive().isSame(item1)
 

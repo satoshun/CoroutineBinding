@@ -3,6 +3,8 @@
     package="com.github.satoshun.coroutinebinding.design">
 
   <application>
-    <activity android:name=".ViewActivity"/>
+    <activity
+        android:name=".ViewActivity"
+        android:theme="@style/Theme.AppCompat"/>
   </application>
 </manifest>
