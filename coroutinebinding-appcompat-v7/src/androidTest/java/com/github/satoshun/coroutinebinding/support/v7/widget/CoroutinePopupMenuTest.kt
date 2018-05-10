@@ -34,7 +34,7 @@ class CoroutinePopupMenuTest {
           menu.add(0, 2, 0, "Hey")
       )
     }
-    val itemClicks = uiRunBlocking { popupMenu.itemClicks() }
+    val itemClicks = uiRunBlocking { popupMenu.itemClicks(1) }
 
     uiLaunch { menu.performIdentifierAction(2, 0) }
     itemClicks.receive().isSame(item2)
