@@ -10,12 +10,22 @@ Coroutine binding APIs for Android UI widgets from the platform and support libr
 
 Platform bindings:
 ```groovy
-implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:0.0.1'
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:{latest-version}'
+```
+
+'appcompat-v7' library bindings:
+```groovy
+not released
+```
+
+'design' library bindings:
+```groovy
+not released yet
 ```
 
 'recyclerview-v7' library bindings:
 ```groovy
-implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-recyclerview-v7:0.0.2'
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-recyclerview-v7:{latest-version}'
 ```
 
 ## etc

@@ -71,20 +71,20 @@ inline fun SeekBar.changeEvents(): ReceiveChannel<SeekBarChangeEvent> = cancelab
   setOnSeekBarChangeListener(listener)
 }
 
-sealed class SeekBarChangeEvent(
-    open val view: SeekBar
-)
+sealed class SeekBarChangeEvent {
+  abstract val view: SeekBar
+}
 
 data class SeekBarProgressChangeEvent(
     override val view: SeekBar,
     val progress: Int,
     val fromUser: Boolean
-) : SeekBarChangeEvent(view)
+) : SeekBarChangeEvent()
 
 data class SeekBarStartChangeEvent(
     override val view: SeekBar
-) : SeekBarChangeEvent(view)
+) : SeekBarChangeEvent()
 
 data class SeekBarStopChangeEvent(
     override val view: SeekBar
-) : SeekBarChangeEvent(view)
+) : SeekBarChangeEvent()
