@@ -32,12 +32,11 @@ class CoroutineSwipeDismissBehaviorTest {
     view.id = 1
     parent.addView(view)
     rule.activity.view.addView(parent)
-
-    (view.layoutParams as CoordinatorLayout.LayoutParams).behavior = SwipeDismissBehavior<View>()
   }
 
   @Test
   fun dismisses() = testRunBlocking {
+    uiRunBlocking { (view.layoutParams as CoordinatorLayout.LayoutParams).behavior = SwipeDismissBehavior<View>() }
     val dismisses = uiRunBlocking { view.dismisses(1) }
 
     onView(withId(1)).perform(swipeRight())

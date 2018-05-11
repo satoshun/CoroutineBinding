@@ -27,17 +27,17 @@ inline fun ViewGroup.changeEvents(capacity: Int = 0): ReceiveChannel<ViewGroupHi
   setOnHierarchyChangeListener(listener)
 }
 
-sealed class ViewGroupHierarchyChangeEvent(
-    val view: ViewGroup,
-    val child: View
-)
+sealed class ViewGroupHierarchyChangeEvent {
+  abstract val view: ViewGroup
+  abstract val child: View
+}
 
 class ViewGroupHierarchyChildViewAddEvent(
-    view: ViewGroup,
-    child: View
-) : ViewGroupHierarchyChangeEvent(view, child)
+    override val view: ViewGroup,
+    override val child: View
+) : ViewGroupHierarchyChangeEvent()
 
 class ViewGroupHierarchyChildViewRemoveEvent(
-    view: ViewGroup,
-    child: View
-) : ViewGroupHierarchyChangeEvent(view, child)
+    override val view: ViewGroup,
+    override val child: View
+) : ViewGroupHierarchyChangeEvent()

@@ -29,20 +29,20 @@ inline fun RecyclerView.childAttachStateChangeEvents(capacity: Int = 0): Receive
   addOnChildAttachStateChangeListener(listener)
 }
 
-sealed class RecyclerViewChildAttachStateChangeEvent(
-    open val view: RecyclerView,
-    open val child: View
-)
+sealed class RecyclerViewChildAttachStateChangeEvent {
+  abstract val view: RecyclerView
+  abstract val child: View
+}
 
 data class RecyclerViewChildAttachEvent(
     override val view: RecyclerView,
     override val child: View
-) : RecyclerViewChildAttachStateChangeEvent(view, child)
+) : RecyclerViewChildAttachStateChangeEvent()
 
 data class RecyclerViewChildDetachEvent(
     override val view: RecyclerView,
     override val child: View
-) : RecyclerViewChildAttachStateChangeEvent(view, child)
+) : RecyclerViewChildAttachStateChangeEvent()
 
 /**
  * Create an observable of scroll events on [RecyclerView].
