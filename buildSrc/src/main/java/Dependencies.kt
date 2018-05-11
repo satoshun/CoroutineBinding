@@ -20,6 +20,7 @@ object Libs {
   val ui_coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Vers.couroutine}"
 
   val design = "com.android.support:design:${Vers.support_lib}"
+  val support_v4_core = "com.android.support:support-core-ui:${Vers.support_lib}"
   val appcompat_v7 = "com.android.support:appcompat-v7:${Vers.support_lib}"
   val support_annotations = "com.android.support:support-annotations:${Vers.support_lib}"
   val recyclerview = "com.android.support:recyclerview-v7:${Vers.support_lib}"
