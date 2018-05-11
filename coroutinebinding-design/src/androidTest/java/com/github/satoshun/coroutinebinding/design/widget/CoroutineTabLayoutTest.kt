@@ -32,7 +32,6 @@ class CoroutineTabLayoutTest {
   @Test
   fun selections() = testRunBlocking {
     val selections = uiRunBlocking { view.selections(1) }
-    selections.receive().isSame(tab1)
 
     uiRunBlocking { tab2.select() }
     selections.receive().isSame(tab2)
@@ -52,7 +51,6 @@ class CoroutineTabLayoutTest {
   @Test
   fun selectionEvents() = testRunBlocking {
     val selectionEvents = uiRunBlocking { view.selectionEvents(2) }
-    selectionEvents.receive().isEqualTo(TabLayoutSelectionSelectedEvent(view, tab1))
 
     uiRunBlocking { tab2.select() }
     selectionEvents.receive().isEqualTo(TabLayoutSelectionUnselectedEvent(view, tab1))

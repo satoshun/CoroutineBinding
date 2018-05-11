@@ -27,11 +27,11 @@ inline fun TabLayout.selections(capacity: Int = 0): ReceiveChannel<TabLayout.Tab
   }
   addOnTabSelectedListener(listener)
 
-  // initialize
-  val index = selectedTabPosition
-  if (index != -1) {
-    safeOffer(getTabAt(index)!!)
-  }
+  // todo this initialize code make sense on Channel?
+//  val index = selectedTabPosition
+//  if (index != -1) {
+//    safeOffer(getTabAt(index)!!)
+//  }
 }
 
 /**
@@ -56,29 +56,29 @@ inline fun TabLayout.selectionEvents(capacity: Int = 0): ReceiveChannel<TabLayou
   }
   addOnTabSelectedListener(listener)
 
-  // initialize
-  val index = selectedTabPosition
-  if (index != -1) {
-    safeOffer(TabLayoutSelectionSelectedEvent(this@selectionEvents, getTabAt(index)!!))
-  }
+  // todo this initialize code make sense on Channel?
+//  val index = selectedTabPosition
+//  if (index != -1) {
+//    safeOffer(TabLayoutSelectionSelectedEvent(this@selectionEvents, getTabAt(index)!!))
+//  }
 }
 
-sealed class TabLayoutSelectionEvent(
-    val view: TabLayout,
-    val tab: TabLayout.Tab
-)
+sealed class TabLayoutSelectionEvent {
+  abstract val view: TabLayout
+  abstract val tab: TabLayout.Tab
+}
 
-class TabLayoutSelectionSelectedEvent(
-    view: TabLayout,
-    tab: TabLayout.Tab
-) : TabLayoutSelectionEvent(view, tab)
+data class TabLayoutSelectionSelectedEvent(
+    override val view: TabLayout,
+    override val tab: TabLayout.Tab
+) : TabLayoutSelectionEvent()
 
-class TabLayoutSelectionUnselectedEvent(
-    view: TabLayout,
-    tab: TabLayout.Tab
-) : TabLayoutSelectionEvent(view, tab)
+data class TabLayoutSelectionUnselectedEvent(
+    override val view: TabLayout,
+    override val tab: TabLayout.Tab
+) : TabLayoutSelectionEvent()
 
-class TabLayoutSelectionReselectedEvent(
-    view: TabLayout,
-    tab: TabLayout.Tab
-) : TabLayoutSelectionEvent(view, tab)
+data class TabLayoutSelectionReselectedEvent(
+    override val view: TabLayout,
+    override val tab: TabLayout.Tab
+) : TabLayoutSelectionEvent()
