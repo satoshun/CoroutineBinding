@@ -37,13 +37,12 @@ class CoroutineDrawerLayoutTest {
     }
     view.addView(main)
 
-    drawer = FrameLayout(rule.activity).apply {
-      layoutParams = ViewGroup.LayoutParams(
-          300,
-          ViewGroup.LayoutParams.MATCH_PARENT
-      )
-    }
-    view.addView(drawer)
+    drawer = FrameLayout(rule.activity)
+    view.addView(drawer, DrawerLayout.LayoutParams(
+        300,
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        Gravity.RIGHT
+    ))
 
     rule.activity.view.addView(view)
   }
