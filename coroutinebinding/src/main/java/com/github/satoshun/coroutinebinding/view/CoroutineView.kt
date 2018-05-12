@@ -263,8 +263,8 @@ inline fun View.preDraws(
 @RequiresApi(23)
 @CheckResult
 inline fun View.scrollChangeEvents(): ReceiveChannel<ViewScrollChangeEvent> = cancelableChannel {
-  val listener = View.OnScrollChangeListener { _, scrollX, scrollY, oldScrollX, oldScrollY ->
-    safeOffer(ViewScrollChangeEvent(this@scrollChangeEvents, scrollX, scrollY, oldScrollX, oldScrollY))
+  val listener = View.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+    safeOffer(ViewScrollChangeEvent(v, scrollX, scrollY, oldScrollX, oldScrollY))
   }
   it {
     setOnScrollChangeListener(null)

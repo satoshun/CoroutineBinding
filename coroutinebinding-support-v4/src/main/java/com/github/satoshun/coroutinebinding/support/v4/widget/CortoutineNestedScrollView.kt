@@ -13,7 +13,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 @CheckResult
 fun NestedScrollView.scrollChangeEvents(capacity: Int = 0): ReceiveChannel<ViewScrollChangeEvent> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-    safeOffer(ViewScrollChangeEvent(this@scrollChangeEvents, scrollX, scrollY, oldScrollX, oldScrollY))
+    safeOffer(ViewScrollChangeEvent(v, scrollX, scrollY, oldScrollX, oldScrollY))
   }
   onAfterClosed {
     setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener)

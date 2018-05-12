@@ -20,26 +20,26 @@ import org.junit.Test
 class CortoutineNestedScrollViewTest {
   @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
 
-  private lateinit var scrollView: ScrollView
   private lateinit var view: NestedScrollView
   private lateinit var emptyView: FrameLayout
 
   @Before @UiThreadTest
   fun setUp() {
-    scrollView = ScrollView(rule.activity).apply {
-      layoutParams = ViewGroup.LayoutParams(
-          ViewGroup.LayoutParams.MATCH_PARENT,
-          ViewGroup.LayoutParams.MATCH_PARENT
-      )
-    }
+    val scrollView = ScrollView(rule.activity)
     emptyView = FrameLayout(rule.activity)
     view = NestedScrollView(rule.activity)
 
     val emptyParams = ViewGroup.LayoutParams(50000, 50000)
 
     view.addView(emptyView, emptyParams)
-    scrollView.addView(view, emptyParams)
-    rule.activity.view.addView(scrollView)
+    scrollView.addView(view, ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    ))
+    rule.activity.view.addView(scrollView, ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    ))
   }
 
   @Test
