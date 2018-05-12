@@ -13,6 +13,11 @@ Platform bindings:
 implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:{latest-version}'
 ```
 
+'support-v4' library bindings:
+```groovy
+not released
+```
+
 'appcompat-v7' library bindings:
 ```groovy
 not released
