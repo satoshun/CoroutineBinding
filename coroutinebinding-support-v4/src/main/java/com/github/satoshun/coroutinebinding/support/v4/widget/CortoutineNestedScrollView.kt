@@ -16,7 +16,8 @@ fun NestedScrollView.scrollChangeEvents(capacity: Int = 0): ReceiveChannel<ViewS
     safeOffer(ViewScrollChangeEvent(v, scrollX, scrollY, oldScrollX, oldScrollY))
   }
   onAfterClosed {
-    setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener)
+    val l: NestedScrollView.OnScrollChangeListener? = null
+    setOnScrollChangeListener(l)
   }
   setOnScrollChangeListener(listener)
 }

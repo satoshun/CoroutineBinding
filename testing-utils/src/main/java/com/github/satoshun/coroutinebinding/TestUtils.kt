@@ -28,6 +28,8 @@ inline fun Any?.isEqualTo(other: Any?) = Truth.assertThat(this).isEqualTo(other)
 inline fun Any?.isInstanceOf(other: KClass<*>) = Truth.assertThat(this).isInstanceOf(other.java)
 inline fun Boolean?.isTrue() = Truth.assertThat(this).isTrue()
 inline fun Boolean?.isFalse() = Truth.assertThat(this).isFalse()
+inline fun Float?.isGreaterThan(other: Float) = Truth.assertThat(this).isGreaterThan(other)
+inline fun Float?.isLessThan(other: Float) = Truth.assertThat(this).isLessThan(other)
 inline fun Any?.isSame(other: Any?) = Truth.assertThat(this).isSameAs(other)
 
 inline fun <T> T.verify() = com.nhaarman.mockito_kotlin.verify(this)
