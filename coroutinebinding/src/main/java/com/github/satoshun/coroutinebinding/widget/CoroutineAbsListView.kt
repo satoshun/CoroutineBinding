@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.widget
 
 import android.widget.AbsListView
@@ -9,9 +7,9 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * Create an channel of scroll events on [AbsListView]
+ * Create an channel of scroll events on AbsListView.
  */
-inline fun AbsListView.scrollEvents(capacity: Int = 0): ReceiveChannel<AbsListViewScrollEvent> = cancelableChannel(capacity) { onAfterClosed ->
+fun AbsListView.scrollEvents(capacity: Int = 0): ReceiveChannel<AbsListViewScrollEvent> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = object : AbsListView.OnScrollListener {
     private var currentScrollState = SCROLL_STATE_IDLE
 
@@ -40,6 +38,9 @@ inline fun AbsListView.scrollEvents(capacity: Int = 0): ReceiveChannel<AbsListVi
   setOnScrollListener(listener)
 }
 
+/**
+ * A scroll event on a AbsListView
+ */
 data class AbsListViewScrollEvent(
     val scrollState: Int,
     val firstVisibleItem: Int,

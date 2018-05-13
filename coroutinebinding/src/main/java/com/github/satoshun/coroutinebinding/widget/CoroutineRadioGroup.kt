@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.widget
 
 import android.widget.RadioGroup
@@ -10,7 +8,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * Create an channel which emits the checked events.
  */
-inline fun RadioGroup.checkedChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) {
+fun RadioGroup.checkedChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) {
   val listener = object : RadioGroup.OnCheckedChangeListener {
     var lastChecked = -1
 

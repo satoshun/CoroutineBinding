@@ -19,10 +19,7 @@ inline fun TextView.editorActions(capacity: Int = 0): ReceiveChannel<Int> = edit
 /**
  * Create an channel of editorActions events.
  */
-inline fun TextView.editorActions(
-    capacity: Int = 0,
-    crossinline handled: Predicate<Int>
-): ReceiveChannel<Int> = cancelableChannel(capacity) {
+fun TextView.editorActions(capacity: Int = 0, handled: Predicate<Int>): ReceiveChannel<Int> = cancelableChannel(capacity) {
   val listener = TextView.OnEditorActionListener { _, actionId, _ ->
     if (handled(actionId)) {
       safeOffer(actionId)
@@ -44,10 +41,7 @@ inline fun TextView.editorActionEvents(capacity: Int = 0): ReceiveChannel<TextVi
 /**
  * Create an channel of editorActions events.
  */
-inline fun TextView.editorActionEvents(
-    capacity: Int = 0,
-    crossinline handled: Predicate<Int>
-): ReceiveChannel<TextViewEditorActionEvent> = cancelableChannel(capacity) {
+fun TextView.editorActionEvents(capacity: Int = 0, handled: Predicate<Int>): ReceiveChannel<TextViewEditorActionEvent> = cancelableChannel(capacity) {
   val listener = TextView.OnEditorActionListener { v, actionId, event ->
     if (handled(actionId)) {
       safeOffer(TextViewEditorActionEvent(v, actionId, event))
@@ -109,6 +103,9 @@ inline fun TextView.textChangeEvents(capacity: Int = 0): ReceiveChannel<TextView
   addTextChangedListener(listener)
 }
 
+/**
+ * A text-change event on a view.
+ */
 data class TextViewTextChangeEvent(
     val view: TextView,
     val text: CharSequence,
@@ -138,6 +135,9 @@ inline fun TextView.beforeTextChangeEvents(capacity: Int = 0): ReceiveChannel<Te
   addTextChangedListener(listener)
 }
 
+/**
+ * A before text-change event on a view.
+ */
 data class TextViewBeforeTextChangeEvent(
     val view: TextView,
     val text: CharSequence,
@@ -167,6 +167,9 @@ inline fun TextView.afterTextChangeEvents(capacity: Int = 0): ReceiveChannel<Tex
   addTextChangedListener(listener)
 }
 
+/**
+ * An after text-change event on a view.
+ */
 data class TextViewAfterTextChangeEvent(
     val view: TextView,
     val editable: Editable?

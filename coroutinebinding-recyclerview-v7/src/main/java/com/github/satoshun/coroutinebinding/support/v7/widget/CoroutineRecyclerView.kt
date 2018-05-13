@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.support.v7.widget
 
 import android.support.annotation.CheckResult
@@ -10,10 +8,10 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * Create an channel of child attach state change events on [RecyclerView].
+ * Create an channel of child attach state change events on RecyclerView.
  */
 @CheckResult
-inline fun RecyclerView.childAttachStateChangeEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewChildAttachStateChangeEvent> = cancelableChannel(capacity) { onAfterClosed ->
+fun RecyclerView.childAttachStateChangeEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewChildAttachStateChangeEvent> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = object : RecyclerView.OnChildAttachStateChangeListener {
     override fun onChildViewDetachedFromWindow(view: View) {
       safeOffer(RecyclerViewChildDetachEvent(this@childAttachStateChangeEvents, view))
@@ -29,26 +27,35 @@ inline fun RecyclerView.childAttachStateChangeEvents(capacity: Int = 0): Receive
   addOnChildAttachStateChangeListener(listener)
 }
 
+/**
+ * A child attach state event on RecyclerView
+ */
 sealed class RecyclerViewChildAttachStateChangeEvent {
   abstract val view: RecyclerView
   abstract val child: View
 }
 
+/**
+ * A child attach event on RecyclerView
+ */
 data class RecyclerViewChildAttachEvent(
     override val view: RecyclerView,
     override val child: View
 ) : RecyclerViewChildAttachStateChangeEvent()
 
+/**
+ * A child detach event on RecyclerView
+ */
 data class RecyclerViewChildDetachEvent(
     override val view: RecyclerView,
     override val child: View
 ) : RecyclerViewChildAttachStateChangeEvent()
 
 /**
- * Create an observable of scroll events on [RecyclerView].
+ * Create an observable of scroll events on RecyclerView.
  */
 @CheckResult
-inline fun RecyclerView.scrollEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewScrollEvent> = cancelableChannel(capacity) { onAfterClosed ->
+fun RecyclerView.scrollEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewScrollEvent> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = object : RecyclerView.OnScrollListener() {
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
       safeOffer(RecyclerViewScrollEvent(recyclerView, dx, dy))
@@ -60,6 +67,9 @@ inline fun RecyclerView.scrollEvents(capacity: Int = 0): ReceiveChannel<Recycler
   addOnScrollListener(listener)
 }
 
+/**
+ * A scroll event on RecyclerView.
+ */
 data class RecyclerViewScrollEvent(
     val view: RecyclerView,
     val dx: Int,
@@ -67,10 +77,10 @@ data class RecyclerViewScrollEvent(
 )
 
 /**
- * Create an observable of scroll state changed on [RecyclerView].
+ * Create an observable of scroll state changed on RecyclerView.
  */
 @CheckResult
-inline fun RecyclerView.scrollStateChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) { onAfterClosed ->
+fun RecyclerView.scrollStateChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = object : RecyclerView.OnScrollListener() {
     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
       safeOffer(newState)

@@ -52,4 +52,3 @@ fun <E> AbstractChannel<E>.safeOffer(value: E): Boolean {
     false
   }
 }
-

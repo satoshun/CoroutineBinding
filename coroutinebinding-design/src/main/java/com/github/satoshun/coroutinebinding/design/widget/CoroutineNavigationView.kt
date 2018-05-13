@@ -1,7 +1,6 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.design.widget
 
+import android.support.annotation.CheckResult
 import android.support.design.widget.NavigationView
 import android.view.MenuItem
 import com.github.satoshun.coroutinebinding.cancelableChannel
@@ -11,7 +10,8 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * Create an channel which emits the selected item in view.
  */
-inline fun NavigationView.itemSelections(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) { onAfterClosed ->
+@CheckResult
+fun NavigationView.itemSelections(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = NavigationView.OnNavigationItemSelectedListener {
     safeOffer(it)
     true

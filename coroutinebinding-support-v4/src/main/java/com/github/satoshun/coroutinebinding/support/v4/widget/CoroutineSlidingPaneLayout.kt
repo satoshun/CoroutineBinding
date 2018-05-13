@@ -1,5 +1,6 @@
 package com.github.satoshun.coroutinebinding.support.v4.widget
 
+import android.support.annotation.CheckResult
 import android.support.v4.widget.SlidingPaneLayout
 import android.view.View
 import com.github.satoshun.coroutinebinding.cancelableChannel
@@ -9,6 +10,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * Create an channel of the open state of the pane of view
  */
+@CheckResult
 fun SlidingPaneLayout.panelOpens(capacity: Int = 0): ReceiveChannel<Boolean> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = object : SlidingPaneLayout.PanelSlideListener {
     override fun onPanelSlide(panel: View, slideOffset: Float) {
@@ -32,7 +34,8 @@ fun SlidingPaneLayout.panelOpens(capacity: Int = 0): ReceiveChannel<Boolean> = c
 /**
  * Create an channel of the slide offset of the pane of view
  */
-  fun SlidingPaneLayout.panelSlides(capacity: Int = 0): ReceiveChannel<Float> = cancelableChannel(capacity) { onAfterClosed ->
+@CheckResult
+fun SlidingPaneLayout.panelSlides(capacity: Int = 0): ReceiveChannel<Float> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = object : SlidingPaneLayout.PanelSlideListener {
     override fun onPanelSlide(panel: View, slideOffset: Float) {
       safeOffer(slideOffset)
