@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.widget
 
 import android.widget.SearchView
@@ -10,7 +8,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * Create an channel which emits the query text change events.
  */
-inline fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<SearchViewQueryTextEvent> = cancelableChannel(capacity) {
+fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<SearchViewQueryTextEvent> = cancelableChannel(capacity) {
   val listener = object : SearchView.OnQueryTextListener {
     override fun onQueryTextSubmit(query: String): Boolean {
       return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, query, true))
@@ -26,6 +24,9 @@ inline fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<S
   setOnQueryTextListener(listener)
 }
 
+/**
+ * A search query event on SearchView.
+ */
 data class SearchViewQueryTextEvent(
     val view: SearchView,
     val queryText: CharSequence,
@@ -35,7 +36,7 @@ data class SearchViewQueryTextEvent(
 /**
  * Create an channel which emits the query text change events.
  */
-inline fun SearchView.queryTextChanges(capacity: Int = 0): ReceiveChannel<CharSequence> = cancelableChannel(capacity) {
+fun SearchView.queryTextChanges(capacity: Int = 0): ReceiveChannel<CharSequence> = cancelableChannel(capacity) {
   val listener = object : SearchView.OnQueryTextListener {
     override fun onQueryTextSubmit(query: String): Boolean {
       return false

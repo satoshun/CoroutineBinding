@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.widget
 
 import android.view.MenuItem
@@ -9,9 +7,9 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * Create an channel which emits the clicked item in [PopupMenu]s menu.
+ * Create an channel which emits the clicked item in PopupMenu's menu.
  */
-inline fun PopupMenu.itemClicks(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) { onAfterClosed ->
+fun PopupMenu.itemClicks(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = PopupMenu.OnMenuItemClickListener {
     safeOffer(it)
   }
@@ -24,7 +22,7 @@ inline fun PopupMenu.itemClicks(capacity: Int = 0): ReceiveChannel<MenuItem> = c
 /**
  * Create an channel which emits the dismiss events.
  */
-inline fun PopupMenu.dismisses(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) { onAfterClosed ->
+fun PopupMenu.dismisses(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) { onAfterClosed ->
   val listener = PopupMenu.OnDismissListener {
     safeOffer(Unit)
   }

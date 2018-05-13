@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.widget
 
 import android.widget.RatingBar
@@ -10,7 +8,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * Create an channel which emits the rating change events.
  */
-inline fun RatingBar.ratingChanges(capacity: Int = 0): ReceiveChannel<Float> = cancelableChannel(capacity) {
+fun RatingBar.ratingChanges(capacity: Int = 0): ReceiveChannel<Float> = cancelableChannel(capacity) {
   val listener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
     safeOffer(rating)
   }
@@ -23,7 +21,7 @@ inline fun RatingBar.ratingChanges(capacity: Int = 0): ReceiveChannel<Float> = c
 /**
  * Create an channel which emits the rating change events.
  */
-inline fun RatingBar.ratingChangeEvents(capacity: Int = 0): ReceiveChannel<RatingBarChangeEvent> = cancelableChannel(capacity) {
+fun RatingBar.ratingChangeEvents(capacity: Int = 0): ReceiveChannel<RatingBarChangeEvent> = cancelableChannel(capacity) {
   val listener = RatingBar.OnRatingBarChangeListener { ratingBar, rating, fromUser ->
     safeOffer(RatingBarChangeEvent(ratingBar, rating, fromUser))
   }
@@ -33,6 +31,9 @@ inline fun RatingBar.ratingChangeEvents(capacity: Int = 0): ReceiveChannel<Ratin
   onRatingBarChangeListener = listener
 }
 
+/**
+ * A change event on RatingBar
+ */
 data class RatingBarChangeEvent(
     val view: RatingBar,
     val rating: Float,

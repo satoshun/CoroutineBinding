@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.widget
 
 import android.support.annotation.RequiresApi
@@ -11,10 +9,10 @@ import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * Create an channel which emits the clicked item in [View]s menu.
+ * Create an channel which emits the clicked item in view's menu.
  */
 @RequiresApi(21)
-inline fun Toolbar.itemClicks(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) {
+fun Toolbar.itemClicks(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelableChannel(capacity) {
   val listener = Toolbar.OnMenuItemClickListener {
     safeOffer(it)
   }
@@ -25,10 +23,10 @@ inline fun Toolbar.itemClicks(capacity: Int = 0): ReceiveChannel<MenuItem> = can
 }
 
 /**
- * Create an channel which emits on [View] navigation click events.
+ * Create an channel which emits on view navigation click events.
  */
 @RequiresApi(21)
-inline fun Toolbar.navigationClicks(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) {
+fun Toolbar.navigationClicks(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) {
   val listener = View.OnClickListener {
     safeOffer(Unit)
   }
