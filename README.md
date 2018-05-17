@@ -15,17 +15,17 @@ implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:{latest-ve
 
 'support-v4' library bindings:
 ```groovy
-not released
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-support-v4:0.1.0'
 ```
 
 'appcompat-v7' library bindings:
 ```groovy
-not released
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-appcompat-v7:0.1.0'
 ```
 
 'design' library bindings:
 ```groovy
-not released yet
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-design:0.1.0'
 ```
 
 'recyclerview-v7' library bindings:
