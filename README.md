@@ -33,9 +33,17 @@ implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-design:{la
 implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-recyclerview-v7:{latest-version}'
 ```
 
+## what is this?
+
+Android event (e.g., view clicks) is transformed to [ReceiveChannel](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental.channels/-receive-channel/receive.html).
+
+This project is inspired by [RxBinding](https://github.com/JakeWharton/RxBinding). This library APIs is same RxBinding!
+
+
 ## etc
 
-This project is inspired by [RxBinding](https://github.com/JakeWharton/RxBinding) and borrows so many many many codes from RxBinding.
+This library borrows so many many many codes from RxBinding. Thx!
+
 
 ## License
 
