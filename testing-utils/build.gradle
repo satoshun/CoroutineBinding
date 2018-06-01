@@ -26,15 +26,14 @@ android {
 dependencies {
   api Libs.kotlin
   api Libs.coroutine
-  implementation Libs.ui_coroutine
-  implementation Libs.support_annotations
-  implementation Libs.junit
-  implementation Libs.support_test
-  implementation Libs.espresso
-  implementation Libs.truth
-  implementation Libs.mockito_kotlin
-  implementation Libs.multidex
-
+  api Libs.ui_coroutine
+  api Libs.support_annotations
+  api Libs.junit
+  api Libs.support_test
+  api Libs.espresso
+  api Libs.truth
+  api Libs.mockito_kotlin
+  api Libs.multidex
 }
 
 kotlin {
