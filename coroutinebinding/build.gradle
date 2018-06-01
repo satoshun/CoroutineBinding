@@ -38,12 +38,6 @@ dependencies {
   implementation Libs.support_annotations
 
   androidTestImplementation project(":testing-utils")
-  androidTestImplementation Libs.junit
-  androidTestImplementation Libs.support_test
-  androidTestImplementation Libs.espresso
-  androidTestImplementation Libs.truth
-  androidTestImplementation Libs.mockito_kotlin
-  androidTestImplementation Libs.multidex
 }
 
 kotlin {

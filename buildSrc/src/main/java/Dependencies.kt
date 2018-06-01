@@ -7,13 +7,13 @@ object Vers {
   val kotlin = "1.2.41"
   val couroutine = "0.22.5"
   val support_lib = "27.1.1"
-  val ktlint = "0.21.0"
+  val ktlint = "0.23.1"
 }
 
 object Libs {
   val android_plugin = "com.android.tools.build:gradle:${Vers.agp}"
   val kotlin_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Vers.kotlin}"
-  val dokka_plugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.16"
+  val dokka_plugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.17"
 
   val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Vers.kotlin}"
   val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Vers.couroutine}"
@@ -38,7 +38,7 @@ object Libs {
   val appcompat = "com.android.support:appcompat-v7:${Vers.support_lib}"
   val support_v4 = "com.android.support:support-v4:${Vers.support_lib}"
 
-  val truth = "com.google.truth:truth:0.39"
+  val truth = "com.google.truth:truth:0.40"
   val mockito_kotlin = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
   val multidex = "com.android.support:multidex:1.0.3"
 }
