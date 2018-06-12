@@ -1,14 +1,14 @@
 subprojects {
   buildscript {
     repositories {
-      jcenter()
       google()
+      jcenter()
     }
   }
 
   repositories {
-    jcenter()
     google()
+    jcenter()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 

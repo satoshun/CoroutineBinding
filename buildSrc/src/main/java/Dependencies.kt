@@ -2,10 +2,10 @@ object Vers {
   val compile_sdk = 27
   val min_sdk = 15
   val target_sdk = 27
-  val agp = "3.1.2"
+  val agp = "3.1.3"
 
   val kotlin = "1.2.41"
-  val couroutine = "0.22.5"
+  val couroutine = "0.23.1"
   val support_lib = "27.1.1"
   val ktlint = "0.23.1"
 }
@@ -24,7 +24,7 @@ object Libs {
   val appcompat_v7 = "com.android.support:appcompat-v7:${Vers.support_lib}"
   val support_annotations = "com.android.support:support-annotations:${Vers.support_lib}"
   val recyclerview = "com.android.support:recyclerview-v7:${Vers.support_lib}"
-  val constraint_layout = "com.android.support.constraint:constraint-layout:1.1.0"
+  val constraint_layout = "com.android.support.constraint:constraint-layout:1.1.1"
 
   val viewmodel = "android.arch.lifecycle:viewmodel:1.1.1"
   val livedata = "android.arch.lifecycle:livedata:1.1.1"
