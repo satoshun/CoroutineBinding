@@ -45,6 +45,9 @@ class CoroutinePopupMenuTest {
   @Test
   fun dismisses() = testRunBlocking {
     val dismisses = uiRunBlocking { popupMenu.dismisses(1) }
+    val menu = popupMenu.menu
+    menu.add(0, 1, 0, "Hi")
+    menu.add(0, 2, 0, "Hey")
 
     uiRunBlocking { popupMenu.show() }
     dismisses.poll().isNull()
