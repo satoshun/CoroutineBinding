@@ -20,6 +20,10 @@ android {
     versionName "1.0"
   }
 
+  packagingOptions {
+    exclude "META-INF/main.kotlin_module"
+  }
+
   buildTypes {
     release {
       minifyEnabled false
