@@ -4,8 +4,8 @@ object Vers {
   val target_sdk = 27
   val agp = "3.1.3"
 
-  val kotlin = "1.2.41"
-  val couroutine = "0.23.1"
+  val kotlin = "1.2.50"
+  val couroutine = "0.23.3"
   val support_lib = "27.1.1"
   val ktlint = "0.23.1"
 }
