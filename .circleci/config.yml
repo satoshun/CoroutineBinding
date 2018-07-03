@@ -166,15 +166,15 @@ workflows:
       - firebase_test:
           requires:
             - build
-      - firebase_test_support_v4:
-          requires:
-            - build
-      - firebase_test_appcompat_v7:
-          requires:
-            - build
-      - firebase_test_design:
-          requires:
-            - build
-      - firebase_test_recyclerview_v7:
-          requires:
-            - build
+#      - firebase_test_support_v4:
+#          requires:
+#            - build
+#      - firebase_test_appcompat_v7:
+#          requires:
+#            - build
+#      - firebase_test_design:
+#          requires:
+#            - build
+#      - firebase_test_recyclerview_v7:
+#          requires:
+#            - build
