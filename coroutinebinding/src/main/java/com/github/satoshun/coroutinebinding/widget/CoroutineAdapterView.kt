@@ -7,7 +7,7 @@ import android.widget.Adapter
 import android.widget.AdapterView
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
-import com.github.satoshun.coroutinebinding.Callable
+import com.github.satoshun.coroutinebinding.view.Callable
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**

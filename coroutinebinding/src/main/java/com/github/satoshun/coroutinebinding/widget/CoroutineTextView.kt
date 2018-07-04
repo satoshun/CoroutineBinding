@@ -8,7 +8,7 @@ import android.view.KeyEvent
 import android.widget.TextView
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
-import com.github.satoshun.coroutinebinding.Predicate
+import com.github.satoshun.coroutinebinding.view.Predicate
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**

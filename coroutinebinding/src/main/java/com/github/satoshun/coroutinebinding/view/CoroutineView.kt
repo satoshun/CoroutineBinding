@@ -9,11 +9,12 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
-import com.github.satoshun.coroutinebinding.Callable
-import com.github.satoshun.coroutinebinding.Predicate
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+
+internal typealias Callable = () -> Boolean
+internal typealias Predicate<T> = (T) -> Boolean
 
 /**
  * Create an channel of to emit on view attach events.
