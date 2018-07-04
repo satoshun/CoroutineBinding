@@ -60,7 +60,7 @@ jobs:
   build:
     working_directory: *workspace
     docker:
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-28-alpha
     environment:
       JVM_OPTS: -Xmx1600m
     steps:
