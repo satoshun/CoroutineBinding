@@ -60,20 +60,20 @@ jobs:
   build:
     working_directory: *workspace
     docker:
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-28-alpha
     environment:
       JVM_OPTS: -Xmx1600m
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-appcompat-v7/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}-{{ checksum  "coroutinebinding-design/build.gradle" }}-{{ checksum  "coroutinebinding-support-v4/build.gradle" }}
+          key: jars-{{ checksum "buildSrc/src/main/java/Dependencies.kt" }}-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-appcompat-v7/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}-{{ checksum  "coroutinebinding-design/build.gradle" }}-{{ checksum  "coroutinebinding-support-v4/build.gradle" }}
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-appcompat-v7/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}-{{ checksum  "coroutinebinding-design/build.gradle" }}-{{ checksum  "coroutinebinding-support-v4/build.gradle" }}
+          key: jars-{{ checksum "buildSrc/src/main/java/Dependencies.kt" }}-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-appcompat-v7/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}-{{ checksum  "coroutinebinding-design/build.gradle" }}-{{ checksum  "coroutinebinding-support-v4/build.gradle" }}
       - run:
           name: Build
           command: ./gradlew :app:assembleDebug assembleAndroidTest -Dorg.gradle.parallel=false
