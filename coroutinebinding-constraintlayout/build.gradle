@@ -14,7 +14,7 @@ android {
   compileSdkVersion Vers.compile_sdk
 
   defaultConfig {
-    minSdkVersion Vers.min_sdk
+    minSdkVersion 18
 
     multiDexEnabled true // for test
 
