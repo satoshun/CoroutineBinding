@@ -1,0 +1,51 @@
+buildscript {
+  dependencies {
+    classpath Libs.android_plugin
+    classpath Libs.kotlin_plugin
+    classpath Libs.dokka_plugin
+  }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.dokka-android'
+
+android {
+  compileSdkVersion Vers.compile_sdk
+
+  defaultConfig {
+    minSdkVersion 18
+
+    multiDexEnabled true // for test
+
+    testInstrumentationRunner "com.github.satoshun.coroutinebinding.MyTestRunner"
+  }
+
+  packagingOptions {
+    exclude "META-INF/main.kotlin_module"
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+
+  libraryVariants.all {
+    it.generateBuildConfig.enabled = false
+  }
+}
+
+dependencies {
+  api project(':coroutinebinding')
+  api Libs.constraint_layout2
+  implementation Libs.ui_coroutine
+  implementation Libs.support_annotations
+
+  androidTestImplementation project(":testing-utils")
+}
+
+kotlin {
+  experimental { coroutines 'enable' }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
