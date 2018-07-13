@@ -26,6 +26,8 @@ object Libs {
   val recyclerview = "com.android.support:recyclerview-v7:${Vers.support_lib}"
   val constraint_layout = "com.android.support.constraint:constraint-layout:1.1.1"
 
+  val constraint_layout2 = "androidx.constraintlayout:constraintlayout:2.0.0-alpha1"
+
   val viewmodel = "android.arch.lifecycle:viewmodel:1.1.1"
   val livedata = "android.arch.lifecycle:livedata:1.1.1"
   val gms = "com.google.android.gms:play-services-location:15.0.0"
