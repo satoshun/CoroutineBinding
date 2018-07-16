@@ -1,0 +1,31 @@
+<ConstraintLayoutStates xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <State
+      android:id="@+id/foo"
+      app:constraints="@layout/activity_main">
+
+    <Constraints
+        app:constraints="@layout/activity_main"
+        app:region_widthLessThan="560dp" />
+
+    <Constraints
+        app:constraints="@layout/activity_main2"
+        app:region_widthLessThan="1030dp"
+        app:region_widthMoreThan="560dp" />
+  </State>
+
+  <State
+      android:id="@+id/foo2"
+      app:constraints="@layout/activity_main">
+
+    <Constraints
+        app:constraints="@layout/activity_main"
+        app:region_widthLessThan="560dp" />
+
+    <Constraints
+        app:constraints="@layout/activity_main2"
+        app:region_widthLessThan="1030dp"
+        app:region_widthMoreThan="560dp" />
+  </State>
+</ConstraintLayoutStates>

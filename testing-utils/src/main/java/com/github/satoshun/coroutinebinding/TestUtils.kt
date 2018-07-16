@@ -39,7 +39,7 @@ inline fun testRunBlocking(
     noinline block: suspend CoroutineScope.() -> Unit
 ) {
   return runBlocking(context = context, block = {
-    withTimeout(10, TimeUnit.SECONDS) { block() }
+    withTimeout(5, TimeUnit.SECONDS) { block() }
   })
 }
 
