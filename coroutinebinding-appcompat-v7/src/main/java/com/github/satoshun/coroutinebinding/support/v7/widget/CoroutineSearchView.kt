@@ -10,47 +10,49 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  * Create an channel of SearchViewQueryTextEvent query text events on view.
  */
 @CheckResult
-fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<SearchViewQueryTextEvent> = cancelableChannel(capacity) { onAfterClosed ->
-  val listener = object : SearchView.OnQueryTextListener {
-    override fun onQueryTextSubmit(query: String?): Boolean {
-      return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, this@queryTextChangeEvents.query, true))
-    }
+fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<SearchViewQueryTextEvent> =
+  cancelableChannel(capacity) { onAfterClosed ->
+    val listener = object : SearchView.OnQueryTextListener {
+      override fun onQueryTextSubmit(query: String?): Boolean {
+        return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, this@queryTextChangeEvents.query, true))
+      }
 
-    override fun onQueryTextChange(newText: String): Boolean {
-      return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, newText, false))
+      override fun onQueryTextChange(newText: String): Boolean {
+        return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, newText, false))
+      }
     }
+    onAfterClosed {
+      setOnQueryTextListener(null)
+    }
+    setOnQueryTextListener(listener)
   }
-  onAfterClosed {
-    setOnQueryTextListener(null)
-  }
-  setOnQueryTextListener(listener)
-}
 
 /**
  * A query text event on a SearchView.
  */
 data class SearchViewQueryTextEvent(
-    val view: SearchView,
-    val queryText: CharSequence,
-    val isSubmitted: Boolean
+  val view: SearchView,
+  val queryText: CharSequence,
+  val isSubmitted: Boolean
 )
 
 /**
  * Create an channel of character sequences for query text changes on view.
  */
 @CheckResult
-fun SearchView.queryTextChange(capacity: Int = 0): ReceiveChannel<CharSequence> = cancelableChannel(capacity) { onAfterClosed ->
-  val listener = object : SearchView.OnQueryTextListener {
-    override fun onQueryTextSubmit(query: String?): Boolean {
-      return false
-    }
+fun SearchView.queryTextChange(capacity: Int = 0): ReceiveChannel<CharSequence> =
+  cancelableChannel(capacity) { onAfterClosed ->
+    val listener = object : SearchView.OnQueryTextListener {
+      override fun onQueryTextSubmit(query: String?): Boolean {
+        return false
+      }
 
-    override fun onQueryTextChange(newText: String): Boolean {
-      return safeOffer(newText)
+      override fun onQueryTextChange(newText: String): Boolean {
+        return safeOffer(newText)
+      }
     }
+    onAfterClosed {
+      setOnQueryTextListener(null)
+    }
+    setOnQueryTextListener(listener)
   }
-  onAfterClosed {
-    setOnQueryTextListener(null)
-  }
-  setOnQueryTextListener(listener)
-}
