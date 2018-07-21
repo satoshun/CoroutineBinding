@@ -11,23 +11,24 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  * Create an channel of to emit on view constraintsChanged events.
  */
 @CheckResult
-fun ConstraintLayout.constraintsChanged(capacity: Int = 0): ReceiveChannel<ConstraintsChangedEvent> = cancelableChannel(capacity) {
-  val listener = object : ConstraintsChangedListener() {
-    override fun preLayoutChange(stateId: Int, constraintId: Int) {
-      super.preLayoutChange(stateId, constraintId)
-      safeOffer(ConstraintsPreChangedEvent(stateId, constraintId))
-    }
+fun ConstraintLayout.constraintsChanged(capacity: Int = 0): ReceiveChannel<ConstraintsChangedEvent> =
+  cancelableChannel(capacity) {
+    val listener = object : ConstraintsChangedListener() {
+      override fun preLayoutChange(stateId: Int, constraintId: Int) {
+        super.preLayoutChange(stateId, constraintId)
+        safeOffer(ConstraintsPreChangedEvent(stateId, constraintId))
+      }
 
-    override fun postLayoutChange(stateId: Int, constraintId: Int) {
-      super.postLayoutChange(stateId, constraintId)
-      safeOffer(ConstraintsPostChangedEvent(stateId, constraintId))
+      override fun postLayoutChange(stateId: Int, constraintId: Int) {
+        super.postLayoutChange(stateId, constraintId)
+        safeOffer(ConstraintsPostChangedEvent(stateId, constraintId))
+      }
     }
+    it {
+      setOnConstraintsChanged(null)
+    }
+    setOnConstraintsChanged(listener)
   }
-  it {
-    setOnConstraintsChanged(null)
-  }
-  setOnConstraintsChanged(listener)
-}
 
 /**
  * A changed constraints event
@@ -41,14 +42,14 @@ sealed class ConstraintsChangedEvent {
  * A changed constraints pre event
  */
 data class ConstraintsPreChangedEvent(
-    override val stateId: Int,
-    override val constraintId: Int
+  override val stateId: Int,
+  override val constraintId: Int
 ) : ConstraintsChangedEvent()
 
 /**
  * A changed constraints post event
  */
 data class ConstraintsPostChangedEvent(
-    override val stateId: Int,
-    override val constraintId: Int
+  override val stateId: Int,
+  override val constraintId: Int
 ) : ConstraintsChangedEvent()
