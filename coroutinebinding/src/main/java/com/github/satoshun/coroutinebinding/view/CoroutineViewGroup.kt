@@ -9,21 +9,22 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * Create an channel of hierarchy change events for ViewGroup.
  */
-fun ViewGroup.changeEvents(capacity: Int = 0): ReceiveChannel<ViewGroupHierarchyChangeEvent> = cancelableChannel(capacity) { onAfterClosed ->
-  val listener = object : ViewGroup.OnHierarchyChangeListener {
-    override fun onChildViewRemoved(parent: View, child: View) {
-      safeOffer(ViewGroupHierarchyChildViewRemoveEvent(this@changeEvents, child))
-    }
+fun ViewGroup.changeEvents(capacity: Int = 0): ReceiveChannel<ViewGroupHierarchyChangeEvent> =
+  cancelableChannel(capacity) { onAfterClosed ->
+    val listener = object : ViewGroup.OnHierarchyChangeListener {
+      override fun onChildViewRemoved(parent: View, child: View) {
+        safeOffer(ViewGroupHierarchyChildViewRemoveEvent(this@changeEvents, child))
+      }
 
-    override fun onChildViewAdded(parent: View, child: View) {
-      safeOffer(ViewGroupHierarchyChildViewAddEvent(this@changeEvents, child))
+      override fun onChildViewAdded(parent: View, child: View) {
+        safeOffer(ViewGroupHierarchyChildViewAddEvent(this@changeEvents, child))
+      }
     }
+    onAfterClosed {
+      setOnHierarchyChangeListener(null)
+    }
+    setOnHierarchyChangeListener(listener)
   }
-  onAfterClosed {
-    setOnHierarchyChangeListener(null)
-  }
-  setOnHierarchyChangeListener(listener)
-}
 
 /**
  * A child view event on a ViewGroup.
@@ -37,14 +38,14 @@ sealed class ViewGroupHierarchyChangeEvent {
  * A child view add event on a ViewGroup.
  */
 class ViewGroupHierarchyChildViewAddEvent(
-    override val view: ViewGroup,
-    override val child: View
+  override val view: ViewGroup,
+  override val child: View
 ) : ViewGroupHierarchyChangeEvent()
 
 /**
  * A child view remove event on a ViewGroup.
  */
 class ViewGroupHierarchyChildViewRemoveEvent(
-    override val view: ViewGroup,
-    override val child: View
+  override val view: ViewGroup,
+  override val child: View
 ) : ViewGroupHierarchyChangeEvent()

@@ -79,21 +79,21 @@ sealed class SeekBarChangeEvent {
  * A progress change event on SeekBar.
  */
 data class SeekBarProgressChangeEvent(
-    override val view: SeekBar,
-    val progress: Int,
-    val fromUser: Boolean
+  override val view: SeekBar,
+  val progress: Int,
+  val fromUser: Boolean
 ) : SeekBarChangeEvent()
 
 /**
  * A start change event on SeekBar.
  */
 data class SeekBarStartChangeEvent(
-    override val view: SeekBar
+  override val view: SeekBar
 ) : SeekBarChangeEvent()
 
 /**
  * A stop change event on SeekBar.
  */
 data class SeekBarStopChangeEvent(
-    override val view: SeekBar
+  override val view: SeekBar
 ) : SeekBarChangeEvent()

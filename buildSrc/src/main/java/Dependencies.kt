@@ -13,6 +13,7 @@ object Vers {
 object Libs {
   val android_plugin = "com.android.tools.build:gradle:${Vers.agp}"
   val kotlin_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Vers.kotlin}"
+  val ktlint_plugin = "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:4.1.0"
   val dokka_plugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.17"
 
   val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Vers.kotlin}"

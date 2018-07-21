@@ -13,8 +13,8 @@ private val mainHandler = Handler(Looper.getMainLooper())
 
 // todo: refactoring after https://github.com/Kotlin/kotlinx.coroutines/issues/341
 inline fun <E> cancelableChannel(
-    capacity: Int = 0,
-    init: AbstractChannel<E>.((() -> Unit) -> Unit) -> Unit
+  capacity: Int = 0,
+  init: AbstractChannel<E>.((() -> Unit) -> Unit) -> Unit
 ): ReceiveChannel<E> {
   if (capacity == 0) {
     val channel = OnCancelableChannel<E>()

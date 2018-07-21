@@ -11,21 +11,22 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  * Create an channel of child attach state change events on RecyclerView.
  */
 @CheckResult
-fun RecyclerView.childAttachStateChangeEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewChildAttachStateChangeEvent> = cancelableChannel(capacity) { onAfterClosed ->
-  val listener = object : RecyclerView.OnChildAttachStateChangeListener {
-    override fun onChildViewDetachedFromWindow(view: View) {
-      safeOffer(RecyclerViewChildDetachEvent(this@childAttachStateChangeEvents, view))
-    }
+fun RecyclerView.childAttachStateChangeEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewChildAttachStateChangeEvent> =
+  cancelableChannel(capacity) { onAfterClosed ->
+    val listener = object : RecyclerView.OnChildAttachStateChangeListener {
+      override fun onChildViewDetachedFromWindow(view: View) {
+        safeOffer(RecyclerViewChildDetachEvent(this@childAttachStateChangeEvents, view))
+      }
 
-    override fun onChildViewAttachedToWindow(view: View) {
-      safeOffer(RecyclerViewChildAttachEvent(this@childAttachStateChangeEvents, view))
+      override fun onChildViewAttachedToWindow(view: View) {
+        safeOffer(RecyclerViewChildAttachEvent(this@childAttachStateChangeEvents, view))
+      }
     }
+    onAfterClosed {
+      removeOnChildAttachStateChangeListener(listener)
+    }
+    addOnChildAttachStateChangeListener(listener)
   }
-  onAfterClosed {
-    removeOnChildAttachStateChangeListener(listener)
-  }
-  addOnChildAttachStateChangeListener(listener)
-}
 
 /**
  * A child attach state event on RecyclerView
@@ -39,55 +40,57 @@ sealed class RecyclerViewChildAttachStateChangeEvent {
  * A child attach event on RecyclerView
  */
 data class RecyclerViewChildAttachEvent(
-    override val view: RecyclerView,
-    override val child: View
+  override val view: RecyclerView,
+  override val child: View
 ) : RecyclerViewChildAttachStateChangeEvent()
 
 /**
  * A child detach event on RecyclerView
  */
 data class RecyclerViewChildDetachEvent(
-    override val view: RecyclerView,
-    override val child: View
+  override val view: RecyclerView,
+  override val child: View
 ) : RecyclerViewChildAttachStateChangeEvent()
 
 /**
  * Create an observable of scroll events on RecyclerView.
  */
 @CheckResult
-fun RecyclerView.scrollEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewScrollEvent> = cancelableChannel(capacity) { onAfterClosed ->
-  val listener = object : RecyclerView.OnScrollListener() {
-    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-      safeOffer(RecyclerViewScrollEvent(recyclerView, dx, dy))
+fun RecyclerView.scrollEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewScrollEvent> =
+  cancelableChannel(capacity) { onAfterClosed ->
+    val listener = object : RecyclerView.OnScrollListener() {
+      override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        safeOffer(RecyclerViewScrollEvent(recyclerView, dx, dy))
+      }
     }
+    onAfterClosed {
+      removeOnScrollListener(listener)
+    }
+    addOnScrollListener(listener)
   }
-  onAfterClosed {
-    removeOnScrollListener(listener)
-  }
-  addOnScrollListener(listener)
-}
 
 /**
  * A scroll event on RecyclerView.
  */
 data class RecyclerViewScrollEvent(
-    val view: RecyclerView,
-    val dx: Int,
-    val dy: Int
+  val view: RecyclerView,
+  val dx: Int,
+  val dy: Int
 )
 
 /**
  * Create an observable of scroll state changed on RecyclerView.
  */
 @CheckResult
-fun RecyclerView.scrollStateChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) { onAfterClosed ->
-  val listener = object : RecyclerView.OnScrollListener() {
-    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-      safeOffer(newState)
+fun RecyclerView.scrollStateChanges(capacity: Int = 0): ReceiveChannel<Int> =
+  cancelableChannel(capacity) { onAfterClosed ->
+    val listener = object : RecyclerView.OnScrollListener() {
+      override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+        safeOffer(newState)
+      }
     }
+    onAfterClosed {
+      removeOnScrollListener(listener)
+    }
+    addOnScrollListener(listener)
   }
-  onAfterClosed {
-    removeOnScrollListener(listener)
-  }
-  addOnScrollListener(listener)
-}

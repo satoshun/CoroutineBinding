@@ -35,8 +35,8 @@ inline fun Any?.isSame(other: Any?) = Truth.assertThat(this).isSameAs(other)
 inline fun <T> T.verify() = com.nhaarman.mockito_kotlin.verify(this)
 
 inline fun testRunBlocking(
-    context: CoroutineContext = EmptyCoroutineContext,
-    noinline block: suspend CoroutineScope.() -> Unit
+  context: CoroutineContext = EmptyCoroutineContext,
+  noinline block: suspend CoroutineScope.() -> Unit
 ) {
   return runBlocking(context = context, block = {
     withTimeout(5, TimeUnit.SECONDS) { block() }

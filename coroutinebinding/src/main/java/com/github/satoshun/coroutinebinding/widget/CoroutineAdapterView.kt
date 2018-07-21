@@ -32,21 +32,22 @@ fun <T : Adapter> AdapterView<T>.itemSelections(capacity: Int = 0): ReceiveChann
 /**
  * Create an channel of item selection events on AdapterView.
  */
-fun <T : Adapter> AdapterView<T>.selectionEvents(capacity: Int = 0): ReceiveChannel<AdapterViewSelectionEvent> = cancelableChannel(capacity) {
-  val listener = object : AdapterView.OnItemSelectedListener {
-    override fun onNothingSelected(parent: AdapterView<*>) {
-      safeOffer(AdapterViewNothingSelectionEvent(parent))
-    }
+fun <T : Adapter> AdapterView<T>.selectionEvents(capacity: Int = 0): ReceiveChannel<AdapterViewSelectionEvent> =
+  cancelableChannel(capacity) {
+    val listener = object : AdapterView.OnItemSelectedListener {
+      override fun onNothingSelected(parent: AdapterView<*>) {
+        safeOffer(AdapterViewNothingSelectionEvent(parent))
+      }
 
-    override fun onItemSelected(parent: AdapterView<*>, selectedView: View, position: Int, id: Long) {
-      safeOffer(AdapterViewItemSelectionEvent(parent, selectedView, position, id))
+      override fun onItemSelected(parent: AdapterView<*>, selectedView: View, position: Int, id: Long) {
+        safeOffer(AdapterViewItemSelectionEvent(parent, selectedView, position, id))
+      }
     }
+    it {
+      setOnItemSelectedListener(null)
+    }
+    setOnItemSelectedListener(listener)
   }
-  it {
-    setOnItemSelectedListener(null)
-  }
-  setOnItemSelectedListener(listener)
-}
 
 /**
  * A select event on AdapterView
@@ -64,10 +65,10 @@ class AdapterViewNothingSelectionEvent(override val parent: AdapterView<*>) : Ad
  * A select event on AdapterView
  */
 data class AdapterViewItemSelectionEvent(
-    override val parent: AdapterView<*>,
-    val selectedView: View,
-    val position: Int,
-    val id: Long
+  override val parent: AdapterView<*>,
+  val selectedView: View,
+  val position: Int,
+  val id: Long
 ) : AdapterViewSelectionEvent()
 
 /**
@@ -86,47 +87,54 @@ fun <T : Adapter> AdapterView<T>.itemClicks(capacity: Int = 0): ReceiveChannel<I
 /**
  * c
  */
-fun <T : Adapter> AdapterView<T>.itemClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemClickEvent> = cancelableChannel(capacity) {
-  val listener = AdapterView.OnItemClickListener { parent, view, position, id ->
-    safeOffer(AdapterViewItemClickEvent(parent, view, position, id))
-  }
-  it {
-    setOnItemClickListener(null)
-  }
-  setOnItemClickListener(listener)
-}
-
-/**
- * Create an channel of the position of item long-clicks for view.
- */
-inline fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0): ReceiveChannel<Int> = itemLongClicks(capacity) { true }
-
-/**
- * Create an channel of the position of item long-clicks for view.
- */
-fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0, handled: Callable): ReceiveChannel<Int> = cancelableChannel(capacity) {
-  val listener = AdapterView.OnItemLongClickListener { _, _, position, _ ->
-    if (handled()) {
-      safeOffer(position)
-    } else {
-      false
+fun <T : Adapter> AdapterView<T>.itemClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemClickEvent> =
+  cancelableChannel(capacity) {
+    val listener = AdapterView.OnItemClickListener { parent, view, position, id ->
+      safeOffer(AdapterViewItemClickEvent(parent, view, position, id))
     }
+    it {
+      setOnItemClickListener(null)
+    }
+    setOnItemClickListener(listener)
   }
-  it {
-    setOnItemLongClickListener(null)
+
+/**
+ * Create an channel of the position of item long-clicks for view.
+ */
+inline fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0): ReceiveChannel<Int> =
+  itemLongClicks(capacity) { true }
+
+/**
+ * Create an channel of the position of item long-clicks for view.
+ */
+fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0, handled: Callable): ReceiveChannel<Int> =
+  cancelableChannel(capacity) {
+    val listener = AdapterView.OnItemLongClickListener { _, _, position, _ ->
+      if (handled()) {
+        safeOffer(position)
+      } else {
+        false
+      }
+    }
+    it {
+      setOnItemLongClickListener(null)
+    }
+    setOnItemLongClickListener(listener)
   }
-  setOnItemLongClickListener(listener)
-}
 
 /**
  * Create an channel of the item long-click events for view.
  */
-inline fun <T : Adapter> AdapterView<T>.itemLongClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemLongClickEvent> = itemLongClickEvents(capacity) { true }
+inline fun <T : Adapter> AdapterView<T>.itemLongClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemLongClickEvent> =
+  itemLongClickEvents(capacity) { true }
 
 /**
  * Create an channel of the item long-click events for view.
  */
-fun <T : Adapter> AdapterView<T>.itemLongClickEvents(capacity: Int = 0, handled: Callable): ReceiveChannel<AdapterViewItemLongClickEvent> = cancelableChannel(capacity) {
+fun <T : Adapter> AdapterView<T>.itemLongClickEvents(
+  capacity: Int = 0,
+  handled: Callable
+): ReceiveChannel<AdapterViewItemLongClickEvent> = cancelableChannel(capacity) {
   val listener = AdapterView.OnItemLongClickListener { parent, view, position, id ->
     if (handled()) {
       safeOffer(AdapterViewItemLongClickEvent(parent, view, position, id))
@@ -144,8 +152,8 @@ fun <T : Adapter> AdapterView<T>.itemLongClickEvents(capacity: Int = 0, handled:
  * A long click event on AdapterView.
  */
 data class AdapterViewItemLongClickEvent(
-    val view: AdapterView<*>,
-    val clickedView: View,
-    val position: Int,
-    val id: Long
+  val view: AdapterView<*>,
+  val clickedView: View,
+  val position: Int,
+  val id: Long
 )
