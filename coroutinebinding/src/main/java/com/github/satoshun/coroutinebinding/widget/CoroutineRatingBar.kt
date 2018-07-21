@@ -21,21 +21,22 @@ fun RatingBar.ratingChanges(capacity: Int = 0): ReceiveChannel<Float> = cancelab
 /**
  * Create an channel which emits the rating change events.
  */
-fun RatingBar.ratingChangeEvents(capacity: Int = 0): ReceiveChannel<RatingBarChangeEvent> = cancelableChannel(capacity) {
-  val listener = RatingBar.OnRatingBarChangeListener { ratingBar, rating, fromUser ->
-    safeOffer(RatingBarChangeEvent(ratingBar, rating, fromUser))
+fun RatingBar.ratingChangeEvents(capacity: Int = 0): ReceiveChannel<RatingBarChangeEvent> =
+  cancelableChannel(capacity) {
+    val listener = RatingBar.OnRatingBarChangeListener { ratingBar, rating, fromUser ->
+      safeOffer(RatingBarChangeEvent(ratingBar, rating, fromUser))
+    }
+    it {
+      onRatingBarChangeListener = null
+    }
+    onRatingBarChangeListener = listener
   }
-  it {
-    onRatingBarChangeListener = null
-  }
-  onRatingBarChangeListener = listener
-}
 
 /**
  * A change event on RatingBar
  */
 data class RatingBarChangeEvent(
-    val view: RatingBar,
-    val rating: Float,
-    val fromUser: Boolean
+  val view: RatingBar,
+  val rating: Float,
+  val fromUser: Boolean
 )

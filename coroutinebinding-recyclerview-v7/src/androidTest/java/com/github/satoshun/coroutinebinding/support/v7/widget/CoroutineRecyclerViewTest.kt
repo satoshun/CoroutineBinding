@@ -91,7 +91,7 @@ class CoroutineRecyclerViewTest {
 }
 
 private class SimpleAdapter constructor(
-    private val child: View
+  private val child: View
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

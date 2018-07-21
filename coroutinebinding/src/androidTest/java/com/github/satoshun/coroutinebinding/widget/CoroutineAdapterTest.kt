@@ -8,7 +8,6 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Rule
 import org.junit.Test
 

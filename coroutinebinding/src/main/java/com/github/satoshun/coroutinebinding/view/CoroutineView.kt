@@ -80,19 +80,20 @@ inline fun View.drags(capacity: Int = 0): ReceiveChannel<DragEvent> = drags(capa
  * Create an channel of DragEvent for drags on view
  */
 @CheckResult
-fun View.drags(capacity: Int = 0, handled: Predicate<in DragEvent>): ReceiveChannel<DragEvent> = cancelableChannel(capacity) {
-  val listener = View.OnDragListener { _, dragEvent ->
-    if (handled(dragEvent)) {
-      safeOffer(dragEvent)
-    } else {
-      false
+fun View.drags(capacity: Int = 0, handled: Predicate<in DragEvent>): ReceiveChannel<DragEvent> =
+  cancelableChannel(capacity) {
+    val listener = View.OnDragListener { _, dragEvent ->
+      if (handled(dragEvent)) {
+        safeOffer(dragEvent)
+      } else {
+        false
+      }
     }
+    it {
+      setOnDragListener(null)
+    }
+    setOnDragListener(listener)
   }
-  it {
-    setOnDragListener(null)
-  }
-  setOnDragListener(listener)
-}
 
 /**
  * Create an channel for draws on view
@@ -147,46 +148,49 @@ inline fun View.hovers(capacity: Int = 0): ReceiveChannel<MotionEvent> = hovers(
  * Create an channel of hover events for view.
  */
 @CheckResult
-fun View.hovers(capacity: Int = 0, handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> = cancelableChannel(capacity) {
-  val listener = View.OnHoverListener { _, motionEvent ->
-    if (handled(motionEvent)) {
-      safeOffer(motionEvent)
-    } else {
-      false
+fun View.hovers(capacity: Int = 0, handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> =
+  cancelableChannel(capacity) {
+    val listener = View.OnHoverListener { _, motionEvent ->
+      if (handled(motionEvent)) {
+        safeOffer(motionEvent)
+      } else {
+        false
+      }
     }
+    it {
+      setOnHoverListener(null)
+    }
+    setOnHoverListener(listener)
   }
-  it {
-    setOnHoverListener(null)
-  }
-  setOnHoverListener(listener)
-}
 
 /**
  * Create an channel of layoutChange events for View.
  */
 @CheckResult
-inline fun View.layoutChanges(capacity: Int = 0): ReceiveChannel<Unit> = layoutChangeEvents(capacity) { _, _, _, _, _, _, _, _ -> Unit }
+inline fun View.layoutChanges(capacity: Int = 0): ReceiveChannel<Unit> =
+  layoutChangeEvents(capacity) { _, _, _, _, _, _, _, _ -> Unit }
 
 /**
  * Create an channel of layoutChange events for View.
  */
 @CheckResult
-inline fun View.layoutChangeEvents(capacity: Int = 0): ReceiveChannel<ViewLayoutChangeEvent> = layoutChangeEvents(capacity) { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-  ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
-}
+inline fun View.layoutChangeEvents(capacity: Int = 0): ReceiveChannel<ViewLayoutChangeEvent> =
+  layoutChangeEvents(capacity) { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+    ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
+  }
 
 /**
  * A layout-change event on a view.
  */
 data class ViewLayoutChangeEvent(
-    val left: Int,
-    val top: Int,
-    val right: Int,
-    val bottom: Int,
-    val oldLeft: Int,
-    val oldTop: Int,
-    val oldRight: Int,
-    val oldBottom: Int
+  val left: Int,
+  val top: Int,
+  val right: Int,
+  val bottom: Int,
+  val oldLeft: Int,
+  val oldTop: Int,
+  val oldRight: Int,
+  val oldBottom: Int
 )
 
 /**
@@ -194,8 +198,8 @@ data class ViewLayoutChangeEvent(
  */
 @CheckResult
 fun <T> View.layoutChangeEvents(
-    capacity: Int = 0,
-    creator: (Int, Int, Int, Int, Int, Int, Int, Int) -> T
+  capacity: Int = 0,
+  creator: (Int, Int, Int, Int, Int, Int, Int, Int) -> T
 ): ReceiveChannel<T> = cancelableChannel(capacity) {
   val listener = View.OnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
     safeOffer(creator(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom))
@@ -234,19 +238,20 @@ fun View.longClicks(capacity: Int = 0, handled: Callable): ReceiveChannel<Unit> 
  * Create an channel for pre-draws on View.
  */
 @CheckResult
-fun View.preDraws(capacity: Int = 0, proceedDrawingPass: () -> Boolean): ReceiveChannel<Unit> = cancelableChannel(capacity) {
-  val listener = ViewTreeObserver.OnPreDrawListener {
-    if (safeOffer(Unit)) {
-      proceedDrawingPass()
-    } else {
-      true
+fun View.preDraws(capacity: Int = 0, proceedDrawingPass: () -> Boolean): ReceiveChannel<Unit> =
+  cancelableChannel(capacity) {
+    val listener = ViewTreeObserver.OnPreDrawListener {
+      if (safeOffer(Unit)) {
+        proceedDrawingPass()
+      } else {
+        true
+      }
     }
+    it {
+      viewTreeObserver.removeOnPreDrawListener(listener)
+    }
+    viewTreeObserver.addOnPreDrawListener(listener)
   }
-  it {
-    viewTreeObserver.removeOnPreDrawListener(listener)
-  }
-  viewTreeObserver.addOnPreDrawListener(listener)
-}
 
 /**
  * Create an channel of scroll-change events for view.
@@ -287,19 +292,20 @@ inline fun View.touches(capacity: Int = 0): ReceiveChannel<MotionEvent> = touche
  * Create an channel of touch events for view.
  */
 @CheckResult
-fun View.touches(capacity: Int = 0, handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> = cancelableChannel(capacity) {
-  val listener = View.OnTouchListener { _, motionEvent ->
-    if (handled(motionEvent)) {
-      safeOffer(motionEvent)
-    } else {
-      false
+fun View.touches(capacity: Int = 0, handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> =
+  cancelableChannel(capacity) {
+    val listener = View.OnTouchListener { _, motionEvent ->
+      if (handled(motionEvent)) {
+        safeOffer(motionEvent)
+      } else {
+        false
+      }
     }
+    it {
+      setOnTouchListener(null)
+    }
+    setOnTouchListener(listener)
   }
-  it {
-    setOnTouchListener(null)
-  }
-  setOnTouchListener(listener)
-}
 
 /**
  * Create an channel of key events for view.
@@ -311,16 +317,17 @@ inline fun View.keys(capacity: Int = 0): ReceiveChannel<KeyEvent> = keys(capacit
  * Create an channel of key events for view.
  */
 @CheckResult
-fun View.keys(capacity: Int = 0, handled: Predicate<in KeyEvent>): ReceiveChannel<KeyEvent> = cancelableChannel(capacity) {
-  val listener = View.OnKeyListener { _, _, event ->
-    if (handled(event)) {
-      safeOffer(event)
-    } else {
-      false
+fun View.keys(capacity: Int = 0, handled: Predicate<in KeyEvent>): ReceiveChannel<KeyEvent> =
+  cancelableChannel(capacity) {
+    val listener = View.OnKeyListener { _, _, event ->
+      if (handled(event)) {
+        safeOffer(event)
+      } else {
+        false
+      }
     }
+    it {
+      setOnKeyListener(null)
+    }
+    setOnKeyListener(listener)
   }
-  it {
-    setOnKeyListener(null)
-  }
-  setOnKeyListener(listener)
-}
