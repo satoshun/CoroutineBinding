@@ -4,6 +4,8 @@ package com.github.satoshun.coroutinebinding
 
 import android.os.Handler
 import android.os.Looper
+import android.support.annotation.RestrictTo
+import android.support.annotation.RestrictTo.Scope.LIBRARY
 import kotlinx.coroutines.experimental.channels.AbstractChannel
 import kotlinx.coroutines.experimental.channels.ArrayChannel
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -12,6 +14,7 @@ import kotlinx.coroutines.experimental.channels.RendezvousChannel
 private val mainHandler = Handler(Looper.getMainLooper())
 
 // todo: refactoring after https://github.com/Kotlin/kotlinx.coroutines/issues/341
+@RestrictTo(LIBRARY)
 inline fun <E> cancelableChannel(
   capacity: Int = 0,
   init: AbstractChannel<E>.((() -> Unit) -> Unit) -> Unit
@@ -35,6 +38,7 @@ class OnCancelableChannel<E> : RendezvousChannel<E>() {
   }
 }
 
+@RestrictTo(LIBRARY)
 class ArrayOnCancelableChannel<E>(capacity: Int) : ArrayChannel<E>(capacity) {
   lateinit var onAfterClosed: () -> Unit
 
