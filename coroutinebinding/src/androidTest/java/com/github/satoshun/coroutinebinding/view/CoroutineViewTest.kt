@@ -10,11 +10,13 @@ import android.widget.EditText
 import android.widget.TextView
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
+import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import com.google.common.truth.Truth
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Ignore
@@ -30,105 +32,105 @@ class CoroutineViewTest {
   private val view: ViewGroup get() = rule.activity.view
 
   @Test @UiThreadTest
-  fun attaches() = runBlocking<Unit> {
+  fun attaches() {
     val child = TextView(rule.activity)
     val attaches = child.attaches(1)
     view.addView(child)
-    Truth.assertThat(attaches.poll()).isNotNull()
+    attaches.poll().isNotNull()
     view.removeView(child)
 
     attaches.cancel()
     view.addView(child)
-    Truth.assertThat(attaches.poll()).isNull()
+    attaches.poll().isNull()
   }
 
   @Test @UiThreadTest
-  fun detaches() = runBlocking<Unit> {
+  fun detaches() {
     val child = TextView(rule.activity)
     val detaches = child.detaches(1)
     view.addView(child)
     view.removeView(child)
-    Truth.assertThat(detaches.poll()).isNotNull()
+    detaches.poll().isNotNull()
 
     detaches.cancel()
     view.addView(child)
     view.removeView(child)
-    Truth.assertThat(detaches.poll()).isNull()
+    detaches.poll().isNull()
   }
 
-  @Test @UiThreadTest
-  fun clicks() = runBlocking<Unit> {
-    val clicks = view.clicks(1)
+  @Test
+  fun clicks() = testRunBlocking {
+    val clicks = uiRunBlocking { view.clicks(1) }
 
-    view.performClick()
-    Truth.assertThat(clicks.poll()).isNotNull()
+    uiRunBlocking { view.performClick() }
+    clicks.poll().isNotNull()
 
     clicks.cancel()
-    view.performClick()
-    Truth.assertThat(clicks.poll()).isNull()
+    uiRunBlocking { view.performClick() }
+    clicks.poll().isNull()
   }
 
   @Ignore("todo")
-  @Test @UiThreadTest
-  fun drags() = runBlocking<Unit> {
+  @Test
+  fun drags() = testRunBlocking {
     val drags = view.drags(1)
   }
 
   @Ignore("todo")
-  @Test @UiThreadTest
-  fun draws() = runBlocking<Unit> {
+  @Test
+  fun draws() = testRunBlocking {
     val draws = view.draws(1)
   }
 
   @Test @UiThreadTest
-  fun focusChanges() = runBlocking<Unit> {
+  fun focusChanges() {
     val focus = view.focusChanges(1)
     view.isFocusable = true
     view.requestFocus()
-    Truth.assertThat(focus.poll()).isTrue()
+    focus.poll().isTrue()
     view.clearFocus()
-    Truth.assertThat(focus.poll()).isFalse()
+    focus.poll().isFalse()
 
     focus.cancel()
     view.requestFocus()
-    Truth.assertThat(focus.poll()).isNull()
+    focus.poll().isNull()
   }
 
-  @Test @UiThreadTest
-  fun globalLayouts() = runBlocking<Unit> {
+  @Test
+  fun globalLayouts() = testRunBlocking {
     val layouts = view.globalLayouts(1)
     view.viewTreeObserver.dispatchOnGlobalLayout()
-    Truth.assertThat(layouts.poll()).isNotNull()
+    layouts.poll().isNotNull()
 
     layouts.cancel()
     view.viewTreeObserver.dispatchOnGlobalLayout()
-    Truth.assertThat(layouts.poll()).isNull()
+    layouts.poll().isNull()
   }
 
   @Ignore("todo")
-  @Test @UiThreadTest
-  fun hovers() = runBlocking<Unit> {
+  @Test
+  fun hovers() = testRunBlocking {
     val hovers = view.hovers(1)
   }
 
   @Test @UiThreadTest
-  fun layoutChanges() = runBlocking<Unit> {
+  fun layoutChanges() {
     val layoutChange = view.layoutChanges(1)
     view.layout(0, 0, 0, 0)
-    Truth.assertThat(layoutChange.poll()).isNotNull()
+    layoutChange.poll().isNotNull()
 
     layoutChange.cancel()
     view.layout(0, 0, 0, 0)
-    Truth.assertThat(layoutChange.poll()).isNull()
+    layoutChange.poll().isNull()
   }
 
   @Test @UiThreadTest
-  fun layoutChangeEvents() = runBlocking<Unit> {
+  fun layoutChangeEvents() {
     val layoutChange = view.layoutChangeEvents(1)
     val oldRight = view.right
     val oldBottom = view.bottom
     view.layout(0, 0, 0, 100)
-    Truth.assertThat(layoutChange.poll()).isEqualTo(
+    layoutChange.poll().isEqualTo(
         ViewLayoutChangeEvent(
             0, 0, 0, 100,
             0, 0, oldRight, oldBottom
@@ -137,23 +139,23 @@ class CoroutineViewTest {
 
     layoutChange.cancel()
     view.layout(0, 0, 0, 0)
-    Truth.assertThat(layoutChange.poll()).isNull()
+    layoutChange.poll().isNull()
   }
 
-  @Test @UiThreadTest
-  fun longClicks() = runBlocking<Unit> {
+  @Test
+  fun longClicks() = testRunBlocking {
     val longClicks = view.longClicks(1)
     view.performLongClick()
 
-    Truth.assertThat(longClicks.poll()).isNotNull()
+    longClicks.poll().isNotNull()
 
     longClicks.cancel()
     view.performLongClick()
-    Truth.assertThat(longClicks.poll()).isNull()
+    longClicks.poll().isNull()
   }
 
-  @Test @UiThreadTest
-  fun preDraws() = runBlocking<Unit> {
+  @Test
+  fun preDraws() = testRunBlocking {
     val preDraws = view.preDraws(1) { true }
     view.viewTreeObserver.dispatchOnPreDraw()
     preDraws.poll().isNotNull()
@@ -164,15 +166,15 @@ class CoroutineViewTest {
   }
 
   @Test
-  fun systemUiVisibilityChanges() = runBlocking<Unit> {
+  fun systemUiVisibilityChanges() = testRunBlocking {
     val view = view
     val systemUiVisibilityChanges = uiRunBlocking { view.systemUiVisibilityChanges() }
 
     uiLaunch { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
-    systemUiVisibilityChanges.receiveOrNull().isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+    systemUiVisibilityChanges.receive().isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
 
     uiLaunch { view.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE }
-    systemUiVisibilityChanges.receiveOrNull().isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE)
+    systemUiVisibilityChanges.receive().isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE)
 
     systemUiVisibilityChanges.cancel()
     uiLaunch { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
@@ -180,13 +182,13 @@ class CoroutineViewTest {
   }
 
   @Ignore("todo")
-  @Test @UiThreadTest
-  fun touches() = runBlocking<Unit> {
+  @Test
+  fun touches() = testRunBlocking {
     val touches = view.touches(1)
   }
 
   @Test
-  fun keys() = runBlocking<Unit> {
+  fun keys() = testRunBlocking {
     val editView = runBlocking(UI) {
       EditText(rule.activity).also {
         view.addView(it)

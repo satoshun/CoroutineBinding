@@ -23,22 +23,22 @@ class CoroutinePopupMenuTest {
     popupMenu = PopupMenu(rule.activity, rule.activity.view)
   }
 
-  @Test @UiThreadTest
+  @Test
   fun itemClicks() = testRunBlocking {
     val menu = popupMenu.menu
-    val item1 = menu.add(0, 1, 0, "Hi")
-    val item2 = menu.add(0, 2, 0, "Hey")
+    val item1 = uiRunBlocking { menu.add(0, 1, 0, "Hi") }
+    val item2 = uiRunBlocking { menu.add(0, 2, 0, "Hey") }
 
-    val itemClicks = popupMenu.itemClicks(1)
+    val itemClicks = uiRunBlocking { popupMenu.itemClicks(1) }
 
-    menu.performIdentifierAction(2, 0)
+    uiRunBlocking { menu.performIdentifierAction(2, 0) }
     itemClicks.receive().isSame(item2)
 
-    menu.performIdentifierAction(1, 0)
+    uiRunBlocking { menu.performIdentifierAction(1, 0) }
     itemClicks.receive().isSame(item1)
 
     itemClicks.cancel()
-    menu.performIdentifierAction(2, 0)
+    uiRunBlocking { menu.performIdentifierAction(2, 0) }
     itemClicks.receiveOrNull().isNull()
   }
 
