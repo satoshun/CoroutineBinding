@@ -27,6 +27,13 @@ inline fun <E> cancelableChannel2(
 private val <E> Channel<E>.canSend get(): Boolean = !isClosedForSend
 
 @RestrictTo(LIBRARY)
+fun <E> Channel<E>.invokeOnCloseOnMain(handler: (cause: Throwable?) -> Unit) {
+  invokeOnClose { throwable ->
+    mainHandler.post { handler(throwable) }
+  }
+}
+
+@RestrictTo(LIBRARY)
 fun <E> Channel<E>.safeOffer(value: E): Boolean {
   return if (canSend) {
     offer(value)
