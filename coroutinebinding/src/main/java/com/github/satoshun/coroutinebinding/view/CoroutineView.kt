@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import com.github.satoshun.coroutinebinding.cancelableChannel
+import com.github.satoshun.coroutinebinding.cancelableChannel2
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
@@ -20,7 +21,7 @@ internal typealias Predicate<T> = (T) -> Boolean
  * Create an channel of to emit on view attach events.
  */
 @CheckResult
-fun View.attaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capacity) {
+fun View.attaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel2(capacity) {
   val listener = object : View.OnAttachStateChangeListener {
     override fun onViewDetachedFromWindow(v: View) {
       // do nothing
@@ -30,7 +31,7 @@ fun View.attaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(c
       safeOffer(Unit)
     }
   }
-  it {
+  invokeOnClose {
     removeOnAttachStateChangeListener(listener)
   }
   addOnAttachStateChangeListener(listener)
@@ -81,19 +82,19 @@ inline fun View.drags(capacity: Int = 0): ReceiveChannel<DragEvent> = drags(capa
  */
 @CheckResult
 fun View.drags(capacity: Int = 0, handled: Predicate<in DragEvent>): ReceiveChannel<DragEvent> =
-  cancelableChannel(capacity) {
-    val listener = View.OnDragListener { _, dragEvent ->
-      if (handled(dragEvent)) {
-        safeOffer(dragEvent)
-      } else {
-        false
+    cancelableChannel(capacity) {
+      val listener = View.OnDragListener { _, dragEvent ->
+        if (handled(dragEvent)) {
+          safeOffer(dragEvent)
+        } else {
+          false
+        }
       }
+      it {
+        setOnDragListener(null)
+      }
+      setOnDragListener(listener)
     }
-    it {
-      setOnDragListener(null)
-    }
-    setOnDragListener(listener)
-  }
 
 /**
  * Create an channel for draws on view
@@ -149,35 +150,35 @@ inline fun View.hovers(capacity: Int = 0): ReceiveChannel<MotionEvent> = hovers(
  */
 @CheckResult
 fun View.hovers(capacity: Int = 0, handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> =
-  cancelableChannel(capacity) {
-    val listener = View.OnHoverListener { _, motionEvent ->
-      if (handled(motionEvent)) {
-        safeOffer(motionEvent)
-      } else {
-        false
+    cancelableChannel(capacity) {
+      val listener = View.OnHoverListener { _, motionEvent ->
+        if (handled(motionEvent)) {
+          safeOffer(motionEvent)
+        } else {
+          false
+        }
       }
+      it {
+        setOnHoverListener(null)
+      }
+      setOnHoverListener(listener)
     }
-    it {
-      setOnHoverListener(null)
-    }
-    setOnHoverListener(listener)
-  }
 
 /**
  * Create an channel of layoutChange events for View.
  */
 @CheckResult
 inline fun View.layoutChanges(capacity: Int = 0): ReceiveChannel<Unit> =
-  layoutChangeEvents(capacity) { _, _, _, _, _, _, _, _ -> Unit }
+    layoutChangeEvents(capacity) { _, _, _, _, _, _, _, _ -> Unit }
 
 /**
  * Create an channel of layoutChange events for View.
  */
 @CheckResult
 inline fun View.layoutChangeEvents(capacity: Int = 0): ReceiveChannel<ViewLayoutChangeEvent> =
-  layoutChangeEvents(capacity) { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-    ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
-  }
+    layoutChangeEvents(capacity) { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+      ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
+    }
 
 /**
  * A layout-change event on a view.
@@ -239,19 +240,19 @@ fun View.longClicks(capacity: Int = 0, handled: Callable): ReceiveChannel<Unit> 
  */
 @CheckResult
 fun View.preDraws(capacity: Int = 0, proceedDrawingPass: () -> Boolean): ReceiveChannel<Unit> =
-  cancelableChannel(capacity) {
-    val listener = ViewTreeObserver.OnPreDrawListener {
-      if (safeOffer(Unit)) {
-        proceedDrawingPass()
-      } else {
-        true
+    cancelableChannel(capacity) {
+      val listener = ViewTreeObserver.OnPreDrawListener {
+        if (safeOffer(Unit)) {
+          proceedDrawingPass()
+        } else {
+          true
+        }
       }
+      it {
+        viewTreeObserver.removeOnPreDrawListener(listener)
+      }
+      viewTreeObserver.addOnPreDrawListener(listener)
     }
-    it {
-      viewTreeObserver.removeOnPreDrawListener(listener)
-    }
-    viewTreeObserver.addOnPreDrawListener(listener)
-  }
 
 /**
  * Create an channel of scroll-change events for view.
@@ -293,19 +294,19 @@ inline fun View.touches(capacity: Int = 0): ReceiveChannel<MotionEvent> = touche
  */
 @CheckResult
 fun View.touches(capacity: Int = 0, handled: Predicate<in MotionEvent>): ReceiveChannel<MotionEvent> =
-  cancelableChannel(capacity) {
-    val listener = View.OnTouchListener { _, motionEvent ->
-      if (handled(motionEvent)) {
-        safeOffer(motionEvent)
-      } else {
-        false
+    cancelableChannel(capacity) {
+      val listener = View.OnTouchListener { _, motionEvent ->
+        if (handled(motionEvent)) {
+          safeOffer(motionEvent)
+        } else {
+          false
+        }
       }
+      it {
+        setOnTouchListener(null)
+      }
+      setOnTouchListener(listener)
     }
-    it {
-      setOnTouchListener(null)
-    }
-    setOnTouchListener(listener)
-  }
 
 /**
  * Create an channel of key events for view.
@@ -318,16 +319,16 @@ inline fun View.keys(capacity: Int = 0): ReceiveChannel<KeyEvent> = keys(capacit
  */
 @CheckResult
 fun View.keys(capacity: Int = 0, handled: Predicate<in KeyEvent>): ReceiveChannel<KeyEvent> =
-  cancelableChannel(capacity) {
-    val listener = View.OnKeyListener { _, _, event ->
-      if (handled(event)) {
-        safeOffer(event)
-      } else {
-        false
+    cancelableChannel(capacity) {
+      val listener = View.OnKeyListener { _, _, event ->
+        if (handled(event)) {
+          safeOffer(event)
+        } else {
+          false
+        }
       }
+      it {
+        setOnKeyListener(null)
+      }
+      setOnKeyListener(listener)
     }
-    it {
-      setOnKeyListener(null)
-    }
-    setOnKeyListener(listener)
-  }
