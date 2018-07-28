@@ -17,8 +17,6 @@ import com.github.satoshun.coroutinebinding.isTrue
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
@@ -58,15 +56,15 @@ class CoroutineViewTest {
     detaches.poll().isNull()
   }
 
-  @Test
-  fun clicks() = testRunBlocking {
-    val clicks = uiRunBlocking { view.clicks(1) }
+  @Test @UiThreadTest
+  fun clicks() {
+    val clicks = view.clicks(1)
 
-    uiRunBlocking { view.performClick() }
+    view.performClick()
     clicks.poll().isNotNull()
 
     clicks.cancel()
-    uiRunBlocking { view.performClick() }
+    view.performClick()
     clicks.poll().isNull()
   }
 
@@ -96,8 +94,8 @@ class CoroutineViewTest {
     focus.poll().isNull()
   }
 
-  @Test
-  fun globalLayouts() = testRunBlocking {
+  @Test @UiThreadTest
+  fun globalLayouts() {
     val layouts = view.globalLayouts(1)
     view.viewTreeObserver.dispatchOnGlobalLayout()
     layouts.poll().isNotNull()
@@ -142,8 +140,8 @@ class CoroutineViewTest {
     layoutChange.poll().isNull()
   }
 
-  @Test
-  fun longClicks() = testRunBlocking {
+  @Test @UiThreadTest
+  fun longClicks() {
     val longClicks = view.longClicks(1)
     view.performLongClick()
 
@@ -154,8 +152,8 @@ class CoroutineViewTest {
     longClicks.poll().isNull()
   }
 
-  @Test
-  fun preDraws() = testRunBlocking {
+  @Test @UiThreadTest
+  fun preDraws() {
     val preDraws = view.preDraws(1) { true }
     view.viewTreeObserver.dispatchOnPreDraw()
     preDraws.poll().isNotNull()
@@ -189,12 +187,12 @@ class CoroutineViewTest {
 
   @Test
   fun keys() = testRunBlocking {
-    val editView = runBlocking(UI) {
+    val editView = uiRunBlocking {
       EditText(rule.activity).also {
         view.addView(it)
       }
     }
-    val keys = runBlocking(UI) {
+    val keys = uiRunBlocking {
       editView.keys(1).also {
         editView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R))
       }
@@ -204,7 +202,7 @@ class CoroutineViewTest {
     event.keyCode.isEqualTo(KeyEvent.KEYCODE_R)
 
     keys.cancel()
-    runBlocking(UI) {
+    uiRunBlocking {
       editView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R))
     }
     keys.poll().isNull()
