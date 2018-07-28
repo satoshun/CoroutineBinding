@@ -5,6 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toolbar
 import com.github.satoshun.coroutinebinding.cancelableChannel
+import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
@@ -16,7 +17,7 @@ fun Toolbar.itemClicks(capacity: Int = 0): ReceiveChannel<MenuItem> = cancelable
   val listener = Toolbar.OnMenuItemClickListener {
     safeOffer(it)
   }
-  it {
+  invokeOnCloseOnMain {
     setOnMenuItemClickListener(null)
   }
   setOnMenuItemClickListener(listener)
@@ -30,7 +31,7 @@ fun Toolbar.navigationClicks(capacity: Int = 0): ReceiveChannel<Unit> = cancelab
   val listener = View.OnClickListener {
     safeOffer(Unit)
   }
-  it {
+  invokeOnCloseOnMain {
     setOnClickListener(null)
   }
   setOnClickListener(listener)

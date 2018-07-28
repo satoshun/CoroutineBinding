@@ -2,6 +2,7 @@ package com.github.satoshun.coroutinebinding.widget
 
 import android.widget.RadioGroup
 import com.github.satoshun.coroutinebinding.cancelableChannel
+import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
@@ -19,7 +20,7 @@ fun RadioGroup.checkedChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelab
       }
     }
   }
-  it {
+  invokeOnCloseOnMain {
     setOnCheckedChangeListener(null)
   }
   setOnCheckedChangeListener(listener)

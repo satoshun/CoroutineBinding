@@ -4,6 +4,7 @@ package com.github.satoshun.coroutinebinding.widget
 
 import android.widget.SeekBar
 import com.github.satoshun.coroutinebinding.cancelableChannel
+import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
@@ -39,7 +40,7 @@ fun SeekBar.changes(capacity: Int = 0, shouldBeFromUser: Boolean?): ReceiveChann
     override fun onStopTrackingTouch(seekBar: SeekBar) {
     }
   }
-  it {
+  invokeOnCloseOnMain {
     setOnSeekBarChangeListener(null)
   }
   setOnSeekBarChangeListener(listener)
@@ -48,7 +49,7 @@ fun SeekBar.changes(capacity: Int = 0, shouldBeFromUser: Boolean?): ReceiveChann
 /**
  * Create an channel which emits the progress change events.
  */
-fun SeekBar.changeEvents(): ReceiveChannel<SeekBarChangeEvent> = cancelableChannel {
+fun SeekBar.changeEvents(capacity: Int = 0): ReceiveChannel<SeekBarChangeEvent> = cancelableChannel(capacity) {
   val listener = object : SeekBar.OnSeekBarChangeListener {
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
       safeOffer(SeekBarProgressChangeEvent(seekBar, progress, fromUser))
@@ -62,7 +63,7 @@ fun SeekBar.changeEvents(): ReceiveChannel<SeekBarChangeEvent> = cancelableChann
       safeOffer(SeekBarStopChangeEvent(seekBar))
     }
   }
-  it {
+  invokeOnCloseOnMain {
     setOnSeekBarChangeListener(null)
   }
   setOnSeekBarChangeListener(listener)

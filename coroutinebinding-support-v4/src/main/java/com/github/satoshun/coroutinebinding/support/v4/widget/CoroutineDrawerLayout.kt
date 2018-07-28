@@ -4,6 +4,7 @@ import android.support.annotation.CheckResult
 import android.support.v4.widget.DrawerLayout
 import android.view.View
 import com.github.satoshun.coroutinebinding.cancelableChannel
+import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
@@ -11,7 +12,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  * Create an channel of the open state of the drawer of view.
  */
 @CheckResult
-fun DrawerLayout.drawerOpen(gravity: Int, capacity: Int = 0): ReceiveChannel<Boolean> = cancelableChannel(capacity) { onAfterClosed ->
+fun DrawerLayout.drawerOpen(gravity: Int, capacity: Int = 0): ReceiveChannel<Boolean> = cancelableChannel(capacity) {
   val listener = object : DrawerLayout.DrawerListener {
     override fun onDrawerStateChanged(newState: Int) {
     }
@@ -31,7 +32,7 @@ fun DrawerLayout.drawerOpen(gravity: Int, capacity: Int = 0): ReceiveChannel<Boo
       }
     }
   }
-  onAfterClosed {
+  invokeOnCloseOnMain {
     removeDrawerListener(listener)
   }
   addDrawerListener(listener)

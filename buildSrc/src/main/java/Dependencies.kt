@@ -5,9 +5,8 @@ object Vers {
   val agp = "3.2.0-beta04"
 
   val kotlin = "1.2.51"
-  val couroutine = "0.23.4"
+  val couroutine = "0.24.0"
   val support_lib = "27.1.1"
-  val ktlint = "0.23.1"
 }
 
 object Libs {

@@ -1,6 +1,5 @@
 package com.github.satoshun.coroutinebinding.view
 
-import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
@@ -8,7 +7,9 @@ import android.view.ViewGroup
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isInstanceOf
 import com.github.satoshun.coroutinebinding.isNull
-import kotlinx.coroutines.experimental.runBlocking
+import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.uiLaunch
+import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,19 +20,20 @@ class CoroutineViewGroupTest {
 
   private val view: ViewGroup get() = rule.activity.view
 
-  @Test @UiThreadTest
-  fun changeEvents() = runBlocking<Unit> {
-    val child = View(rule.activity)
+  @Test
+  fun changeEvents() = testRunBlocking {
+    val view = view
+    val child = uiRunBlocking { View(rule.activity) }
     val changeEvents = view.changeEvents(1)
 
-    view.addView(child)
+    uiLaunch { view.addView(child) }
     changeEvents.receive().isInstanceOf(ViewGroupHierarchyChildViewAddEvent::class)
 
-    view.removeView(child)
+    uiLaunch { view.removeView(child) }
     changeEvents.receive().isInstanceOf(ViewGroupHierarchyChildViewRemoveEvent::class)
 
     changeEvents.cancel()
-    view.addView(child)
+    uiLaunch { view.addView(child) }
     changeEvents.poll().isNull()
   }
 }

@@ -2,6 +2,7 @@ package com.github.satoshun.coroutinebinding.widget
 
 import android.widget.SearchView
 import com.github.satoshun.coroutinebinding.cancelableChannel
+import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
@@ -9,21 +10,21 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  * Create an channel which emits the query text change events.
  */
 fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<SearchViewQueryTextEvent> =
-  cancelableChannel(capacity) {
-    val listener = object : SearchView.OnQueryTextListener {
-      override fun onQueryTextSubmit(query: String): Boolean {
-        return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, query, true))
-      }
+    cancelableChannel(capacity) {
+      val listener = object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String): Boolean {
+          return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, query, true))
+        }
 
-      override fun onQueryTextChange(newText: String): Boolean {
-        return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, newText, false))
+        override fun onQueryTextChange(newText: String): Boolean {
+          return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, newText, false))
+        }
       }
+      invokeOnCloseOnMain {
+        setOnQueryTextListener(null)
+      }
+      setOnQueryTextListener(listener)
     }
-    it {
-      setOnQueryTextListener(null)
-    }
-    setOnQueryTextListener(listener)
-  }
 
 /**
  * A search query event on SearchView.
@@ -47,7 +48,7 @@ fun SearchView.queryTextChanges(capacity: Int = 0): ReceiveChannel<CharSequence>
       return safeOffer(newText)
     }
   }
-  it {
+  invokeOnCloseOnMain {
     setOnQueryTextListener(null)
   }
   setOnQueryTextListener(listener)
