@@ -3,7 +3,8 @@ package com.github.satoshun.coroutinebinding.support.v4.widget
 import android.support.annotation.CheckResult
 import android.support.v4.widget.SlidingPaneLayout
 import android.view.View
-import com.github.satoshun.coroutinebinding.cancelableChannel
+import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
@@ -11,7 +12,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  * Create an channel of the open state of the pane of view
  */
 @CheckResult
-fun SlidingPaneLayout.panelOpens(capacity: Int = 0): ReceiveChannel<Boolean> = cancelableChannel(capacity) { onAfterClosed ->
+fun SlidingPaneLayout.panelOpens(capacity: Int = 0): ReceiveChannel<Boolean> = cancelableChannel2(capacity) {
   val listener = object : SlidingPaneLayout.PanelSlideListener {
     override fun onPanelSlide(panel: View, slideOffset: Float) {
     }
@@ -25,7 +26,7 @@ fun SlidingPaneLayout.panelOpens(capacity: Int = 0): ReceiveChannel<Boolean> = c
     }
   }
 
-  onAfterClosed {
+  invokeOnCloseOnMain {
     setPanelSlideListener(null)
   }
   setPanelSlideListener(listener)
@@ -35,7 +36,7 @@ fun SlidingPaneLayout.panelOpens(capacity: Int = 0): ReceiveChannel<Boolean> = c
  * Create an channel of the slide offset of the pane of view
  */
 @CheckResult
-fun SlidingPaneLayout.panelSlides(capacity: Int = 0): ReceiveChannel<Float> = cancelableChannel(capacity) { onAfterClosed ->
+fun SlidingPaneLayout.panelSlides(capacity: Int = 0): ReceiveChannel<Float> = cancelableChannel2(capacity) {
   val listener = object : SlidingPaneLayout.PanelSlideListener {
     override fun onPanelSlide(panel: View, slideOffset: Float) {
       safeOffer(slideOffset)
@@ -48,7 +49,7 @@ fun SlidingPaneLayout.panelSlides(capacity: Int = 0): ReceiveChannel<Float> = ca
     }
   }
 
-  onAfterClosed {
+  invokeOnCloseOnMain {
     setPanelSlideListener(null)
   }
   setPanelSlideListener(listener)
