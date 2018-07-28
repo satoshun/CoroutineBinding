@@ -2,7 +2,7 @@ package com.github.satoshun.coroutinebinding.design.widget
 
 import android.support.annotation.CheckResult
 import android.support.design.widget.TabLayout
-import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -12,7 +12,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  */
 @CheckResult
 fun TabLayout.selections(capacity: Int = 0): ReceiveChannel<TabLayout.Tab> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : TabLayout.OnTabSelectedListener {
         override fun onTabReselected(tab: TabLayout.Tab?) {
         }
@@ -40,7 +40,7 @@ fun TabLayout.selections(capacity: Int = 0): ReceiveChannel<TabLayout.Tab> =
  */
 @CheckResult
 fun TabLayout.selectionEvents(capacity: Int = 0): ReceiveChannel<TabLayoutSelectionEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : TabLayout.OnTabSelectedListener {
         override fun onTabReselected(tab: TabLayout.Tab) {
           safeOffer(TabLayoutSelectionReselectedEvent(this@selectionEvents, tab))

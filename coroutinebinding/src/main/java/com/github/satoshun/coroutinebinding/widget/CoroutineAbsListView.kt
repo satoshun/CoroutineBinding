@@ -2,7 +2,7 @@ package com.github.satoshun.coroutinebinding.widget
 
 import android.widget.AbsListView
 import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE
-import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -11,7 +11,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  * Create an channel of scroll events on AbsListView.
  */
 fun AbsListView.scrollEvents(capacity: Int = 0): ReceiveChannel<AbsListViewScrollEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : AbsListView.OnScrollListener {
         private var currentScrollState = SCROLL_STATE_IDLE
 

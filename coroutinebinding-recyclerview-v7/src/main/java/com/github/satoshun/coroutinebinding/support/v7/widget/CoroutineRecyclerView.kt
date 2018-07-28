@@ -3,7 +3,7 @@ package com.github.satoshun.coroutinebinding.support.v7.widget
 import android.support.annotation.CheckResult
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -13,7 +13,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  */
 @CheckResult
 fun RecyclerView.childAttachStateChangeEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewChildAttachStateChangeEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : RecyclerView.OnChildAttachStateChangeListener {
         override fun onChildViewDetachedFromWindow(view: View) {
           safeOffer(RecyclerViewChildDetachEvent(this@childAttachStateChangeEvents, view))
@@ -58,7 +58,7 @@ data class RecyclerViewChildDetachEvent(
  */
 @CheckResult
 fun RecyclerView.scrollEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewScrollEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
           safeOffer(RecyclerViewScrollEvent(recyclerView, dx, dy))
@@ -84,7 +84,7 @@ data class RecyclerViewScrollEvent(
  */
 @CheckResult
 fun RecyclerView.scrollStateChanges(capacity: Int = 0): ReceiveChannel<Int> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
           safeOffer(newState)

@@ -6,7 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.widget.TextView
-import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import com.github.satoshun.coroutinebinding.view.Predicate
@@ -21,7 +21,7 @@ inline fun TextView.editorActions(capacity: Int = 0): ReceiveChannel<Int> = edit
  * Create an channel of editorActions events.
  */
 fun TextView.editorActions(capacity: Int = 0, handled: Predicate<Int>): ReceiveChannel<Int> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = TextView.OnEditorActionListener { _, actionId, _ ->
         if (handled(actionId)) {
           safeOffer(actionId)
@@ -45,7 +45,7 @@ inline fun TextView.editorActionEvents(capacity: Int = 0): ReceiveChannel<TextVi
  * Create an channel of editorActions events.
  */
 fun TextView.editorActionEvents(capacity: Int = 0, handled: Predicate<Int>): ReceiveChannel<TextViewEditorActionEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = TextView.OnEditorActionListener { v, actionId, event ->
         if (handled(actionId)) {
           safeOffer(TextViewEditorActionEvent(v, actionId, event))
@@ -68,7 +68,7 @@ data class TextViewEditorActionEvent(
 /**
  * Create an channel of text change events.
  */
-inline fun TextView.textChanges(capacity: Int = 0): ReceiveChannel<CharSequence> = cancelableChannel2(capacity) {
+inline fun TextView.textChanges(capacity: Int = 0): ReceiveChannel<CharSequence> = cancelableChannel(capacity) {
   val listener = object : TextWatcher {
     override fun afterTextChanged(s: Editable?) {
     }
@@ -90,7 +90,7 @@ inline fun TextView.textChanges(capacity: Int = 0): ReceiveChannel<CharSequence>
  * Create an channel of text change events.
  */
 inline fun TextView.textChangeEvents(capacity: Int = 0): ReceiveChannel<TextViewTextChangeEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
         }
@@ -123,7 +123,7 @@ data class TextViewTextChangeEvent(
  * Create an channel of before text change events.
  */
 inline fun TextView.beforeTextChangeEvents(capacity: Int = 0): ReceiveChannel<TextViewBeforeTextChangeEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
         }
@@ -156,7 +156,7 @@ data class TextViewBeforeTextChangeEvent(
  * Create an channel of after text change events.
  */
 inline fun TextView.afterTextChangeEvents(capacity: Int = 0): ReceiveChannel<TextViewAfterTextChangeEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
           safeOffer(TextViewAfterTextChangeEvent(this@afterTextChangeEvents, s))

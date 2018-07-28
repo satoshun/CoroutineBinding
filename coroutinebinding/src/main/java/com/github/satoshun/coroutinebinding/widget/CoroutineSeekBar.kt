@@ -3,7 +3,7 @@
 package com.github.satoshun.coroutinebinding.widget
 
 import android.widget.SeekBar
-import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -26,7 +26,7 @@ inline fun SeekBar.systemChanges(capacity: Int = 0): ReceiveChannel<Int> = chang
 /**
  * Create an channel which emits the progress change events.
  */
-fun SeekBar.changes(capacity: Int = 0, shouldBeFromUser: Boolean?): ReceiveChannel<Int> = cancelableChannel2(capacity) {
+fun SeekBar.changes(capacity: Int = 0, shouldBeFromUser: Boolean?): ReceiveChannel<Int> = cancelableChannel(capacity) {
   val listener = object : SeekBar.OnSeekBarChangeListener {
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
       if (shouldBeFromUser == null || shouldBeFromUser == fromUser) {
@@ -49,7 +49,7 @@ fun SeekBar.changes(capacity: Int = 0, shouldBeFromUser: Boolean?): ReceiveChann
 /**
  * Create an channel which emits the progress change events.
  */
-fun SeekBar.changeEvents(capacity: Int = 0): ReceiveChannel<SeekBarChangeEvent> = cancelableChannel2(capacity) {
+fun SeekBar.changeEvents(capacity: Int = 0): ReceiveChannel<SeekBarChangeEvent> = cancelableChannel(capacity) {
   val listener = object : SeekBar.OnSeekBarChangeListener {
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
       safeOffer(SeekBarProgressChangeEvent(seekBar, progress, fromUser))

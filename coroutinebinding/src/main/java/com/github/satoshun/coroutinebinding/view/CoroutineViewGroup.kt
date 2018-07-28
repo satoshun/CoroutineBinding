@@ -2,7 +2,7 @@ package com.github.satoshun.coroutinebinding.view
 
 import android.view.View
 import android.view.ViewGroup
-import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -11,7 +11,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  * Create an channel of hierarchy change events for ViewGroup.
  */
 fun ViewGroup.changeEvents(capacity: Int = 0): ReceiveChannel<ViewGroupHierarchyChangeEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : ViewGroup.OnHierarchyChangeListener {
         override fun onChildViewRemoved(parent: View, child: View) {
           safeOffer(ViewGroupHierarchyChildViewRemoveEvent(this@changeEvents, child))

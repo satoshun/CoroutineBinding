@@ -2,7 +2,7 @@ package com.github.satoshun.coroutinebinding.support.v7.widget
 
 import android.support.annotation.CheckResult
 import android.support.v7.widget.SearchView
-import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -12,7 +12,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  */
 @CheckResult
 fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<SearchViewQueryTextEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
           return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, this@queryTextChangeEvents.query, true))
@@ -42,7 +42,7 @@ data class SearchViewQueryTextEvent(
  */
 @CheckResult
 fun SearchView.queryTextChange(capacity: Int = 0): ReceiveChannel<CharSequence> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
           return false

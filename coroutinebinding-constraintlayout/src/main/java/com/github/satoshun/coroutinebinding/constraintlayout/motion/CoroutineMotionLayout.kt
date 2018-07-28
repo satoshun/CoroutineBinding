@@ -2,7 +2,7 @@ package com.github.satoshun.coroutinebinding.constraintlayout.motion
 
 import android.support.annotation.CheckResult
 import androidx.constraintlayout.motion.widget.MotionLayout
-import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -12,7 +12,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
  */
 @CheckResult
 fun MotionLayout.transitionChanged(capacity: Int = 0): ReceiveChannel<MotionLayoutTransition> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : MotionLayout.TransitionListener {
         override fun onTransitionChange(motionLayout: MotionLayout, startId: Int, endId: Int, progress: Float) {
           safeOffer(

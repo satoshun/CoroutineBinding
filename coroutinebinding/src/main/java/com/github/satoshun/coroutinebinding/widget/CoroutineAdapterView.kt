@@ -5,7 +5,7 @@ package com.github.satoshun.coroutinebinding.widget
 import android.view.View
 import android.widget.Adapter
 import android.widget.AdapterView
-import com.github.satoshun.coroutinebinding.cancelableChannel2
+import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import com.github.satoshun.coroutinebinding.view.Callable
@@ -14,7 +14,7 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 /**
  * Create an channel of item selection events on AdapterView.
  */
-fun <T : Adapter> AdapterView<T>.itemSelections(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel2(capacity) {
+fun <T : Adapter> AdapterView<T>.itemSelections(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) {
   val listener = object : AdapterView.OnItemSelectedListener {
     override fun onNothingSelected(parent: AdapterView<*>) {
       safeOffer(AdapterView.INVALID_POSITION)
@@ -34,7 +34,7 @@ fun <T : Adapter> AdapterView<T>.itemSelections(capacity: Int = 0): ReceiveChann
  * Create an channel of item selection events on AdapterView.
  */
 fun <T : Adapter> AdapterView<T>.selectionEvents(capacity: Int = 0): ReceiveChannel<AdapterViewSelectionEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>) {
           safeOffer(AdapterViewNothingSelectionEvent(parent))
@@ -75,7 +75,7 @@ data class AdapterViewItemSelectionEvent(
 /**
  * Create an channel of item click events on AdapterView.
  */
-fun <T : Adapter> AdapterView<T>.itemClicks(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel2(capacity) {
+fun <T : Adapter> AdapterView<T>.itemClicks(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) {
   val listener = AdapterView.OnItemClickListener { _, _, position, _ ->
     safeOffer(position)
   }
@@ -89,7 +89,7 @@ fun <T : Adapter> AdapterView<T>.itemClicks(capacity: Int = 0): ReceiveChannel<I
  * c
  */
 fun <T : Adapter> AdapterView<T>.itemClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemClickEvent> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = AdapterView.OnItemClickListener { parent, view, position, id ->
         safeOffer(AdapterViewItemClickEvent(parent, view, position, id))
       }
@@ -109,7 +109,7 @@ inline fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0): Recei
  * Create an channel of the position of item long-clicks for view.
  */
 fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0, handled: Callable): ReceiveChannel<Int> =
-    cancelableChannel2(capacity) {
+    cancelableChannel(capacity) {
       val listener = AdapterView.OnItemLongClickListener { _, _, position, _ ->
         if (handled()) {
           safeOffer(position)
@@ -135,7 +135,7 @@ inline fun <T : Adapter> AdapterView<T>.itemLongClickEvents(capacity: Int = 0): 
 fun <T : Adapter> AdapterView<T>.itemLongClickEvents(
   capacity: Int = 0,
   handled: Callable
-): ReceiveChannel<AdapterViewItemLongClickEvent> = cancelableChannel2(capacity) {
+): ReceiveChannel<AdapterViewItemLongClickEvent> = cancelableChannel(capacity) {
   val listener = AdapterView.OnItemLongClickListener { parent, view, position, id ->
     if (handled()) {
       safeOffer(AdapterViewItemLongClickEvent(parent, view, position, id))
