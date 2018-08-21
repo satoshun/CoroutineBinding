@@ -4,7 +4,7 @@ object Vers {
   val target_sdk = 28
   val agp = "3.2.0-beta05"
 
-  val kotlin = "1.2.60"
+  val kotlin = "1.2.61"
   val couroutine = "0.24.0"
   val support_lib = "27.1.1"
 }
@@ -40,7 +40,7 @@ object Libs {
   val appcompat = "com.android.support:appcompat-v7:${Vers.support_lib}"
   val support_v4 = "com.android.support:support-v4:${Vers.support_lib}"
 
-  val truth = "com.google.truth:truth:0.40"
+  val truth = "com.google.truth:truth:0.42"
   val mockito_kotlin = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
   val multidex = "com.android.support:multidex:1.0.3"
 }
