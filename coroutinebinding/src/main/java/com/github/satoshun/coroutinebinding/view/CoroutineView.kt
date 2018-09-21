@@ -13,6 +13,7 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 internal typealias Callable = () -> Boolean
 internal typealias Predicate<T> = (T) -> Boolean
@@ -32,6 +33,25 @@ fun View.attaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(c
     }
   }
   invokeOnCloseOnMain {
+    removeOnAttachStateChangeListener(listener)
+  }
+  addOnAttachStateChangeListener(listener)
+}
+
+suspend fun View.awaitAttach(): Unit = suspendCancellableCoroutine { cont ->
+  val listener = object : View.OnAttachStateChangeListener {
+    override fun onViewDetachedFromWindow(v: View) {
+      // do nothing
+    }
+
+    override fun onViewAttachedToWindow(v: View) {
+      cont.resume(Unit)
+      removeOnAttachStateChangeListener(this)
+    }
+  }
+
+  cont.invokeOnCancellation {
+    // todo check mainthread?
     removeOnAttachStateChangeListener(listener)
   }
   addOnAttachStateChangeListener(listener)

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.github.satoshun.coroutinebinding.view.attaches
+import com.github.satoshun.coroutinebinding.view.awaitAttach
 import com.github.satoshun.coroutinebinding.view.detaches
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.CoroutineScope
@@ -49,5 +50,17 @@ class MainActivity : AppCompatActivity(),
         }
       }
     }
+
+    launch {
+      while (true) {
+        hello.awaitAttach()
+        Log.d("suspend attach", "attached")
+      }
+    }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    job.cancel()
   }
 }
