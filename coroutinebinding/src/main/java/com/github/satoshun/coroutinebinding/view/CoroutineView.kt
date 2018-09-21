@@ -77,6 +77,24 @@ fun View.detaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(c
   addOnAttachStateChangeListener(listener)
 }
 
+suspend fun View.awaitDetach(): Unit = suspendCancellableCoroutine { cont ->
+  val listener = object : View.OnAttachStateChangeListener {
+    override fun onViewDetachedFromWindow(v: View) {
+      cont.resume(Unit)
+      removeOnAttachStateChangeListener(this)
+    }
+
+    override fun onViewAttachedToWindow(v: View) {
+      // do nothing
+    }
+  }
+  cont.invokeOnCancellation {
+    // todo check mainthread?
+    removeOnAttachStateChangeListener(listener)
+  }
+  addOnAttachStateChangeListener(listener)
+}
+
 /**
  * Create an channel of to emit on view click events.
  */

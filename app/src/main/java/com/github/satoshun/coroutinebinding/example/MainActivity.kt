@@ -5,12 +5,14 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.github.satoshun.coroutinebinding.view.attaches
 import com.github.satoshun.coroutinebinding.view.awaitAttach
+import com.github.satoshun.coroutinebinding.view.awaitDetach
 import com.github.satoshun.coroutinebinding.view.detaches
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import java.util.concurrent.TimeUnit
@@ -52,9 +54,17 @@ class MainActivity : AppCompatActivity(),
     }
 
     launch {
-      while (true) {
-        hello.awaitAttach()
-        Log.d("suspend attach", "attached")
+      val attach = async {
+        while (true) {
+          hello.awaitAttach()
+          Log.d("suspend attach", "attached")
+        }
+      }
+      val detach = async {
+        while (true) {
+          hello.awaitDetach()
+          Log.d("suspend detach", "detached")
+        }
       }
     }
   }
