@@ -36,7 +36,6 @@ dependencies {
   api Libs.support_test
   api Libs.espresso
   api Libs.truth
-  api Libs.mockito_kotlin
   api Libs.multidex
 }
 

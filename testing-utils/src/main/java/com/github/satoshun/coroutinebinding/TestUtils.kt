@@ -12,8 +12,10 @@ import android.widget.ListView
 import android.widget.TextView
 import com.google.common.truth.Truth
 import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.coroutines.experimental.withTimeout
@@ -32,8 +34,6 @@ inline fun Float?.isGreaterThan(other: Float) = Truth.assertThat(this).isGreater
 inline fun Float?.isLessThan(other: Float) = Truth.assertThat(this).isLessThan(other)
 inline fun Any?.isSame(other: Any?) = Truth.assertThat(this).isSameAs(other)
 
-inline fun <T> T.verify() = com.nhaarman.mockito_kotlin.verify(this)
-
 inline fun testRunBlocking(
   context: CoroutineContext = EmptyCoroutineContext,
   noinline block: suspend CoroutineScope.() -> Unit
@@ -44,11 +44,11 @@ inline fun testRunBlocking(
 }
 
 inline fun <T> uiRunBlocking(noinline block: suspend CoroutineScope.() -> T): T {
-  return runBlocking(context = UI, block = block)
+  return runBlocking(context = Dispatchers.Main, block = block)
 }
 
 inline fun uiLaunch(noinline block: suspend CoroutineScope.() -> Unit): Job {
-  return launch(context = UI, block = block)
+  return GlobalScope.launch(context = Dispatchers.Main, block = block)
 }
 
 inline fun ActivityTestRule<out Activity>.createListView(): Pair<ListView, ListAdapter> {

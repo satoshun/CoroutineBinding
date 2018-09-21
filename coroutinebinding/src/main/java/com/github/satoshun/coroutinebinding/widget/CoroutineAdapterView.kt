@@ -86,7 +86,7 @@ fun <T : Adapter> AdapterView<T>.itemClicks(capacity: Int = 0): ReceiveChannel<I
 }
 
 /**
- * c
+ * Create an channel of item click events on AdapterView
  */
 fun <T : Adapter> AdapterView<T>.itemClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemClickEvent> =
     cancelableChannel(capacity) {

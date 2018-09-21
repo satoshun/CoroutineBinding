@@ -35,6 +35,18 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     attaches.poll().isNull()
   }
 
+  @Test
+  fun awaitAttach() = testRunBlocking {
+    val child = uiRunBlocking { TextView(rule.activity) }
+    val job = uiLaunch {
+      child.awaitAttach()
+    }
+    job.isCompleted.isFalse()
+    uiRunBlocking { view.addView(child) }
+    job.join()
+    job.isCompleted.isTrue()
+  }
+
   @Test @UiThreadTest
   fun detaches() {
     val child = TextView(rule.activity)
@@ -47,6 +59,21 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     view.addView(child)
     view.removeView(child)
     detaches.poll().isNull()
+  }
+
+  @Test
+  fun awaitDetach() = testRunBlocking {
+    val child = uiRunBlocking { TextView(rule.activity) }
+    val job = uiLaunch {
+      child.awaitDetach()
+    }
+    job.isCompleted.isFalse()
+    uiRunBlocking {
+      view.addView(child)
+      view.removeView(child)
+    }
+    job.join()
+    job.isCompleted.isTrue()
   }
 
   @Test @UiThreadTest

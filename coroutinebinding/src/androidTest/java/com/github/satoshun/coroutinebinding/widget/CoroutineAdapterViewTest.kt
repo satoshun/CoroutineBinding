@@ -12,6 +12,7 @@ import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
@@ -91,15 +92,15 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
     itemClickEvents.poll().isNull()
   }
 
+  @Ignore("todo")
   @Test
   fun itemLongClicks() = testRunBlocking {
-    // todo
     val itemLongClicks = listView.itemLongClicks(1)
   }
 
+  @Ignore("todo")
   @Test
   fun itemLongClickEvents() = testRunBlocking {
-    // todo
     val itemLongClickEvents = listView.itemLongClickEvents(1)
   }
 }
