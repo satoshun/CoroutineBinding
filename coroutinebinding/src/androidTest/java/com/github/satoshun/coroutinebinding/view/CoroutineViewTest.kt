@@ -1,13 +1,12 @@
 package com.github.satoshun.coroutinebinding.view
 
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isFalse
@@ -18,15 +17,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Ignore
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class CoroutineViewTest {
-
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private val view: ViewGroup get() = rule.activity.view
 
   @Test @UiThreadTest
@@ -163,6 +156,7 @@ class CoroutineViewTest {
     preDraws.poll().isNull()
   }
 
+  @Ignore("Flaky")
   @Test
   fun systemUiVisibilityChanges() = testRunBlocking {
     val view = view

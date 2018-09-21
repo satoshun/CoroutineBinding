@@ -7,6 +7,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withContentDescription
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.view.ContextThemeWrapper
 import android.support.v7.widget.Toolbar
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
@@ -20,9 +21,7 @@ import org.junit.Test
 
 private const val NAVIGATION_CONTENT_DESCRIPTION = "desc"
 
-class CoroutineToolbarTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineToolbarTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var toolbar: Toolbar
 
   @Before @UiThreadTest

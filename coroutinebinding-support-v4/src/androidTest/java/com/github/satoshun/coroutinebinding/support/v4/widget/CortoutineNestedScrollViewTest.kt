@@ -1,11 +1,11 @@
 package com.github.satoshun.coroutinebinding.support.v4.widget
 
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.support.v4.widget.NestedScrollView
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ScrollView
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
@@ -14,12 +14,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CortoutineNestedScrollViewTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CortoutineNestedScrollViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var view: NestedScrollView
   private lateinit var emptyView: FrameLayout
 

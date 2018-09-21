@@ -1,11 +1,11 @@
 package com.github.satoshun.coroutinebinding.support.v4.widget
 
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.support.v4.widget.DrawerLayout
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isTrue
@@ -14,12 +14,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineDrawerLayoutTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineDrawerLayoutTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var main: FrameLayout
   private lateinit var drawer: FrameLayout
   private lateinit var view: DrawerLayout

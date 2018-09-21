@@ -4,8 +4,8 @@ import android.support.test.annotation.UiThreadTest
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.matcher.ViewMatchers.withContentDescription
-import android.support.test.rule.ActivityTestRule
 import android.widget.Toolbar
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNotNull
@@ -14,14 +14,11 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Assume.assumeTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 private const val NAVIGATION_CONTENT_DESCRIPTION = "test"
 
-class CoroutineToolbarTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineToolbarTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var toolbar: Toolbar
 
   @Before @UiThreadTest

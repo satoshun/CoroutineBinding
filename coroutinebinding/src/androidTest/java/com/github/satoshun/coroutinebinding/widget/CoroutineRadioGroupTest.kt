@@ -1,9 +1,9 @@
 package com.github.satoshun.coroutinebinding.widget
 
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
@@ -11,12 +11,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineRadioGroupTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineRadioGroupTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var radioGroup: RadioGroup
 
   @Before @UiThreadTest

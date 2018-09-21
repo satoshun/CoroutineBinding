@@ -1,8 +1,8 @@
 package com.github.satoshun.coroutinebinding.widget
 
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.widget.SeekBar
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
@@ -10,12 +10,10 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
+import org.junit.Ignore
 import org.junit.Test
 
-class CoroutineSeekBarTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineSeekBarTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var seekBar: SeekBar
 
   @Before @UiThreadTest
@@ -38,21 +36,21 @@ class CoroutineSeekBarTest {
     changes.receiveOrNull().isNull()
   }
 
+  @Ignore("todo")
   @Test
   fun userChanges() = testRunBlocking {
-    // todo
     val userChanges = uiRunBlocking { seekBar.userChanges() }
   }
 
+  @Ignore("todo")
   @Test
   fun systemChanges() = testRunBlocking {
-    // todo
     val systemChanges = uiRunBlocking { seekBar.systemChanges() }
   }
 
+  @Ignore("todo")
   @Test
   fun changeEvents() = testRunBlocking {
-    // todo
     val changeEvents = uiRunBlocking { seekBar.changeEvents() }
   }
 }

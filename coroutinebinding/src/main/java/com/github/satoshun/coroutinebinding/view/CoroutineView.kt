@@ -38,6 +38,9 @@ fun View.attaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(c
   addOnAttachStateChangeListener(listener)
 }
 
+/**
+ * suspend for view attach event.
+ */
 suspend fun View.awaitAttach(): Unit = suspendCancellableCoroutine { cont ->
   val listener = object : View.OnAttachStateChangeListener {
     override fun onViewDetachedFromWindow(v: View) {
@@ -77,6 +80,9 @@ fun View.detaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(c
   addOnAttachStateChangeListener(listener)
 }
 
+/**
+ * suspend for view detach event.
+ */
 suspend fun View.awaitDetach(): Unit = suspendCancellableCoroutine { cont ->
   val listener = object : View.OnAttachStateChangeListener {
     override fun onViewDetachedFromWindow(v: View) {

@@ -2,7 +2,7 @@ package com.github.satoshun.coroutinebinding.design.widget
 
 import android.support.design.widget.TabLayout
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.design.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
@@ -11,12 +11,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import kotlinx.coroutines.experimental.delay
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineTabLayoutTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineTabLayoutTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var view: TabLayout
   private lateinit var tab1: TabLayout.Tab
   private lateinit var tab2: TabLayout.Tab

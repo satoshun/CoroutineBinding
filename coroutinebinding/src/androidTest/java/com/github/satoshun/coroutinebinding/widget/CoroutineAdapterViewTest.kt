@@ -1,10 +1,10 @@
 package com.github.satoshun.coroutinebinding.widget
 
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Spinner
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.createListView
 import com.github.satoshun.coroutinebinding.isEqualTo
@@ -12,12 +12,9 @@ import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineAdapterViewTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var spinner: Spinner
   private lateinit var listView: ListView
 

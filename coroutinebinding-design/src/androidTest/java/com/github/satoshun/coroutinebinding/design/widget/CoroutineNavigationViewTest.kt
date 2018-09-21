@@ -2,8 +2,8 @@ package com.github.satoshun.coroutinebinding.design.widget
 
 import android.support.design.widget.NavigationView
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.support.v7.view.ContextThemeWrapper
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.design.R
 import com.github.satoshun.coroutinebinding.design.ViewActivity
 import com.github.satoshun.coroutinebinding.isNull
@@ -12,12 +12,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineNavigationViewTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineNavigationViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var view: NavigationView
 
   @Before @UiThreadTest
