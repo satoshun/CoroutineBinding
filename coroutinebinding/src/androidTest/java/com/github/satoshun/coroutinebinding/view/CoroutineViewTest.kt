@@ -186,7 +186,7 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     job.isCompleted.isTrue()
 
     val cancelJob = uiLaunch { view.awaitGlobalLayout() }
-    cancelJob.cancel()
+    cancelJob.cancel().isTrue()
     uiRunBlocking { view.viewTreeObserver.dispatchOnGlobalLayout() }
     cancelJob.isCancelled.isTrue()
   }
