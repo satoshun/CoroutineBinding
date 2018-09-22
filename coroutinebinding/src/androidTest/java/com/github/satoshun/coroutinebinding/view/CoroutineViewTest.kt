@@ -125,6 +125,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     val draws = view.draws(1)
   }
 
+  @Ignore("todo")
+  @Test
+  fun draw() = testRunBlocking {
+    view.draw()
+  }
+
   @Test @UiThreadTest
   fun focusChanges() {
     val focus = view.focusChanges(1)

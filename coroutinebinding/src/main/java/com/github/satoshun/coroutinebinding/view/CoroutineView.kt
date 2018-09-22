@@ -194,6 +194,20 @@ fun View.draws(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capa
 }
 
 /**
+ * Suspend for draws on view
+ */
+@RequiresApi(16)
+suspend fun View.draw(): Unit = suspendCancellableCoroutine { cont ->
+  val listener = ViewTreeObserver.OnDrawListener {
+    cont.resume(Unit)
+  }
+  cont.invokeOnCancellation {
+    viewTreeObserver.removeOnDrawListener(listener)
+  }
+  viewTreeObserver.addOnDrawListener(listener)
+}
+
+/**
  * Create an channel of booleans representing the focus of view.
  */
 @CheckResult
