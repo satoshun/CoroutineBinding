@@ -176,6 +176,20 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     layouts.poll().isNull()
   }
 
+  @Test
+  fun globalLayout() = testRunBlocking {
+    val job = uiLaunch { view.globalLayout() }
+    job.isCompleted.isFalse()
+    uiRunBlocking { view.viewTreeObserver.dispatchOnGlobalLayout() }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { view.globalLayout() }
+    cancelJob.cancel()
+    uiRunBlocking { view.viewTreeObserver.dispatchOnGlobalLayout() }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Ignore("todo")
   @Test
   fun hovers() = testRunBlocking {

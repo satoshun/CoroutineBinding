@@ -248,7 +248,23 @@ fun View.globalLayouts(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChan
     safeOffer(Unit)
   }
   invokeOnCloseOnMain {
-    viewTreeObserver.addOnGlobalLayoutListener(listener)
+    viewTreeObserver.removeGlobalOnLayoutListener(listener)
+  }
+  viewTreeObserver.addOnGlobalLayoutListener(listener)
+}
+
+/**
+ * Suspend the focus of view.
+ */
+suspend fun View.globalLayout(): Unit = suspendCancellableCoroutine { cont ->
+  val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
+    override fun onGlobalLayout() {
+      cont.resume(Unit)
+      viewTreeObserver.removeGlobalOnLayoutListener(this)
+    }
+  }
+  cont.invokeOnCancellation {
+    viewTreeObserver.removeGlobalOnLayoutListener(listener)
   }
   viewTreeObserver.addOnGlobalLayoutListener(listener)
 }
