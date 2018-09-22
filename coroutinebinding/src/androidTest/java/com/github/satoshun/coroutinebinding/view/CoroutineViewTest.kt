@@ -88,6 +88,20 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     clicks.poll().isNull()
   }
 
+  @Test
+  fun click() = testRunBlocking {
+    val job = uiLaunch { view.click() }
+
+    job.isCompleted.isFalse()
+    uiRunBlocking { view.performClick() }
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { view.click() }
+    cancelJob.cancel()
+    uiRunBlocking { view.performClick() }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Ignore("todo")
   @Test
   fun drags() = testRunBlocking {

@@ -34,24 +34,24 @@ inline fun Float?.isGreaterThan(other: Float) = Truth.assertThat(this).isGreater
 inline fun Float?.isLessThan(other: Float) = Truth.assertThat(this).isLessThan(other)
 inline fun Any?.isSame(other: Any?) = Truth.assertThat(this).isSameAs(other)
 
-inline fun testRunBlocking(
+fun testRunBlocking(
   context: CoroutineContext = EmptyCoroutineContext,
-  noinline block: suspend CoroutineScope.() -> Unit
+  block: suspend CoroutineScope.() -> Unit
 ) {
   return runBlocking(context = context, block = {
     withTimeout(5, TimeUnit.SECONDS) { block() }
   })
 }
 
-inline fun <T> uiRunBlocking(noinline block: suspend CoroutineScope.() -> T): T {
+fun <T> uiRunBlocking(block: suspend CoroutineScope.() -> T): T {
   return runBlocking(context = Dispatchers.Main, block = block)
 }
 
-inline fun uiLaunch(noinline block: suspend CoroutineScope.() -> Unit): Job {
+fun uiLaunch(block: suspend CoroutineScope.() -> Unit): Job {
   return GlobalScope.launch(context = Dispatchers.Main, block = block)
 }
 
-inline fun ActivityTestRule<out Activity>.createListView(): Pair<ListView, ListAdapter> {
+fun ActivityTestRule<out Activity>.createListView(): Pair<ListView, ListAdapter> {
   val listView = ListView(activity)
   val adapter = MyListAdapter()
   listView.adapter = adapter

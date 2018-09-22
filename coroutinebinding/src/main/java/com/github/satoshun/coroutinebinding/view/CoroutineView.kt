@@ -39,7 +39,7 @@ fun View.attaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(c
 }
 
 /**
- * suspend for view attach event.
+ * Suspend for view attach event.
  */
 suspend fun View.awaitAttach(): Unit = suspendCancellableCoroutine { cont ->
   val listener = object : View.OnAttachStateChangeListener {
@@ -81,7 +81,7 @@ fun View.detaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(c
 }
 
 /**
- * suspend for view detach event.
+ * Suspend for view detach event.
  */
 suspend fun View.awaitDetach(): Unit = suspendCancellableCoroutine { cont ->
   val listener = object : View.OnAttachStateChangeListener {
@@ -110,6 +110,21 @@ fun View.clicks(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(cap
     safeOffer(Unit)
   }
   invokeOnCloseOnMain {
+    setOnClickListener(null)
+  }
+  setOnClickListener(listener)
+}
+
+/**
+ * Suspend for view click event.
+ */
+suspend fun View.click(): Unit = suspendCancellableCoroutine { cont ->
+  val listener = View.OnClickListener {
+    cont.resume(Unit)
+    setOnClickListener(null)
+  }
+  cont.invokeOnCancellation {
+    // todo check mainthread?
     setOnClickListener(null)
   }
   setOnClickListener(listener)
