@@ -514,6 +514,20 @@ fun View.systemUiVisibilityChanges(capacity: Int = 0): ReceiveChannel<Int> = can
 }
 
 /**
+ * Suspend a systemUiVisibilityChange event on view.
+ */
+suspend fun View.systemUiVisibilityChange(): Int = suspendCancellableCoroutine { cont ->
+  val listener = View.OnSystemUiVisibilityChangeListener {
+    cont.resume(it)
+    setOnSystemUiVisibilityChangeListener(null)
+  }
+  cont.invokeOnCancellation {
+    setOnSystemUiVisibilityChangeListener(null)
+  }
+  setOnSystemUiVisibilityChangeListener(listener)
+}
+
+/**
  * Create an channel of touch events for view.
  */
 @CheckResult

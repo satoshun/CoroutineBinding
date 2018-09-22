@@ -337,6 +337,27 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     systemUiVisibilityChanges.receiveOrNull().isNull()
   }
 
+  @Ignore("Flaky")
+  @Test
+  fun systemUiVisibilityChange() = testRunBlocking {
+    val view = view
+    val job = uiLaunch { view.systemUiVisibilityChange().isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) }
+
+    uiRunBlocking { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val job2 = uiLaunch { view.systemUiVisibilityChange().isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE) }
+    uiRunBlocking { view.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE }
+    job2.join()
+    job2.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { view.systemUiVisibilityChange() }
+    cancelJob.cancel()
+    uiRunBlocking { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Ignore("todo")
   @Test
   fun touches() = testRunBlocking {
