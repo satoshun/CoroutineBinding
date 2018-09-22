@@ -134,7 +134,7 @@ suspend fun View.click(): Unit = suspendCancellableCoroutine { cont ->
  * Create an channel of DragEvent for drags on View
  */
 @CheckResult
-inline fun View.drags(capacity: Int = 0): ReceiveChannel<DragEvent> = drags(capacity) { true }
+fun View.drags(capacity: Int = 0): ReceiveChannel<DragEvent> = drags(capacity) { true }
 
 /**
  * Create an channel of DragEvent for drags on view
@@ -273,7 +273,7 @@ suspend fun View.globalLayout(): Unit = suspendCancellableCoroutine { cont ->
  * Create an channel of hover events for view.
  */
 @CheckResult
-inline fun View.hovers(capacity: Int = 0): ReceiveChannel<MotionEvent> = hovers(capacity) { true }
+fun View.hovers(capacity: Int = 0): ReceiveChannel<MotionEvent> = hovers(capacity) { true }
 
 /**
  * Create an channel of hover events for view.
@@ -293,6 +293,30 @@ fun View.hovers(capacity: Int = 0, handled: Predicate<in MotionEvent>): ReceiveC
       }
       setOnHoverListener(listener)
     }
+
+/**
+ * Suspend hover event for view.
+ */
+suspend fun View.hover(): MotionEvent = hover { true }
+
+/**
+ * Suspend hover event for view.
+ */
+suspend fun View.hover(handled: Predicate<in MotionEvent>): MotionEvent = suspendCancellableCoroutine { cont ->
+  val listener = View.OnHoverListener { _, motionEvent ->
+    if (handled(motionEvent)) {
+      cont.resume(motionEvent)
+      setOnHoverListener(null)
+      true
+    } else {
+      false
+    }
+  }
+  cont.invokeOnCancellation {
+    setOnHoverListener(null)
+  }
+  setOnHoverListener(listener)
+}
 
 /**
  * Create an channel of layoutChange events for View.

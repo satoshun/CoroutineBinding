@@ -196,6 +196,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     val hovers = view.hovers(1)
   }
 
+  @Ignore("todo")
+  @Test
+  fun hover() = testRunBlocking {
+    view.hover()
+  }
+
   @Test @UiThreadTest
   fun layoutChanges() {
     val layoutChange = view.layoutChanges(1)
