@@ -392,4 +392,29 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     }
     keys.poll().isNull()
   }
+
+  @Test
+  fun key() = testRunBlocking {
+    val editView = uiRunBlocking {
+      EditText(rule.activity).also { view.addView(it) }
+    }
+    val job = uiLaunch {
+      val event = editView.key()
+      event.action.isEqualTo(KeyEvent.ACTION_DOWN)
+      event.keyCode.isEqualTo(KeyEvent.KEYCODE_R)
+    }
+    job.isCompleted.isFalse()
+    uiRunBlocking {
+      editView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R))
+    }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { editView.key() }
+    cancelJob.cancel()
+    uiRunBlocking {
+      editView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R))
+    }
+    cancelJob.isCancelled.isTrue()
+  }
 }

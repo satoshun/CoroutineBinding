@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.view
 
 import android.support.annotation.CheckResult
@@ -580,7 +578,7 @@ suspend fun View.touch(handled: Predicate<in MotionEvent>): MotionEvent = suspen
  * Create an channel of key events for view.
  */
 @CheckResult
-inline fun View.keys(capacity: Int = 0): ReceiveChannel<KeyEvent> = keys(capacity) { true }
+fun View.keys(capacity: Int = 0): ReceiveChannel<KeyEvent> = keys(capacity) { true }
 
 /**
  * Create an channel of key events for view.
@@ -600,3 +598,27 @@ fun View.keys(capacity: Int = 0, handled: Predicate<in KeyEvent>): ReceiveChanne
       }
       setOnKeyListener(listener)
     }
+
+/**
+ * Suspend a key event for view.
+ */
+suspend fun View.key(): KeyEvent = key { true }
+
+/**
+ * Suspend a key event for view.
+ */
+suspend fun View.key(handled: Predicate<in KeyEvent>): KeyEvent = suspendCancellableCoroutine { cont ->
+  val listener = View.OnKeyListener { _, _, event ->
+    if (handled(event)) {
+      cont.resume(event)
+      setOnKeyListener(null)
+      true
+    } else {
+      false
+    }
+  }
+  cont.invokeOnCancellation {
+    setOnKeyListener(null)
+  }
+  setOnKeyListener(listener)
+}
