@@ -38,13 +38,14 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   @Test
   fun awaitAttach() = testRunBlocking {
     val child = uiRunBlocking { TextView(rule.activity) }
-    val job = uiLaunch {
-      child.awaitAttach()
-    }
+    val job = uiLaunch { child.awaitAttach() }
     job.isCompleted.isFalse()
     uiRunBlocking { view.addView(child) }
     job.join()
     job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { child.awaitAttach() }
+    cancelJob.cancel()
   }
 
   @Test @UiThreadTest
@@ -74,6 +75,9 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     }
     job.join()
     job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { child.awaitDetach() }
+    cancelJob.cancel()
   }
 
   @Test @UiThreadTest
@@ -94,6 +98,7 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
     job.isCompleted.isFalse()
     uiRunBlocking { view.performClick() }
+    job.join()
     job.isCompleted.isTrue()
 
     val cancelJob = uiLaunch { view.click() }
@@ -106,6 +111,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   @Test
   fun drags() = testRunBlocking {
     val drags = view.drags(1)
+  }
+
+  @Ignore("todo")
+  @Test
+  fun drag() = testRunBlocking {
+    view.drag()
   }
 
   @Ignore("todo")

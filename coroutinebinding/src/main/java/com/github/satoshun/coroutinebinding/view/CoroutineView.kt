@@ -156,6 +156,29 @@ fun View.drags(capacity: Int = 0, handled: Predicate<in DragEvent>): ReceiveChan
     }
 
 /**
+ * Suspend for drags on View
+ */
+suspend fun View.drag(): DragEvent = drag { true }
+
+/**
+ * Suspend for drags on view
+ */
+suspend fun View.drag(handled: Predicate<in DragEvent>): DragEvent = suspendCancellableCoroutine { cont ->
+  val listener = View.OnDragListener { _, dragEvent ->
+    if (handled(dragEvent)) {
+      cont.resume(dragEvent)
+      true
+    } else {
+      false
+    }
+  }
+  cont.invokeOnCancellation {
+    setOnDragListener(null)
+  }
+  setOnDragListener(listener)
+}
+
+/**
  * Create an channel for draws on view
  */
 @RequiresApi(16)
