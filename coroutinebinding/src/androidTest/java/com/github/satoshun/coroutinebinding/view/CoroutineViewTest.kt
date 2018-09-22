@@ -145,6 +145,26 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     focus.poll().isNull()
   }
 
+  @Test
+  fun focusChange() = testRunBlocking {
+    val job = uiLaunch { view.focusChange().isTrue() }
+    uiRunBlocking {
+      view.isFocusable = true
+      view.requestFocus()
+    }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val clearJob = uiLaunch { view.focusChange().isFalse() }
+    uiRunBlocking { view.clearFocus() }
+    clearJob.join()
+
+    val cancelJob = uiLaunch { view.focusChange() }
+    cancelJob.cancel()
+    uiRunBlocking { view.requestFocus() }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Test @UiThreadTest
   fun globalLayouts() {
     val layouts = view.globalLayouts(1)

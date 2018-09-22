@@ -167,6 +167,7 @@ suspend fun View.drag(handled: Predicate<in DragEvent>): DragEvent = suspendCanc
   val listener = View.OnDragListener { _, dragEvent ->
     if (handled(dragEvent)) {
       cont.resume(dragEvent)
+      setOnDragListener(null)
       true
     } else {
       false
@@ -198,8 +199,11 @@ fun View.draws(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capa
  */
 @RequiresApi(16)
 suspend fun View.draw(): Unit = suspendCancellableCoroutine { cont ->
-  val listener = ViewTreeObserver.OnDrawListener {
-    cont.resume(Unit)
+  val listener = object : ViewTreeObserver.OnDrawListener {
+    override fun onDraw() {
+      cont.resume(Unit)
+      viewTreeObserver.removeOnDrawListener(this)
+    }
   }
   cont.invokeOnCancellation {
     viewTreeObserver.removeOnDrawListener(listener)
@@ -216,6 +220,20 @@ fun View.focusChanges(capacity: Int = 0): ReceiveChannel<Boolean> = cancelableCh
     safeOffer(hasFocus)
   }
   invokeOnCloseOnMain {
+    onFocusChangeListener = null
+  }
+  onFocusChangeListener = listener
+}
+
+/**
+ * Suspend the focus of view.
+ */
+suspend fun View.focusChange(): Boolean = suspendCancellableCoroutine { cont ->
+  val listener = View.OnFocusChangeListener { _, hasFocus ->
+    cont.resume(hasFocus)
+    onFocusChangeListener = null
+  }
+  cont.invokeOnCancellation {
     onFocusChangeListener = null
   }
   onFocusChangeListener = listener
