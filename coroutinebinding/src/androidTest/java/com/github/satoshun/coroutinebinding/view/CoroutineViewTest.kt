@@ -306,6 +306,20 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     preDraws.poll().isNull()
   }
 
+  @Test
+  fun preDraw() = testRunBlocking {
+    val job = uiLaunch { view.preDraw { true } }
+    job.isCompleted.isFalse()
+    uiRunBlocking { view.viewTreeObserver.dispatchOnPreDraw() }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { view.preDraw { true } }
+    cancelJob.cancel()
+    uiRunBlocking { view.viewTreeObserver.dispatchOnPreDraw() }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Ignore("Flaky")
   @Test
   fun systemUiVisibilityChanges() = testRunBlocking {

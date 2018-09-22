@@ -468,6 +468,23 @@ fun View.preDraws(capacity: Int = 0, proceedDrawingPass: () -> Boolean): Receive
     }
 
 /**
+ * Suspend a pre-draws event on View.
+ */
+suspend fun View.preDraw(proceedDrawingPass: () -> Boolean): Unit = suspendCancellableCoroutine { cont ->
+  val listener = object : ViewTreeObserver.OnPreDrawListener {
+    override fun onPreDraw(): Boolean {
+      cont.resume(Unit)
+      viewTreeObserver.removeOnPreDrawListener(this)
+      return proceedDrawingPass()
+    }
+  }
+  cont.invokeOnCancellation {
+    viewTreeObserver.removeOnPreDrawListener(listener)
+  }
+  viewTreeObserver.addOnPreDrawListener(listener)
+}
+
+/**
  * Create an channel of scroll-change events for view.
  */
 @RequiresApi(23)

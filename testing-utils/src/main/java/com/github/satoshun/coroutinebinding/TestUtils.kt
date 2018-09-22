@@ -51,6 +51,10 @@ fun uiLaunch(block: suspend CoroutineScope.() -> Unit): Job {
   return GlobalScope.launch(context = Dispatchers.Main, block = block)
 }
 
+fun CoroutineScope.uiLaunch(block: suspend CoroutineScope.() -> Unit): Job {
+  return launch(context = Dispatchers.Main, block = block)
+}
+
 fun ActivityTestRule<out Activity>.createListView(): Pair<ListView, ListAdapter> {
   val listView = ListView(activity)
   val adapter = MyListAdapter()
