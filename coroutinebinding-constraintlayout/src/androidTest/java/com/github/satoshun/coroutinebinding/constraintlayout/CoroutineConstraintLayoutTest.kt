@@ -1,17 +1,14 @@
 package com.github.satoshun.coroutinebinding.constraintlayout
 
-import android.support.test.rule.ActivityTestRule
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineConstraintLayoutTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineConstraintLayoutTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private val activity get() = rule.activity
   private val layout get() = activity.view
 

@@ -13,6 +13,7 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 internal typealias Callable = () -> Boolean
 internal typealias Predicate<T> = (T) -> Boolean
@@ -32,6 +33,28 @@ fun View.attaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(c
     }
   }
   invokeOnCloseOnMain {
+    removeOnAttachStateChangeListener(listener)
+  }
+  addOnAttachStateChangeListener(listener)
+}
+
+/**
+ * Suspend for view attach event.
+ */
+suspend fun View.awaitAttach(): Unit = suspendCancellableCoroutine { cont ->
+  val listener = object : View.OnAttachStateChangeListener {
+    override fun onViewDetachedFromWindow(v: View) {
+      // do nothing
+    }
+
+    override fun onViewAttachedToWindow(v: View) {
+      cont.resume(Unit)
+      removeOnAttachStateChangeListener(this)
+    }
+  }
+
+  cont.invokeOnCancellation {
+    // todo check mainthread?
     removeOnAttachStateChangeListener(listener)
   }
   addOnAttachStateChangeListener(listener)
@@ -58,6 +81,27 @@ fun View.detaches(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(c
 }
 
 /**
+ * Suspend for view detach event.
+ */
+suspend fun View.awaitDetach(): Unit = suspendCancellableCoroutine { cont ->
+  val listener = object : View.OnAttachStateChangeListener {
+    override fun onViewDetachedFromWindow(v: View) {
+      cont.resume(Unit)
+      removeOnAttachStateChangeListener(this)
+    }
+
+    override fun onViewAttachedToWindow(v: View) {
+      // do nothing
+    }
+  }
+  cont.invokeOnCancellation {
+    // todo check mainthread?
+    removeOnAttachStateChangeListener(listener)
+  }
+  addOnAttachStateChangeListener(listener)
+}
+
+/**
  * Create an channel of to emit on view click events.
  */
 @CheckResult
@@ -66,6 +110,21 @@ fun View.clicks(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(cap
     safeOffer(Unit)
   }
   invokeOnCloseOnMain {
+    setOnClickListener(null)
+  }
+  setOnClickListener(listener)
+}
+
+/**
+ * Suspend for view click event.
+ */
+suspend fun View.click(): Unit = suspendCancellableCoroutine { cont ->
+  val listener = View.OnClickListener {
+    cont.resume(Unit)
+    setOnClickListener(null)
+  }
+  cont.invokeOnCancellation {
+    // todo check mainthread?
     setOnClickListener(null)
   }
   setOnClickListener(listener)
@@ -95,6 +154,29 @@ fun View.drags(capacity: Int = 0, handled: Predicate<in DragEvent>): ReceiveChan
       }
       setOnDragListener(listener)
     }
+
+/**
+ * Suspend for drags on View
+ */
+suspend fun View.drag(): DragEvent = drag { true }
+
+/**
+ * Suspend for drags on view
+ */
+suspend fun View.drag(handled: Predicate<in DragEvent>): DragEvent = suspendCancellableCoroutine { cont ->
+  val listener = View.OnDragListener { _, dragEvent ->
+    if (handled(dragEvent)) {
+      cont.resume(dragEvent)
+      true
+    } else {
+      false
+    }
+  }
+  cont.invokeOnCancellation {
+    setOnDragListener(null)
+  }
+  setOnDragListener(listener)
+}
 
 /**
  * Create an channel for draws on view

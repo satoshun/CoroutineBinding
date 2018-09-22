@@ -4,6 +4,7 @@ import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import android.widget.ListAdapter
 import android.widget.ListView
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.createListView
 import com.github.satoshun.coroutinebinding.isEqualTo
@@ -14,9 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class CoroutineAbsListViewTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineAbsListViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var listView: ListView
   private lateinit var adapter: ListAdapter
 

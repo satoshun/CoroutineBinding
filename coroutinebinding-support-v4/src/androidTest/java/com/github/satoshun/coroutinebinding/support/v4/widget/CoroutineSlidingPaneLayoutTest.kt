@@ -2,11 +2,11 @@ package com.github.satoshun.coroutinebinding.support.v4.widget
 
 import android.graphics.Color
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.support.v4.widget.SlidingPaneLayout
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isGreaterThan
 import com.github.satoshun.coroutinebinding.isLessThan
@@ -17,12 +17,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineSlidingPaneLayoutTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineSlidingPaneLayoutTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var view: SlidingPaneLayout
 
   @Before @UiThreadTest

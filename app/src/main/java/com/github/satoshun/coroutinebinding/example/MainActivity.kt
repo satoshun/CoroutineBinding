@@ -4,31 +4,45 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.github.satoshun.coroutinebinding.view.attaches
+import com.github.satoshun.coroutinebinding.view.awaitAttach
+import com.github.satoshun.coroutinebinding.view.awaitDetach
 import com.github.satoshun.coroutinebinding.view.detaches
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.experimental.CoroutineContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),
+    CoroutineScope {
+
+  private lateinit var job: Job
+  override val coroutineContext: CoroutineContext get() = job + Dispatchers.Main
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    launch(UI) {
+    job = Job()
+
+    launch {
       for (attach in hello.attaches()) {
         Log.d("attach", attach.toString())
       }
     }
 
-    launch(UI) {
+    launch {
       for (detach in hello.detaches()) {
         Log.d("detach", detach.toString())
       }
     }
 
-    launch(UI) {
+    launch {
       while (true) {
         delay(5000, TimeUnit.MILLISECONDS)
         try {
@@ -38,5 +52,25 @@ class MainActivity : AppCompatActivity() {
         }
       }
     }
+
+    launch {
+      val attach = async {
+        while (true) {
+          hello.awaitAttach()
+          Log.d("suspend attach", "attached")
+        }
+      }
+      val detach = async {
+        while (true) {
+          hello.awaitDetach()
+          Log.d("suspend detach", "detached")
+        }
+      }
+    }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    job.cancel()
   }
 }

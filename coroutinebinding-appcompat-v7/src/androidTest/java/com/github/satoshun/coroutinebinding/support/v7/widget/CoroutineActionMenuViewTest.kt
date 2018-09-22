@@ -1,8 +1,8 @@
 package com.github.satoshun.coroutinebinding.support.v7.widget
 
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.support.v7.widget.ActionMenuView
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
 import com.github.satoshun.coroutinebinding.support.v7.ViewActivity
@@ -10,12 +10,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineActionMenuViewTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineActionMenuViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var actionMenuView: ActionMenuView
 
   @Before @UiThreadTest

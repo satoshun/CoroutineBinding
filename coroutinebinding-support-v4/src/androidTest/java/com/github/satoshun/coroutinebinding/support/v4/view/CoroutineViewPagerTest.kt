@@ -4,12 +4,12 @@ import android.support.test.annotation.UiThreadTest
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.swipeLeft
 import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.rule.ActivityTestRule
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.support.v4.ViewActivity
@@ -17,12 +17,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineViewPagerTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineViewPagerTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var viewPager: ViewPager
 
   @Before @UiThreadTest

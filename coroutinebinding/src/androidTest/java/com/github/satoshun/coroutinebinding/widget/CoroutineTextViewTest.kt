@@ -1,10 +1,10 @@
 package com.github.satoshun.coroutinebinding.widget
 
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.view.inputmethod.EditorInfo.IME_ACTION_GO
 import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.widget.TextView
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
@@ -12,12 +12,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineTextViewTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineTextViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var textView: TextView
 
   @Before @UiThreadTest

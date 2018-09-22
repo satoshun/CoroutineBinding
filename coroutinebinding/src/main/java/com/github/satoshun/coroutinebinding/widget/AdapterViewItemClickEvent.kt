@@ -8,7 +8,7 @@ import android.widget.AdapterView
  */
 data class AdapterViewItemClickEvent(
   val view: AdapterView<*>,
-  val clickedView: View,
+  val clickedView: View?,
   val position: Int,
   val id: Long
 )

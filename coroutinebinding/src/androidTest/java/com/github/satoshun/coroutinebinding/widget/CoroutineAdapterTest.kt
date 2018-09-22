@@ -1,19 +1,16 @@
 package com.github.satoshun.coroutinebinding.widget
 
-import android.support.test.rule.ActivityTestRule
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineAdapterTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineAdapterTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   @Test
   fun dataChanges() = testRunBlocking {
     val testAdapter = TestAdapter()

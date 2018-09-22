@@ -1,13 +1,12 @@
 package com.github.satoshun.coroutinebinding.view
 
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isFalse
@@ -18,15 +17,9 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Ignore
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class CoroutineViewTest {
-
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private val view: ViewGroup get() = rule.activity.view
 
   @Test @UiThreadTest
@@ -40,6 +33,19 @@ class CoroutineViewTest {
     attaches.cancel()
     view.addView(child)
     attaches.poll().isNull()
+  }
+
+  @Test
+  fun awaitAttach() = testRunBlocking {
+    val child = uiRunBlocking { TextView(rule.activity) }
+    val job = uiLaunch { child.awaitAttach() }
+    job.isCompleted.isFalse()
+    uiRunBlocking { view.addView(child) }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { child.awaitAttach() }
+    cancelJob.cancel()
   }
 
   @Test @UiThreadTest
@@ -56,6 +62,24 @@ class CoroutineViewTest {
     detaches.poll().isNull()
   }
 
+  @Test
+  fun awaitDetach() = testRunBlocking {
+    val child = uiRunBlocking { TextView(rule.activity) }
+    val job = uiLaunch {
+      child.awaitDetach()
+    }
+    job.isCompleted.isFalse()
+    uiRunBlocking {
+      view.addView(child)
+      view.removeView(child)
+    }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { child.awaitDetach() }
+    cancelJob.cancel()
+  }
+
   @Test @UiThreadTest
   fun clicks() {
     val clicks = view.clicks(1)
@@ -68,10 +92,31 @@ class CoroutineViewTest {
     clicks.poll().isNull()
   }
 
+  @Test
+  fun click() = testRunBlocking {
+    val job = uiLaunch { view.click() }
+
+    job.isCompleted.isFalse()
+    uiRunBlocking { view.performClick() }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { view.click() }
+    cancelJob.cancel()
+    uiRunBlocking { view.performClick() }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Ignore("todo")
   @Test
   fun drags() = testRunBlocking {
     val drags = view.drags(1)
+  }
+
+  @Ignore("todo")
+  @Test
+  fun drag() = testRunBlocking {
+    view.drag()
   }
 
   @Ignore("todo")
@@ -163,6 +208,7 @@ class CoroutineViewTest {
     preDraws.poll().isNull()
   }
 
+  @Ignore("Flaky")
   @Test
   fun systemUiVisibilityChanges() = testRunBlocking {
     val view = view

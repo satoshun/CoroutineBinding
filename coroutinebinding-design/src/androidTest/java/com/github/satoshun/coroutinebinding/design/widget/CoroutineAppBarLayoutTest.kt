@@ -3,9 +3,9 @@ package com.github.satoshun.coroutinebinding.design.widget
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.support.test.annotation.UiThreadTest
-import android.support.test.rule.ActivityTestRule
 import android.support.v7.view.ContextThemeWrapper
 import android.view.View
+import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.design.R
 import com.github.satoshun.coroutinebinding.design.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
@@ -13,12 +13,9 @@ import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class CoroutineAppBarLayoutTest {
-  @JvmField @Rule val rule = ActivityTestRule<ViewActivity>(ViewActivity::class.java)
-
+class CoroutineAppBarLayoutTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var parent: CoordinatorLayout
   private lateinit var view: AppBarLayout
 
