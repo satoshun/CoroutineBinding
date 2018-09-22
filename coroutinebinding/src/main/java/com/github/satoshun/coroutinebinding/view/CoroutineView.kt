@@ -322,17 +322,34 @@ suspend fun View.hover(handled: Predicate<in MotionEvent>): MotionEvent = suspen
  * Create an channel of layoutChange events for View.
  */
 @CheckResult
-inline fun View.layoutChanges(capacity: Int = 0): ReceiveChannel<Unit> =
+fun View.layoutChanges(capacity: Int = 0): ReceiveChannel<Unit> =
     layoutChangeEvents(capacity) { _, _, _, _, _, _, _, _ -> Unit }
 
 /**
  * Create an channel of layoutChange events for View.
  */
 @CheckResult
-inline fun View.layoutChangeEvents(capacity: Int = 0): ReceiveChannel<ViewLayoutChangeEvent> =
+fun View.layoutChangeEvents(capacity: Int = 0): ReceiveChannel<ViewLayoutChangeEvent> =
     layoutChangeEvents(capacity) { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
       ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
     }
+
+/**
+ * Create an channel of layoutChange events for View.
+ */
+@CheckResult
+fun <T> View.layoutChangeEvents(
+  capacity: Int = 0,
+  creator: (Int, Int, Int, Int, Int, Int, Int, Int) -> T
+): ReceiveChannel<T> = cancelableChannel(capacity) {
+  val listener = View.OnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+    safeOffer(creator(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom))
+  }
+  invokeOnCloseOnMain {
+    removeOnLayoutChangeListener(listener)
+  }
+  addOnLayoutChangeListener(listener)
+}
 
 /**
  * A layout-change event on a view.
@@ -349,17 +366,35 @@ data class ViewLayoutChangeEvent(
 )
 
 /**
- * Create an channel of layoutChange events for View.
+ * Suspend layoutChange event for View.
  */
-@CheckResult
-fun <T> View.layoutChangeEvents(
-  capacity: Int = 0,
+suspend fun View.layoutChange(): Unit =
+    layoutChangeEvent { _, _, _, _, _, _, _, _ -> Unit }
+
+/**
+ * Suspend layoutChange event for View.
+ */
+suspend fun View.layoutChangeEvent(): ViewLayoutChangeEvent =
+    layoutChangeEvent { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+      ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
+    }
+
+/**
+ * Suspend an layoutChange event for View.
+ */
+suspend fun <T> View.layoutChangeEvent(
   creator: (Int, Int, Int, Int, Int, Int, Int, Int) -> T
-): ReceiveChannel<T> = cancelableChannel(capacity) {
-  val listener = View.OnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-    safeOffer(creator(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom))
+): T = suspendCancellableCoroutine { cont ->
+  val listener = object : View.OnLayoutChangeListener {
+    override fun onLayoutChange(
+      v: View?, left: Int, top: Int, right: Int, bottom: Int,
+      oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int
+    ) {
+      cont.resume(creator(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom))
+      removeOnLayoutChangeListener(this)
+    }
   }
-  invokeOnCloseOnMain {
+  cont.invokeOnCancellation {
     removeOnLayoutChangeListener(listener)
   }
   addOnLayoutChangeListener(listener)

@@ -16,6 +16,7 @@ import com.github.satoshun.coroutinebinding.isTrue
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Ignore
 import org.junit.Test
 
@@ -213,6 +214,20 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     layoutChange.poll().isNull()
   }
 
+  @Ignore("todo")
+  @Test
+  fun layoutChange() = testRunBlocking {
+    val job = uiLaunch { view.layoutChange() }
+    runBlocking { view.layout(0, 0, 0, 0) }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { view.layoutChange() }
+    cancelJob.cancel()
+    uiRunBlocking { view.layout(0, 0, 0, 0) }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Test @UiThreadTest
   fun layoutChangeEvents() {
     val layoutChange = view.layoutChangeEvents(1)
@@ -229,6 +244,29 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     layoutChange.cancel()
     view.layout(0, 0, 0, 0)
     layoutChange.poll().isNull()
+  }
+
+  @Test
+  fun layoutChangeEvent() = testRunBlocking {
+    val oldRight = uiRunBlocking { view.right }
+    val oldBottom = uiRunBlocking { view.bottom }
+    val job = uiLaunch {
+      val event = view.layoutChangeEvent()
+      event.isEqualTo(
+          ViewLayoutChangeEvent(
+              0, 0, 0, 100,
+              0, 0, oldRight, oldBottom
+          )
+      )
+    }
+    uiRunBlocking { view.layout(0, 0, 0, 100) }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { view.layoutChangeEvent() }
+    cancelJob.cancel()
+    uiRunBlocking { view.layout(0, 0, 0, 0) }
+    cancelJob.isCancelled.isTrue()
   }
 
   @Test @UiThreadTest
