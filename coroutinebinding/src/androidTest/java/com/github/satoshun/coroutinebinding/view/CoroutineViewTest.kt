@@ -281,6 +281,20 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     longClicks.poll().isNull()
   }
 
+  @Test
+  fun longClick() = testRunBlocking {
+    val job = uiLaunch { view.longClick() }
+    job.isCompleted.isFalse()
+    uiRunBlocking { view.performLongClick() }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { view.longClick() }
+    cancelJob.cancel()
+    uiRunBlocking { view.performLongClick() }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Test @UiThreadTest
   fun preDraws() {
     val preDraws = view.preDraws(1) { true }

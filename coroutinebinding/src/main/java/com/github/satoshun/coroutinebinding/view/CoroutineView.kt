@@ -404,7 +404,7 @@ suspend fun <T> View.layoutChangeEvent(
  * Create an channel of longClick events for View.
  */
 @CheckResult
-inline fun View.longClicks(capacity: Int = 0): ReceiveChannel<Unit> = longClicks(capacity) { true }
+fun View.longClicks(capacity: Int = 0): ReceiveChannel<Unit> = longClicks(capacity) { true }
 
 /**
  * Create an channel of longClick events for View.
@@ -419,6 +419,30 @@ fun View.longClicks(capacity: Int = 0, handled: Callable): ReceiveChannel<Unit> 
     }
   }
   invokeOnCloseOnMain {
+    setOnLongClickListener(null)
+  }
+  setOnLongClickListener(listener)
+}
+
+/**
+ * Suspend a longClick event for View.
+ */
+suspend fun View.longClick(): Unit = longClick { true }
+
+/**
+ * Suspend a longClick event for View.
+ */
+suspend fun View.longClick(handled: Callable): Unit = suspendCancellableCoroutine { cont ->
+  val listener = View.OnLongClickListener {
+    if (handled()) {
+      cont.resume(Unit)
+      setOnLongClickListener(null)
+      true
+    } else {
+      false
+    }
+  }
+  cont.invokeOnCancellation {
     setOnLongClickListener(null)
   }
   setOnLongClickListener(listener)
