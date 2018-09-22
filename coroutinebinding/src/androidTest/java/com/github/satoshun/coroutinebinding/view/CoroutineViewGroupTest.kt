@@ -6,6 +6,7 @@ import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isInstanceOf
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
@@ -29,5 +30,30 @@ class CoroutineViewGroupTest : AndroidTest<ViewActivity>(ViewActivity::class.jav
     changeEvents.cancel()
     uiLaunch { view.addView(child) }
     changeEvents.poll().isNull()
+  }
+
+  @Test
+  fun awaitChangeEvent() = testRunBlocking {
+    val view = view
+    val child = uiRunBlocking { View(rule.activity) }
+
+    val job = uiLaunch {
+      view.awaitChangeEvent().isInstanceOf(ViewGroupHierarchyChildViewAddEvent::class)
+    }
+    uiRunBlocking { view.addView(child) }
+    job.join()
+    job.isCompleted.isTrue()
+
+    val job2 = uiLaunch {
+      view.awaitChangeEvent().isInstanceOf(ViewGroupHierarchyChildViewRemoveEvent::class)
+    }
+    uiRunBlocking { view.removeView(child) }
+    job2.join()
+    job.isCompleted.isTrue()
+
+    val cancelJob = uiLaunch { view.awaitChangeEvent() }
+    cancelJob.cancel()
+    uiRunBlocking { view.addView(child) }
+    cancelJob.isCancelled.isTrue()
   }
 }
