@@ -531,7 +531,7 @@ suspend fun View.systemUiVisibilityChange(): Int = suspendCancellableCoroutine {
  * Create an channel of touch events for view.
  */
 @CheckResult
-inline fun View.touches(capacity: Int = 0): ReceiveChannel<MotionEvent> = touches(capacity) { true }
+fun View.touches(capacity: Int = 0): ReceiveChannel<MotionEvent> = touches(capacity) { true }
 
 /**
  * Create an channel of touch events for view.
@@ -551,6 +551,30 @@ fun View.touches(capacity: Int = 0, handled: Predicate<in MotionEvent>): Receive
       }
       setOnTouchListener(listener)
     }
+
+/**
+ * Suspend a touch event for view.
+ */
+suspend fun View.touch(): MotionEvent = touch { true }
+
+/**
+ * Suspend a touch event for view.
+ */
+suspend fun View.touch(handled: Predicate<in MotionEvent>): MotionEvent = suspendCancellableCoroutine { cont ->
+  val listener = View.OnTouchListener { _, motionEvent ->
+    if (handled(motionEvent)) {
+      cont.resume(motionEvent)
+      setOnTouchListener(null)
+      true
+    } else {
+      false
+    }
+  }
+  cont.invokeOnCancellation {
+    setOnTouchListener(null)
+  }
+  setOnTouchListener(listener)
+}
 
 /**
  * Create an channel of key events for view.

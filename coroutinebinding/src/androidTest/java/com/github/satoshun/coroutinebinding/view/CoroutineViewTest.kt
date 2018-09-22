@@ -364,6 +364,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     val touches = view.touches(1)
   }
 
+  @Ignore("todo")
+  @Test
+  fun touch() = testRunBlocking {
+    view.touch()
+  }
+
   @Test
   fun keys() = testRunBlocking {
     val editView = uiRunBlocking {
