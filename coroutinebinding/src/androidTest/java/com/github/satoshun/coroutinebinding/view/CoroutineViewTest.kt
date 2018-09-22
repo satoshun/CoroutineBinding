@@ -95,14 +95,14 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
   @Test
   fun click() = testRunBlocking {
-    val job = uiLaunch { view.click() }
+    val job = uiLaunch { view.awaitClick() }
 
     job.isCompleted.isFalse()
     uiRunBlocking { view.performClick() }
     job.join()
     job.isCompleted.isTrue()
 
-    val cancelJob = uiLaunch { view.click() }
+    val cancelJob = uiLaunch { view.awaitClick() }
     cancelJob.cancel()
     uiRunBlocking { view.performClick() }
     cancelJob.isCancelled.isTrue()
@@ -116,8 +116,8 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
   @Ignore("todo")
   @Test
-  fun drag() = testRunBlocking {
-    view.drag()
+  fun awaitDrag() = testRunBlocking {
+    view.awaitDrag()
   }
 
   @Ignore("todo")
@@ -128,8 +128,8 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
   @Ignore("todo")
   @Test
-  fun draw() = testRunBlocking {
-    view.draw()
+  fun awaitDraw() = testRunBlocking {
+    view.awaitDraw()
   }
 
   @Test @UiThreadTest
@@ -148,7 +148,7 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
   @Test
   fun focusChange() = testRunBlocking {
-    val job = uiLaunch { view.focusChange().isTrue() }
+    val job = uiLaunch { view.awaitFocusChange().isTrue() }
     uiRunBlocking {
       view.isFocusable = true
       view.requestFocus()
@@ -156,11 +156,11 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     job.join()
     job.isCompleted.isTrue()
 
-    val clearJob = uiLaunch { view.focusChange().isFalse() }
+    val clearJob = uiLaunch { view.awaitFocusChange().isFalse() }
     uiRunBlocking { view.clearFocus() }
     clearJob.join()
 
-    val cancelJob = uiLaunch { view.focusChange() }
+    val cancelJob = uiLaunch { view.awaitFocusChange() }
     cancelJob.cancel()
     uiRunBlocking { view.requestFocus() }
     cancelJob.isCancelled.isTrue()
@@ -178,14 +178,14 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   }
 
   @Test
-  fun globalLayout() = testRunBlocking {
-    val job = uiLaunch { view.globalLayout() }
+  fun awaitGlobalLayout() = testRunBlocking {
+    val job = uiLaunch { view.awaitGlobalLayout() }
     job.isCompleted.isFalse()
     uiRunBlocking { view.viewTreeObserver.dispatchOnGlobalLayout() }
     job.join()
     job.isCompleted.isTrue()
 
-    val cancelJob = uiLaunch { view.globalLayout() }
+    val cancelJob = uiLaunch { view.awaitGlobalLayout() }
     cancelJob.cancel()
     uiRunBlocking { view.viewTreeObserver.dispatchOnGlobalLayout() }
     cancelJob.isCancelled.isTrue()
@@ -199,8 +199,8 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
   @Ignore("todo")
   @Test
-  fun hover() = testRunBlocking {
-    view.hover()
+  fun awaitHover() = testRunBlocking {
+    view.awaitHover()
   }
 
   @Test @UiThreadTest
@@ -217,12 +217,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   @Ignore("todo")
   @Test
   fun layoutChange() = testRunBlocking {
-    val job = uiLaunch { view.layoutChange() }
+    val job = uiLaunch { view.awaitLayoutChange() }
     runBlocking { view.layout(0, 0, 0, 0) }
     job.join()
     job.isCompleted.isTrue()
 
-    val cancelJob = uiLaunch { view.layoutChange() }
+    val cancelJob = uiLaunch { view.awaitLayoutChange() }
     cancelJob.cancel()
     uiRunBlocking { view.layout(0, 0, 0, 0) }
     cancelJob.isCancelled.isTrue()
@@ -251,7 +251,7 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     val oldRight = uiRunBlocking { view.right }
     val oldBottom = uiRunBlocking { view.bottom }
     val job = uiLaunch {
-      val event = view.layoutChangeEvent()
+      val event = view.awaitLayoutChangeEvent()
       event.isEqualTo(
           ViewLayoutChangeEvent(
               0, 0, 0, 100,
@@ -263,7 +263,7 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     job.join()
     job.isCompleted.isTrue()
 
-    val cancelJob = uiLaunch { view.layoutChangeEvent() }
+    val cancelJob = uiLaunch { view.awaitLayoutChangeEvent() }
     cancelJob.cancel()
     uiRunBlocking { view.layout(0, 0, 0, 0) }
     cancelJob.isCancelled.isTrue()
@@ -283,13 +283,13 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
   @Test
   fun longClick() = testRunBlocking {
-    val job = uiLaunch { view.longClick() }
+    val job = uiLaunch { view.awaitLongClick() }
     job.isCompleted.isFalse()
     uiRunBlocking { view.performLongClick() }
     job.join()
     job.isCompleted.isTrue()
 
-    val cancelJob = uiLaunch { view.longClick() }
+    val cancelJob = uiLaunch { view.awaitLongClick() }
     cancelJob.cancel()
     uiRunBlocking { view.performLongClick() }
     cancelJob.isCancelled.isTrue()
@@ -308,13 +308,13 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
   @Test
   fun preDraw() = testRunBlocking {
-    val job = uiLaunch { view.preDraw { true } }
+    val job = uiLaunch { view.awaitPreDraw { true } }
     job.isCompleted.isFalse()
     uiRunBlocking { view.viewTreeObserver.dispatchOnPreDraw() }
     job.join()
     job.isCompleted.isTrue()
 
-    val cancelJob = uiLaunch { view.preDraw { true } }
+    val cancelJob = uiLaunch { view.awaitPreDraw { true } }
     cancelJob.cancel()
     uiRunBlocking { view.viewTreeObserver.dispatchOnPreDraw() }
     cancelJob.isCancelled.isTrue()
@@ -341,18 +341,18 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   @Test
   fun systemUiVisibilityChange() = testRunBlocking {
     val view = view
-    val job = uiLaunch { view.systemUiVisibilityChange().isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) }
+    val job = uiLaunch { view.awaitSystemUiVisibilityChange().isEqualTo(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) }
 
     uiRunBlocking { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
     job.join()
     job.isCompleted.isTrue()
 
-    val job2 = uiLaunch { view.systemUiVisibilityChange().isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE) }
+    val job2 = uiLaunch { view.awaitSystemUiVisibilityChange().isEqualTo(View.SYSTEM_UI_FLAG_VISIBLE) }
     uiRunBlocking { view.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE }
     job2.join()
     job2.isCompleted.isTrue()
 
-    val cancelJob = uiLaunch { view.systemUiVisibilityChange() }
+    val cancelJob = uiLaunch { view.awaitSystemUiVisibilityChange() }
     cancelJob.cancel()
     uiRunBlocking { view.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION }
     cancelJob.isCancelled.isTrue()
@@ -366,8 +366,8 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
   @Ignore("todo")
   @Test
-  fun touch() = testRunBlocking {
-    view.touch()
+  fun awaitTouch() = testRunBlocking {
+    view.awaitTouch()
   }
 
   @Test
@@ -399,7 +399,7 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
       EditText(rule.activity).also { view.addView(it) }
     }
     val job = uiLaunch {
-      val event = editView.key()
+      val event = editView.awaitKey()
       event.action.isEqualTo(KeyEvent.ACTION_DOWN)
       event.keyCode.isEqualTo(KeyEvent.KEYCODE_R)
     }
@@ -410,7 +410,7 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     job.join()
     job.isCompleted.isTrue()
 
-    val cancelJob = uiLaunch { editView.key() }
+    val cancelJob = uiLaunch { editView.awaitKey() }
     cancelJob.cancel()
     uiRunBlocking {
       editView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R))

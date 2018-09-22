@@ -116,7 +116,7 @@ fun View.clicks(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(cap
 /**
  * Suspend for view click event.
  */
-suspend fun View.click(): Unit = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitClick(): Unit = suspendCancellableCoroutine { cont ->
   val listener = View.OnClickListener {
     cont.resume(Unit)
     setOnClickListener(null)
@@ -156,12 +156,12 @@ fun View.drags(capacity: Int = 0, handled: Predicate<in DragEvent>): ReceiveChan
 /**
  * Suspend for drags on View
  */
-suspend fun View.drag(): DragEvent = drag { true }
+suspend fun View.awaitDrag(): DragEvent = awaitDrag { true }
 
 /**
  * Suspend for drags on view
  */
-suspend fun View.drag(handled: Predicate<in DragEvent>): DragEvent = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitDrag(handled: Predicate<in DragEvent>): DragEvent = suspendCancellableCoroutine { cont ->
   val listener = View.OnDragListener { _, dragEvent ->
     if (handled(dragEvent)) {
       cont.resume(dragEvent)
@@ -196,7 +196,7 @@ fun View.draws(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChannel(capa
  * Suspend for draws on view
  */
 @RequiresApi(16)
-suspend fun View.draw(): Unit = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitDraw(): Unit = suspendCancellableCoroutine { cont ->
   val listener = object : ViewTreeObserver.OnDrawListener {
     override fun onDraw() {
       cont.resume(Unit)
@@ -226,7 +226,7 @@ fun View.focusChanges(capacity: Int = 0): ReceiveChannel<Boolean> = cancelableCh
 /**
  * Suspend the focus of view.
  */
-suspend fun View.focusChange(): Boolean = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitFocusChange(): Boolean = suspendCancellableCoroutine { cont ->
   val listener = View.OnFocusChangeListener { _, hasFocus ->
     cont.resume(hasFocus)
     onFocusChangeListener = null
@@ -254,7 +254,7 @@ fun View.globalLayouts(capacity: Int = 0): ReceiveChannel<Unit> = cancelableChan
 /**
  * Suspend the focus of view.
  */
-suspend fun View.globalLayout(): Unit = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitGlobalLayout(): Unit = suspendCancellableCoroutine { cont ->
   val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
     override fun onGlobalLayout() {
       cont.resume(Unit)
@@ -295,12 +295,12 @@ fun View.hovers(capacity: Int = 0, handled: Predicate<in MotionEvent>): ReceiveC
 /**
  * Suspend hover event for view.
  */
-suspend fun View.hover(): MotionEvent = hover { true }
+suspend fun View.awaitHover(): MotionEvent = awaitHover { true }
 
 /**
  * Suspend hover event for view.
  */
-suspend fun View.hover(handled: Predicate<in MotionEvent>): MotionEvent = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitHover(handled: Predicate<in MotionEvent>): MotionEvent = suspendCancellableCoroutine { cont ->
   val listener = View.OnHoverListener { _, motionEvent ->
     if (handled(motionEvent)) {
       cont.resume(motionEvent)
@@ -366,21 +366,21 @@ data class ViewLayoutChangeEvent(
 /**
  * Suspend layoutChange event for View.
  */
-suspend fun View.layoutChange(): Unit =
-    layoutChangeEvent { _, _, _, _, _, _, _, _ -> Unit }
+suspend fun View.awaitLayoutChange(): Unit =
+    awaitLayoutChangeEvent { _, _, _, _, _, _, _, _ -> Unit }
 
 /**
  * Suspend layoutChange event for View.
  */
-suspend fun View.layoutChangeEvent(): ViewLayoutChangeEvent =
-    layoutChangeEvent { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+suspend fun View.awaitLayoutChangeEvent(): ViewLayoutChangeEvent =
+    awaitLayoutChangeEvent { left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
       ViewLayoutChangeEvent(left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
     }
 
 /**
  * Suspend an layoutChange event for View.
  */
-suspend fun <T> View.layoutChangeEvent(
+suspend fun <T> View.awaitLayoutChangeEvent(
   creator: (Int, Int, Int, Int, Int, Int, Int, Int) -> T
 ): T = suspendCancellableCoroutine { cont ->
   val listener = object : View.OnLayoutChangeListener {
@@ -425,12 +425,12 @@ fun View.longClicks(capacity: Int = 0, handled: Callable): ReceiveChannel<Unit> 
 /**
  * Suspend a longClick event for View.
  */
-suspend fun View.longClick(): Unit = longClick { true }
+suspend fun View.awaitLongClick(): Unit = awaitLongClick { true }
 
 /**
  * Suspend a longClick event for View.
  */
-suspend fun View.longClick(handled: Callable): Unit = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitLongClick(handled: Callable): Unit = suspendCancellableCoroutine { cont ->
   val listener = View.OnLongClickListener {
     if (handled()) {
       cont.resume(Unit)
@@ -468,7 +468,7 @@ fun View.preDraws(capacity: Int = 0, proceedDrawingPass: () -> Boolean): Receive
 /**
  * Suspend a pre-draws event on View.
  */
-suspend fun View.preDraw(proceedDrawingPass: () -> Boolean): Unit = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitPreDraw(proceedDrawingPass: () -> Boolean): Unit = suspendCancellableCoroutine { cont ->
   val listener = object : ViewTreeObserver.OnPreDrawListener {
     override fun onPreDraw(): Boolean {
       cont.resume(Unit)
@@ -498,6 +498,21 @@ fun View.scrollChangeEvents(capacity: Int = 0): ReceiveChannel<ViewScrollChangeE
 }
 
 /**
+ * Create an channel of scroll-change events for view.
+ */
+@RequiresApi(23)
+suspend fun View.awaitScrollChangeEvent(): ViewScrollChangeEvent = suspendCancellableCoroutine { cont ->
+  val listener = View.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+    cont.resume(ViewScrollChangeEvent(v, scrollX, scrollY, oldScrollX, oldScrollY))
+    setOnScrollChangeListener(null)
+  }
+  cont.invokeOnCancellation {
+    setOnScrollChangeListener(null)
+  }
+  setOnScrollChangeListener(listener)
+}
+
+/**
  * Create an channel for systemUiVisibilityChanges on view.
  */
 @CheckResult
@@ -514,7 +529,7 @@ fun View.systemUiVisibilityChanges(capacity: Int = 0): ReceiveChannel<Int> = can
 /**
  * Suspend a systemUiVisibilityChange event on view.
  */
-suspend fun View.systemUiVisibilityChange(): Int = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitSystemUiVisibilityChange(): Int = suspendCancellableCoroutine { cont ->
   val listener = View.OnSystemUiVisibilityChangeListener {
     cont.resume(it)
     setOnSystemUiVisibilityChangeListener(null)
@@ -553,12 +568,12 @@ fun View.touches(capacity: Int = 0, handled: Predicate<in MotionEvent>): Receive
 /**
  * Suspend a touch event for view.
  */
-suspend fun View.touch(): MotionEvent = touch { true }
+suspend fun View.awaitTouch(): MotionEvent = awaitTouch { true }
 
 /**
  * Suspend a touch event for view.
  */
-suspend fun View.touch(handled: Predicate<in MotionEvent>): MotionEvent = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitTouch(handled: Predicate<in MotionEvent>): MotionEvent = suspendCancellableCoroutine { cont ->
   val listener = View.OnTouchListener { _, motionEvent ->
     if (handled(motionEvent)) {
       cont.resume(motionEvent)
@@ -602,12 +617,12 @@ fun View.keys(capacity: Int = 0, handled: Predicate<in KeyEvent>): ReceiveChanne
 /**
  * Suspend a key event for view.
  */
-suspend fun View.key(): KeyEvent = key { true }
+suspend fun View.awaitKey(): KeyEvent = awaitKey { true }
 
 /**
  * Suspend a key event for view.
  */
-suspend fun View.key(handled: Predicate<in KeyEvent>): KeyEvent = suspendCancellableCoroutine { cont ->
+suspend fun View.awaitKey(handled: Predicate<in KeyEvent>): KeyEvent = suspendCancellableCoroutine { cont ->
   val listener = View.OnKeyListener { _, _, event ->
     if (handled(event)) {
       cont.resume(event)
