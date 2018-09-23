@@ -7,6 +7,7 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel of the open state of the pane of view
@@ -27,6 +28,31 @@ fun SlidingPaneLayout.panelOpens(capacity: Int = 0): ReceiveChannel<Boolean> = c
   }
 
   invokeOnCloseOnMain {
+    setPanelSlideListener(null)
+  }
+  setPanelSlideListener(listener)
+}
+
+/**
+ * Suspend a of the open state of the pane of view
+ */
+suspend fun SlidingPaneLayout.awaitPanelOpen(): Boolean = suspendCancellableCoroutine { cont ->
+  val listener = object : SlidingPaneLayout.PanelSlideListener {
+    override fun onPanelSlide(panel: View, slideOffset: Float) {
+    }
+
+    override fun onPanelClosed(panel: View) {
+      cont.resume(false)
+      setPanelSlideListener(null)
+    }
+
+    override fun onPanelOpened(panel: View) {
+      cont.resume(true)
+      setPanelSlideListener(null)
+    }
+  }
+
+  cont.invokeOnCancellation {
     setPanelSlideListener(null)
   }
   setPanelSlideListener(listener)

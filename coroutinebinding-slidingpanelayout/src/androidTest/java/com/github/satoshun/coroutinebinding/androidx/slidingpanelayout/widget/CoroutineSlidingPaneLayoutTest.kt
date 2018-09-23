@@ -13,7 +13,9 @@ import com.github.satoshun.coroutinebinding.isGreaterThan
 import com.github.satoshun.coroutinebinding.isLessThan
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
@@ -53,6 +55,21 @@ class CoroutineSlidingPaneLayoutTest : AndroidTest<ViewActivity>(ViewActivity::c
     panelOpens.cancel()
     uiLaunch { view.openPane() }
     panelOpens.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitPanelOpen() = testRunBlocking {
+    val job = uiLaunch { view.awaitPanelOpen().isTrue() }
+    uiLaunch { view.openPane() }
+    job.joinAndIsCompleted()
+
+    val job2 = uiLaunch { view.awaitPanelOpen().isFalse() }
+    uiLaunch { view.closePane() }
+    job2.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { view.awaitPanelOpen() }
+    uiRunBlocking { view.openPane() }
+    cancelJob.isCancelled.isTrue()
   }
 
   @Test
