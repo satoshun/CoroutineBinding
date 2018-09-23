@@ -8,7 +8,9 @@ import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
@@ -54,6 +56,52 @@ class CoroutineSearchViewTest : AndroidTest<ViewActivity>(ViewActivity::class.ja
     queryTextChangeEvents.cancel()
     uiLaunch { searchView.setQuery("HHH", false) }
     queryTextChangeEvents.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitQueryTextChangeEvent() = testRunBlocking {
+    val job = uiLaunch {
+      searchView.awaitQueryTextChangeEvent().queryText.isEqualTo("init")
+    }
+    uiLaunch { searchView.setQuery("init", false) }
+    job.joinAndIsCompleted()
+
+    val job2 = uiLaunch {
+      val event = searchView.awaitQueryTextChangeEvent()
+      event.queryText.isEqualTo("")
+      event.isSubmitted.isFalse()
+    }
+    uiLaunch { searchView.setQuery(null, false) }
+    job2.joinAndIsCompleted()
+
+    val job3 = uiLaunch {
+      val event = searchView.awaitQueryTextChangeEvent()
+      event.queryText.isEqualTo("HHH")
+      event.isSubmitted.isFalse()
+    }
+    uiLaunch { searchView.setQuery("HHH", true) }
+    job3.joinAndIsCompleted()
+
+    val jobCancel = toBeCancelLaunch { searchView.awaitQueryTextChangeEvent() }
+    jobCancel.cancel()
+    uiRunBlocking { searchView.setQuery("HHH", false) }
+    jobCancel.isCancelled.isTrue()
+  }
+
+  @Test
+  fun awaitSubmitQueryTextEvent() = testRunBlocking {
+    val job = uiLaunch {
+      val event = searchView.awaitSubmitQueryTextEvent()
+      event.queryText.isEqualTo("HHH")
+      event.isSubmitted.isTrue()
+    }
+    uiLaunch { searchView.setQuery("HHH", true) }
+    job.joinAndIsCompleted()
+
+    val jobCancel = toBeCancelLaunch { searchView.awaitSubmitQueryTextEvent() }
+    jobCancel.cancel()
+    uiRunBlocking { searchView.setQuery("HHH", true) }
+    jobCancel.isCancelled.isTrue()
   }
 
   @Test
