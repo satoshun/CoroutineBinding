@@ -5,9 +5,12 @@ import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.material.R
 import com.github.satoshun.coroutinebinding.material.ViewActivity
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -44,5 +47,29 @@ class CoroutineBottomNavigationViewTest : AndroidTest<ViewActivity>(ViewActivity
     itemSelections.cancel()
     uiLaunch { menu.performIdentifierAction(1, 0) }
     itemSelections.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitItemSelection() = testRunBlocking {
+    val (menu, item1, item2) = uiRunBlocking {
+      val menu = view.menu
+      Triple(
+          menu,
+          menu.add(0, 1, 0, "Hi"),
+          menu.add(0, 2, 0, "Hey")
+      )
+    }
+
+    val job = uiLaunch {
+      view.awaitItemSelection().isSame(item1)
+    }
+    uiLaunch { menu.performIdentifierAction(1, 0) }
+    job.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch {
+      view.awaitItemSelection()
+    }
+    uiRunBlocking { menu.performIdentifierAction(1, 0) }
+    cancelJob.isCancelled.isTrue()
   }
 }

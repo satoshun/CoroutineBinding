@@ -10,8 +10,12 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.material.ViewActivity
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
+import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import com.google.android.material.behavior.SwipeDismissBehavior
 import org.junit.Before
@@ -42,5 +46,18 @@ class CoroutineSwipeDismissBehaviorTest : AndroidTest<ViewActivity>(ViewActivity
     dismisses.cancel()
     onView(withId(1)).perform(swipeRight())
     dismisses.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitDismiss() = testRunBlocking {
+    uiRunBlocking { (view.layoutParams as CoordinatorLayout.LayoutParams).behavior = SwipeDismissBehavior<View>() }
+
+    val job = uiLaunch { view.awaitDismiss() }
+    onView(withId(1)).perform(swipeRight())
+    job.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { view.awaitDismiss() }
+    onView(withId(1)).perform(swipeRight())
+    cancelJob.isCancelled.isTrue()
   }
 }
