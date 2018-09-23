@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v4
+package com.github.satoshun.coroutinebinding.androidx.core
 
 import android.app.Activity
 import android.os.Bundle
