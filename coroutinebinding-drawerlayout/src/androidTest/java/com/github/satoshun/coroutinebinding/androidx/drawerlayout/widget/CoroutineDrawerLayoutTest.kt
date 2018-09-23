@@ -10,7 +10,9 @@ import com.github.satoshun.coroutinebinding.androidx.drawerlayout.ViewActivity
 import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
@@ -55,5 +57,24 @@ class CoroutineDrawerLayoutTest : AndroidTest<ViewActivity>(ViewActivity::class.
 
     drawerOpen.cancel()
     drawerOpen.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitDrawerOpen() = testRunBlocking {
+    val job = uiLaunch {
+      view.awaitDrawerOpen(Gravity.RIGHT).isTrue()
+    }
+    uiLaunch { view.openDrawer(Gravity.RIGHT) }
+    job.joinAndIsCompleted()
+
+    val job2 = uiLaunch {
+      view.awaitDrawerOpen(Gravity.RIGHT).isFalse()
+    }
+    uiLaunch { view.closeDrawer(Gravity.RIGHT) }
+    job2.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { view.awaitDrawerOpen(Gravity.RIGHT) }
+    uiRunBlocking { view.openDrawer(Gravity.RIGHT) }
+    cancelJob.isCancelled.isTrue()
   }
 }

@@ -7,6 +7,7 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel of the open state of the drawer of view.
@@ -33,6 +34,37 @@ fun DrawerLayout.drawerOpen(gravity: Int, capacity: Int = 0): ReceiveChannel<Boo
     }
   }
   invokeOnCloseOnMain {
+    removeDrawerListener(listener)
+  }
+  addDrawerListener(listener)
+}
+
+/**
+ * Suspend a of the open state of the drawer of view.
+ */
+suspend fun DrawerLayout.awaitDrawerOpen(gravity: Int): Boolean = suspendCancellableCoroutine { cont ->
+  val listener = object : DrawerLayout.DrawerListener {
+    override fun onDrawerStateChanged(newState: Int) {
+    }
+
+    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+    }
+
+    override fun onDrawerClosed(drawerView: View) {
+      if ((drawerView.layoutParams as DrawerLayout.LayoutParams).gravity == gravity) {
+        cont.resume(false)
+        removeDrawerListener(this)
+      }
+    }
+
+    override fun onDrawerOpened(drawerView: View) {
+      if ((drawerView.layoutParams as DrawerLayout.LayoutParams).gravity == gravity) {
+        cont.resume(true)
+        removeDrawerListener(this)
+      }
+    }
+  }
+  cont.invokeOnCancellation {
     removeDrawerListener(listener)
   }
   addDrawerListener(listener)
