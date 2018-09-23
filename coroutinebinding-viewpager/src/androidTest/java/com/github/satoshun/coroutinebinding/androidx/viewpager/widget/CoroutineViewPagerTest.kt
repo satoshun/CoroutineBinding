@@ -13,7 +13,10 @@ import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.androidx.viewpager.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
@@ -56,6 +59,23 @@ class CoroutineViewPagerTest : AndroidTest<ViewActivity>(ViewActivity::class.jav
     pageSelections.cancel()
     uiLaunch { viewPager.currentItem = 3 }
     pageSelections.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitPageSelection() = testRunBlocking {
+    uiRunBlocking { viewPager.currentItem = 0 }
+
+    val job = uiLaunch {
+      viewPager.awaitPageSelection().isEqualTo(5)
+    }
+    uiLaunch { viewPager.currentItem = 5 }
+    job.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch {
+      viewPager.awaitPageSelection()
+    }
+    uiRunBlocking { viewPager.currentItem = 3 }
+    cancelJob.isCancelled.isTrue()
   }
 }
 
