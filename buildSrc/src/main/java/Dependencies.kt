@@ -22,7 +22,7 @@ object Libs {
   val appcompat = "androidx.appcompat:appcompat:1.0.0"
   val annotations = "androidx.annotation:annotation:1.0.0"
   val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
-  val constraint_layout = "androidx.constraintlayout:constraintlayout:2.0.0-alpha1"
+  val constraint_layout = "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
 
   val core = "androidx.core:core:1.0.0"
   val viewpager = "androidx.viewpager:viewpager:1.0.0"
