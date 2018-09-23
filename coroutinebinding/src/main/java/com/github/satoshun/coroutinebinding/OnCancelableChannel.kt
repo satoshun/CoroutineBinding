@@ -4,8 +4,8 @@ package com.github.satoshun.coroutinebinding
 
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.RestrictTo
-import android.support.annotation.RestrictTo.Scope.LIBRARY
+import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope.LIBRARY
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 

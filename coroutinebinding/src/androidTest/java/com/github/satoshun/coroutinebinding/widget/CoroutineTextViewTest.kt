@@ -1,9 +1,9 @@
 package com.github.satoshun.coroutinebinding.widget
 
-import android.support.test.annotation.UiThreadTest
 import android.view.inputmethod.EditorInfo.IME_ACTION_GO
 import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.widget.TextView
+import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo

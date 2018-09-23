@@ -14,7 +14,7 @@ android {
 
   defaultConfig {
     applicationId "com.github.satoshun.coroutinebinding.example"
-    minSdkVersion Vers.min_sdk
+    minSdkVersion 18
     targetSdkVersion Vers.target_sdk
     versionCode 1
     versionName "1.0"
@@ -37,7 +37,7 @@ android {
 
 dependencies {
   implementation project(':coroutinebinding')
-  implementation project(':coroutinebinding-recyclerview-v7')
+  implementation project(':coroutinebinding-recyclerview')
 //  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:0.1.0'
 //  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-recyclerview-v7:0.1.0'
 //  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-design:0.1.0'
@@ -48,7 +48,7 @@ dependencies {
   implementation Libs.coroutine
   implementation Libs.ui_coroutine
 
-  implementation Libs.appcompat_v7
+  implementation Libs.appcompat
   implementation Libs.constraint_layout
 }
 

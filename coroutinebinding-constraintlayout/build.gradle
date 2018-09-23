@@ -43,9 +43,9 @@ android {
 
 dependencies {
   api project(':coroutinebinding')
-  api Libs.constraint_layout2
+  api Libs.constraint_layout
   implementation Libs.ui_coroutine
-  implementation Libs.support_annotations
+  implementation Libs.annotations
 
   androidTestImplementation project(":testing-utils")
 }

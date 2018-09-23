@@ -3,13 +3,13 @@
 package com.github.satoshun.coroutinebinding
 
 import android.app.Activity
-import android.support.test.rule.ActivityTestRule
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
+import androidx.test.rule.ActivityTestRule
 import com.google.common.truth.Truth
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers

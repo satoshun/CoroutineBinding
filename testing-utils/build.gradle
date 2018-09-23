@@ -31,10 +31,12 @@ dependencies {
   api Libs.kotlin
   api Libs.coroutine
   api Libs.ui_coroutine
-  api Libs.support_annotations
+  api Libs.annotations
   api Libs.junit
-  api Libs.support_test
+  api Libs.test_runner
+  api Libs.test_rule
   api Libs.espresso
+  api Libs.espresso_contrib
   api Libs.truth
   api Libs.multidex
 }

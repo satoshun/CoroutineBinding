@@ -1,6 +1,6 @@
 package com.github.satoshun.coroutinebinding.constraintlayout.motion
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
