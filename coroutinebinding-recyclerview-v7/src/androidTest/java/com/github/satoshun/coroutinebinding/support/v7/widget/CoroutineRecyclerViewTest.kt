@@ -1,13 +1,13 @@
 package com.github.satoshun.coroutinebinding.support.v7.widget
 
 import android.support.test.annotation.UiThreadTest
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isInstanceOf
@@ -89,14 +89,14 @@ class CoroutineRecyclerViewTest : AndroidTest<ViewActivity>(ViewActivity::class.
 
 private class SimpleAdapter constructor(
   private val child: View
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<ViewHolder>() {
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-    return object : RecyclerView.ViewHolder(child) {
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    return object : ViewHolder(child) {
     }
   }
 
-  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
+  override fun onBindViewHolder(holder: ViewHolder, position: Int) {}
 
   override fun getItemCount(): Int {
     return 1

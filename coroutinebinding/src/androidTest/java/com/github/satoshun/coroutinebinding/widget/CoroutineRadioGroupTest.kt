@@ -1,8 +1,8 @@
 package com.github.satoshun.coroutinebinding.widget
 
-import android.support.test.annotation.UiThreadTest
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo

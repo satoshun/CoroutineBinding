@@ -1,11 +1,11 @@
 package com.github.satoshun.coroutinebinding.design.widget
 
-import android.support.annotation.CheckResult
-import android.support.design.widget.NavigationView
 import android.view.MenuItem
+import androidx.annotation.CheckResult
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
+import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**

@@ -1,8 +1,8 @@
 package com.github.satoshun.coroutinebinding.support.v4.widget
 
-import android.support.annotation.CheckResult
-import android.support.v4.widget.DrawerLayout
 import android.view.View
+import androidx.annotation.CheckResult
+import androidx.drawerlayout.widget.DrawerLayout
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer

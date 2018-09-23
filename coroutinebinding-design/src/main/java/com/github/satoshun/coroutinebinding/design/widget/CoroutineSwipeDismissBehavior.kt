@@ -1,12 +1,12 @@
 package com.github.satoshun.coroutinebinding.design.widget
 
-import android.support.annotation.CheckResult
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.SwipeDismissBehavior
 import android.view.View
+import androidx.annotation.CheckResult
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
+import com.google.android.material.behavior.SwipeDismissBehavior
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**

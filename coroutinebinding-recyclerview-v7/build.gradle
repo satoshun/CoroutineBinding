@@ -44,8 +44,8 @@ android {
 dependencies {
   api project(':coroutinebinding')
   api Libs.recyclerview
+
   implementation Libs.ui_coroutine
-  implementation Libs.support_annotations
 
   androidTestImplementation project(":testing-utils")
 }

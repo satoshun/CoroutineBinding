@@ -1,9 +1,9 @@
 package com.github.satoshun.coroutinebinding.example
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.github.satoshun.coroutinebinding.view.attaches
 import com.github.satoshun.coroutinebinding.view.awaitAttach
 import com.github.satoshun.coroutinebinding.view.awaitClick

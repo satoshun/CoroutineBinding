@@ -1,6 +1,6 @@
 package com.github.satoshun.coroutinebinding.constraintlayout
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintsChangedListener
 import androidx.constraintlayout.widget.StateSet
 import com.github.satoshun.coroutinebinding.cancelableChannel

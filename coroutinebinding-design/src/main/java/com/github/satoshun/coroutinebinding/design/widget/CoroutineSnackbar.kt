@@ -1,10 +1,10 @@
 package com.github.satoshun.coroutinebinding.design.widget
 
-import android.support.annotation.CheckResult
-import android.support.design.widget.Snackbar
+import androidx.annotation.CheckResult
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**

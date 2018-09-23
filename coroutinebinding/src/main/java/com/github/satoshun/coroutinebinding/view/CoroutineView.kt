@@ -1,12 +1,12 @@
 package com.github.satoshun.coroutinebinding.view
 
-import android.support.annotation.CheckResult
-import android.support.annotation.RequiresApi
 import android.view.DragEvent
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.annotation.CheckResult
+import androidx.annotation.RequiresApi
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer

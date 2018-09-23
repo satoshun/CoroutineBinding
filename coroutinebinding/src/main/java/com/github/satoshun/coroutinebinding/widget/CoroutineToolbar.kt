@@ -1,9 +1,9 @@
 package com.github.satoshun.coroutinebinding.widget
 
-import android.support.annotation.RequiresApi
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toolbar
+import androidx.annotation.RequiresApi
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer

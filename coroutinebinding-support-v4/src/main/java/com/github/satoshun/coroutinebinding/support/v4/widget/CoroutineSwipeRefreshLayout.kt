@@ -1,7 +1,7 @@
 package com.github.satoshun.coroutinebinding.support.v4.widget
 
-import android.support.annotation.CheckResult
-import android.support.v4.widget.SwipeRefreshLayout
+import androidx.annotation.CheckResult
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer

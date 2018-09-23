@@ -1,7 +1,7 @@
 package com.github.satoshun.coroutinebinding.support.v4.view
 
-import android.support.annotation.CheckResult
-import android.support.v4.view.ViewPager
+import androidx.annotation.CheckResult
+import androidx.viewpager.widget.ViewPager
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer

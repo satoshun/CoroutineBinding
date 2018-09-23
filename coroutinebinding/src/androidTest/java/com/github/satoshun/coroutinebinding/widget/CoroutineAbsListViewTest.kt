@@ -1,8 +1,8 @@
 package com.github.satoshun.coroutinebinding.widget
 
-import android.support.test.annotation.UiThreadTest
 import android.widget.ListAdapter
 import android.widget.ListView
+import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.createListView
