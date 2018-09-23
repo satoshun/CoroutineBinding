@@ -164,7 +164,7 @@ suspend fun <T : Adapter> AdapterView<T>.awaitItemClickEvent(): AdapterViewItemC
 /**
  * Create an channel of the position of item long-clicks for view.
  */
-inline fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0): ReceiveChannel<Int> =
+fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0): ReceiveChannel<Int> =
     itemLongClicks(capacity) { true }
 
 /**
@@ -180,6 +180,31 @@ fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0, handled: Call
         }
       }
       invokeOnCloseOnMain {
+        setOnItemLongClickListener(null)
+      }
+      setOnItemLongClickListener(listener)
+    }
+
+/**
+ * Suspend a position of item long-click for view.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemLongClick(): Int = awaitItemLongClick { true }
+
+/**
+ * Suspend a position of item long-click for view.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemLongClick(handled: Callable): Int =
+    suspendCancellableCoroutine { cont ->
+      val listener = AdapterView.OnItemLongClickListener { _, _, position, _ ->
+        if (handled()) {
+          cont.resume(position)
+          onItemLongClickListener = null
+          true
+        } else {
+          false
+        }
+      }
+      cont.invokeOnCancellation {
         setOnItemLongClickListener(null)
       }
       setOnItemLongClickListener(listener)
