@@ -10,15 +10,16 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.github.satoshun.coroutinebinding.AndroidTest
+import com.github.satoshun.coroutinebinding.androidx.swiperefreshlayout.ViewActivity
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
-import com.github.satoshun.coroutinebinding.support.v4.ViewActivity
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
 import org.junit.Test
 
-class CoroutineSwipeRefreshLayoutTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
+class CoroutineSwipeRefreshLayoutTest : AndroidTest<ViewActivity>(
+    ViewActivity::class.java) {
   private lateinit var view: SwipeRefreshLayout
 
   @Before @UiThreadTest
