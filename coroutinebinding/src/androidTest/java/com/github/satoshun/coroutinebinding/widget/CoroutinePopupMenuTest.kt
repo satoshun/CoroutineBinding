@@ -90,7 +90,6 @@ class CoroutinePopupMenuTest : AndroidTest<ViewActivity>(ViewActivity::class.jav
     uiRunBlocking { popupMenu.dismiss() }
     job.joinAndIsCompleted()
 
-
     val jobCancel = uiLaunch { popupMenu.awaitDismiss() }
     jobCancel.cancel()
     uiRunBlocking { popupMenu.show() }

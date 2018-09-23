@@ -5,6 +5,7 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel which emits the checked events.
@@ -21,6 +22,20 @@ fun RadioGroup.checkedChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelab
     }
   }
   invokeOnCloseOnMain {
+    setOnCheckedChangeListener(null)
+  }
+  setOnCheckedChangeListener(listener)
+}
+
+/**
+ * Suspend a which emits the checked event.
+ */
+suspend fun RadioGroup.awaitCheckedChange(): Int = suspendCancellableCoroutine { cont ->
+  val listener = RadioGroup.OnCheckedChangeListener { group, checkedId ->
+    cont.resume(checkedId)
+    setOnCheckedChangeListener(null)
+  }
+  cont.invokeOnCancellation {
     setOnCheckedChangeListener(null)
   }
   setOnCheckedChangeListener(listener)
