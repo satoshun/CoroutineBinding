@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v7
+package com.github.satoshun.coroutinebinding.androidx.recyclerview
 
 import android.app.Activity
 import android.os.Bundle

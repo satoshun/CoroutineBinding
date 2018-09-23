@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v7.widget
+package com.github.satoshun.coroutinebinding.androidx.recyclerview.widget
 
 import android.view.View
 import androidx.annotation.CheckResult
@@ -16,11 +16,21 @@ fun RecyclerView.childAttachStateChangeEvents(capacity: Int = 0): ReceiveChannel
     cancelableChannel(capacity) {
       val listener = object : RecyclerView.OnChildAttachStateChangeListener {
         override fun onChildViewDetachedFromWindow(view: View) {
-          safeOffer(RecyclerViewChildDetachEvent(this@childAttachStateChangeEvents, view))
+          safeOffer(
+              RecyclerViewChildDetachEvent(
+                  this@childAttachStateChangeEvents,
+                  view
+              )
+          )
         }
 
         override fun onChildViewAttachedToWindow(view: View) {
-          safeOffer(RecyclerViewChildAttachEvent(this@childAttachStateChangeEvents, view))
+          safeOffer(
+              RecyclerViewChildAttachEvent(
+                  this@childAttachStateChangeEvents,
+                  view
+              )
+          )
         }
       }
       invokeOnCloseOnMain {
@@ -61,7 +71,13 @@ fun RecyclerView.scrollEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewScr
     cancelableChannel(capacity) {
       val listener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-          safeOffer(RecyclerViewScrollEvent(recyclerView, dx, dy))
+          safeOffer(
+              RecyclerViewScrollEvent(
+                  recyclerView,
+                  dx,
+                  dy
+              )
+          )
         }
       }
       invokeOnCloseOnMain {

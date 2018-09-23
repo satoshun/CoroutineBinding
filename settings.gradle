@@ -1,6 +1,6 @@
 include ':coroutinebinding'
 include ':coroutinebinding-appcompat'
-include ':coroutinebinding-recyclerview-v7'
+include ':coroutinebinding-recyclerview'
 include ':coroutinebinding-support-v4'
 include ':coroutinebinding-design'
 include ':coroutinebinding-constraintlayout'

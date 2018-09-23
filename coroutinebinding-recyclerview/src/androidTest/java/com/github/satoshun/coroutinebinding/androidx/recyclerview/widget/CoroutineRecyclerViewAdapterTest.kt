@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v7.widget
+package com.github.satoshun.coroutinebinding.androidx.recyclerview.widget
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
+import com.github.satoshun.coroutinebinding.androidx.recyclerview.ViewActivity
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
-import com.github.satoshun.coroutinebinding.support.v7.ViewActivity
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import kotlinx.coroutines.experimental.runBlocking

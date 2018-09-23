@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v7.widget
+package com.github.satoshun.coroutinebinding.androidx.recyclerview.widget
 
 import androidx.recyclerview.widget.RecyclerView
 import com.github.satoshun.coroutinebinding.cancelableChannel
