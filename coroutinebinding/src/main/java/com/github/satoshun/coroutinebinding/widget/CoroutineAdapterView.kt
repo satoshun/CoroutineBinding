@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.widget
 
 import android.view.View
@@ -213,7 +211,7 @@ suspend fun <T : Adapter> AdapterView<T>.awaitItemLongClick(handled: Callable): 
 /**
  * Create an channel of the item long-click events for view.
  */
-inline fun <T : Adapter> AdapterView<T>.itemLongClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemLongClickEvent> =
+fun <T : Adapter> AdapterView<T>.itemLongClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemLongClickEvent> =
     itemLongClickEvents(capacity) { true }
 
 /**
@@ -245,3 +243,30 @@ data class AdapterViewItemLongClickEvent(
   val position: Int,
   val id: Long
 )
+
+/**
+ * Suspend a item long-click event for view.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemLongClickEvent(): AdapterViewItemLongClickEvent =
+    awaitItemLongClickEvent { true }
+
+/**
+ * Suspend a item long-click event for view.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemLongClickEvent(
+  handled: Callable
+): AdapterViewItemLongClickEvent = suspendCancellableCoroutine { cont ->
+  val listener = AdapterView.OnItemLongClickListener { parent, view, position, id ->
+    if (handled()) {
+      cont.resume(AdapterViewItemLongClickEvent(parent, view, position, id))
+      onItemLongClickListener = null
+      true
+    } else {
+      false
+    }
+  }
+  cont.invokeOnCancellation {
+    setOnItemLongClickListener(null)
+  }
+  setOnItemLongClickListener(listener)
+}

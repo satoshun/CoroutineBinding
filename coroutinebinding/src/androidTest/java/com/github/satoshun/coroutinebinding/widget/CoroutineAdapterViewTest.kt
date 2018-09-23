@@ -160,4 +160,10 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
   fun itemLongClickEvents() = testRunBlocking {
     val itemLongClickEvents = listView.itemLongClickEvents(1)
   }
+
+  @Ignore("todo")
+  @Test
+  fun awaitItemLongClickEvent() = testRunBlocking {
+    listView.awaitItemLongClickEvent()
+  }
 }
