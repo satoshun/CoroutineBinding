@@ -1,18 +1,18 @@
-package com.github.satoshun.coroutinebinding.constraintlayout
+package com.github.satoshun.coroutinebinding.androidx.constraintlayout.widget
 
 import androidx.annotation.CheckResult
-import androidx.constraintlayout.widget.ConstraintLayoutStates
 import androidx.constraintlayout.widget.ConstraintsChangedListener
+import androidx.constraintlayout.widget.StateSet
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 
 /**
- * Create an channel of to emit on ConstraintLayoutStates constraintsChanged events.
+ * Create an channel of to emit on StateSet constraintsChanged events.
  */
 @CheckResult
-fun ConstraintLayoutStates.constraintsChanged(capacity: Int = 0): ReceiveChannel<ConstraintsChangedEvent> =
+fun StateSet.constraintsChanged(capacity: Int = 0): ReceiveChannel<ConstraintsChangedEvent> =
     cancelableChannel(capacity) {
       val listener = object : ConstraintsChangedListener() {
         override fun preLayoutChange(stateId: Int, constraintId: Int) {

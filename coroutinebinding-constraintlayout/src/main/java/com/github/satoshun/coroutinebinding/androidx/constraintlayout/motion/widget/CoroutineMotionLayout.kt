@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.constraintlayout.motion
+package com.github.satoshun.coroutinebinding.androidx.constraintlayout.motion.widget
 
 import androidx.annotation.CheckResult
 import androidx.constraintlayout.motion.widget.MotionLayout

@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.constraintlayout
+package com.github.satoshun.coroutinebinding.androidx.constraintlayout
 
 import android.app.Activity
 import android.os.Bundle
@@ -12,7 +12,6 @@ class ViewActivity : Activity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
     val context = ContextThemeWrapper(this, R.style.Theme_AppCompat)
     view = ConstraintLayout(context).apply {
       layoutParams = ViewGroup.LayoutParams(

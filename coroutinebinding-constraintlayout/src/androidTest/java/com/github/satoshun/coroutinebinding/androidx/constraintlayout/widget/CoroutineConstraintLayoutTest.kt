@@ -1,6 +1,8 @@
-package com.github.satoshun.coroutinebinding.constraintlayout
+package com.github.satoshun.coroutinebinding.androidx.constraintlayout.widget
 
 import com.github.satoshun.coroutinebinding.AndroidTest
+import com.github.satoshun.coroutinebinding.androidx.constraintlayout.R
+import com.github.satoshun.coroutinebinding.androidx.constraintlayout.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking

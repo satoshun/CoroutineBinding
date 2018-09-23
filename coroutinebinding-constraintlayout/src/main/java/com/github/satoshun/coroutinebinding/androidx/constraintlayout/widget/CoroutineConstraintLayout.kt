@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.constraintlayout
+package com.github.satoshun.coroutinebinding.androidx.constraintlayout.widget
 
 import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintLayout
