@@ -1,12 +1,14 @@
-package com.github.satoshun.coroutinebinding.support.v7.widget
+package com.github.satoshun.coroutinebinding.androidx.appcompat.widget
 
 import androidx.appcompat.widget.PopupMenu
 import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
+import com.github.satoshun.coroutinebinding.androidx.appcompat.dismisses
+import com.github.satoshun.coroutinebinding.androidx.appcompat.itemClicks
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
-import com.github.satoshun.coroutinebinding.support.v7.ViewActivity
+import com.github.satoshun.coroutinebinding.androidx.appcompat.ViewActivity
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking

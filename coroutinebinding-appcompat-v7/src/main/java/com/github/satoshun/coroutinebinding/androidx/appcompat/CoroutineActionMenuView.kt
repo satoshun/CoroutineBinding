@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v7.widget
+package com.github.satoshun.coroutinebinding.androidx.appcompat
 
 import android.view.MenuItem
 import androidx.annotation.CheckResult

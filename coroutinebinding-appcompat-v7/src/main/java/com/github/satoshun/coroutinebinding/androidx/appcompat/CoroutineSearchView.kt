@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v7.widget
+package com.github.satoshun.coroutinebinding.androidx.appcompat
 
 import androidx.annotation.CheckResult
 import androidx.appcompat.widget.SearchView
@@ -15,11 +15,23 @@ fun SearchView.queryTextChangeEvents(capacity: Int = 0): ReceiveChannel<SearchVi
     cancelableChannel(capacity) {
       val listener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
-          return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, this@queryTextChangeEvents.query, true))
+          return safeOffer(
+              SearchViewQueryTextEvent(
+                  this@queryTextChangeEvents,
+                  this@queryTextChangeEvents.query,
+                  true
+              )
+          )
         }
 
         override fun onQueryTextChange(newText: String): Boolean {
-          return safeOffer(SearchViewQueryTextEvent(this@queryTextChangeEvents, newText, false))
+          return safeOffer(
+              SearchViewQueryTextEvent(
+                  this@queryTextChangeEvents,
+                  newText,
+                  false
+              )
+          )
         }
       }
       invokeOnCloseOnMain {
