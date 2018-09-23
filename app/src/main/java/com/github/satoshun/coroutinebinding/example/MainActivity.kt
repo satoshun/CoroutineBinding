@@ -3,8 +3,10 @@ package com.github.satoshun.coroutinebinding.example
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.Toast
 import com.github.satoshun.coroutinebinding.view.attaches
 import com.github.satoshun.coroutinebinding.view.awaitAttach
+import com.github.satoshun.coroutinebinding.view.awaitClick
 import com.github.satoshun.coroutinebinding.view.awaitDetach
 import com.github.satoshun.coroutinebinding.view.detaches
 import kotlinx.android.synthetic.main.activity_main.*
@@ -65,6 +67,19 @@ class MainActivity : AppCompatActivity(),
           hello.awaitDetach()
           Log.d("suspend detach", "detached")
         }
+      }
+    }
+
+    launch {
+      button.awaitClick()
+      Toast.makeText(this@MainActivity, "one shot clicked", Toast.LENGTH_LONG).show()
+    }
+
+    launch {
+      while (true) {
+        button2.awaitClick()
+        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_SHORT).show()
+        delay(300)
       }
     }
   }
