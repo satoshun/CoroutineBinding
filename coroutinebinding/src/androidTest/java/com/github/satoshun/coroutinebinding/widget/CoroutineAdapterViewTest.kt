@@ -86,6 +86,21 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
   }
 
   @Test
+  fun awaitSelectionEvent() = testRunBlocking {
+    val job = uiLaunch {
+      val event = listView.awaitSelectionEvent()
+      (event as AdapterViewItemSelectionEvent).position.isEqualTo(2)
+    }
+    uiRunBlocking { listView.setSelection(2) }
+    job.joinAndIsCompleted()
+
+    val cancelJob = uiLaunch { listView.awaitSelectionEvent() }
+    cancelJob.cancel()
+    uiRunBlocking { listView.setSelection(1) }
+    cancelJob.isCancelled.isTrue()
+  }
+
+  @Test
   fun itemClicks() = testRunBlocking {
     val itemClicks = listView.itemClicks(1)
 
