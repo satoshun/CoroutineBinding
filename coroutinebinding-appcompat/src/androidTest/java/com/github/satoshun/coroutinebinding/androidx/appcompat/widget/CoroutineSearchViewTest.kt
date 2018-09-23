@@ -4,12 +4,12 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.SearchView
 import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
+import com.github.satoshun.coroutinebinding.androidx.appcompat.R
+import com.github.satoshun.coroutinebinding.androidx.appcompat.ViewActivity
 import com.github.satoshun.coroutinebinding.androidx.appcompat.queryTextChange
 import com.github.satoshun.coroutinebinding.androidx.appcompat.queryTextChangeEvents
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
-import com.github.satoshun.coroutinebinding.androidx.appcompat.ViewActivity
-import com.github.satoshun.coroutinebinding.androidx.appcompat.v7.appcompat.R
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking

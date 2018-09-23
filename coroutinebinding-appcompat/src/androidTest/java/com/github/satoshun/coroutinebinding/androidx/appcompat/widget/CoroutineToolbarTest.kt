@@ -7,13 +7,13 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.github.satoshun.coroutinebinding.AndroidTest
+import com.github.satoshun.coroutinebinding.androidx.appcompat.R
+import com.github.satoshun.coroutinebinding.androidx.appcompat.ViewActivity
 import com.github.satoshun.coroutinebinding.androidx.appcompat.itemClicks
 import com.github.satoshun.coroutinebinding.androidx.appcompat.navigationClicks
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
-import com.github.satoshun.coroutinebinding.androidx.appcompat.ViewActivity
-import com.github.satoshun.coroutinebinding.androidx.appcompat.v7.appcompat.R
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before

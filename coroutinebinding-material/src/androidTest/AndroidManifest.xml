@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.satoshun.coroutinebinding.material">
+
+  <application>
+    <activity
+        android:name=".ViewActivity"
+        android:theme="@style/Theme.AppCompat"/>
+  </application>
+</manifest>
