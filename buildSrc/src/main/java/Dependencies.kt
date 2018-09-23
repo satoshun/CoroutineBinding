@@ -43,5 +43,5 @@ object Libs {
 
   val truth = "com.google.truth:truth:0.42"
   val mockito_kotlin = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
-  val multidex = "com.android.support:multidex:1.0.3"
+  val multidex = "androidx.multidex:multidex:2.0.0"
 }

@@ -1,12 +1,11 @@
 package com.github.satoshun.coroutinebinding.support.v7.widget
 
-import android.support.test.annotation.UiThreadTest
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.matcher.ViewMatchers.withContentDescription
-import android.support.test.rule.ActivityTestRule
-import android.support.v7.view.ContextThemeWrapper
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.Toolbar
+import androidx.test.annotation.UiThreadTest
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
@@ -16,7 +15,6 @@ import com.github.satoshun.coroutinebinding.support.v7.appcompat.R
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 private const val NAVIGATION_CONTENT_DESCRIPTION = "desc"

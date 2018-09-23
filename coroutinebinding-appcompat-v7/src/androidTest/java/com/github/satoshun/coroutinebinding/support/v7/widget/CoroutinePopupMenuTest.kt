@@ -1,7 +1,7 @@
 package com.github.satoshun.coroutinebinding.support.v7.widget
 
-import android.support.test.annotation.UiThreadTest
-import android.support.v7.widget.PopupMenu
+import androidx.appcompat.widget.PopupMenu
+import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull

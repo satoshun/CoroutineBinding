@@ -1,8 +1,8 @@
 package com.github.satoshun.coroutinebinding.support.v7.widget
 
-import android.support.test.annotation.UiThreadTest
-import android.support.v7.view.ContextThemeWrapper
-import android.support.v7.widget.SearchView
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.SearchView
+import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull

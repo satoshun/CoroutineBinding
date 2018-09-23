@@ -1,13 +1,13 @@
 package com.github.satoshun.coroutinebinding.design.widget
 
-import android.support.design.widget.Snackbar
-import android.support.test.annotation.UiThreadTest
+import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.design.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
+import com.google.android.material.snackbar.Snackbar
 import org.junit.Before
 import org.junit.Test
 

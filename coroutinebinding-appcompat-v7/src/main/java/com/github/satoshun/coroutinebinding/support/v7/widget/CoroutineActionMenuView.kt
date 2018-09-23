@@ -1,8 +1,8 @@
 package com.github.satoshun.coroutinebinding.support.v7.widget
 
 import android.view.MenuItem
-import android.widget.ActionMenuView
 import androidx.annotation.CheckResult
+import androidx.appcompat.widget.ActionMenuView
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer

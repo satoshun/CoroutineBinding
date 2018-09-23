@@ -1,19 +1,19 @@
 package com.github.satoshun.coroutinebinding.design.widget
 
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.SwipeDismissBehavior
-import android.support.test.annotation.UiThreadTest
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.swipeRight
-import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.test.annotation.UiThreadTest
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.swipeRight
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.design.ViewActivity
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
+import com.google.android.material.behavior.SwipeDismissBehavior
 import org.junit.Before
 import org.junit.Test
 

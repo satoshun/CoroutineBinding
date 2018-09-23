@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 
 class ViewActivity : Activity() {
-  val rootView: ViewGroup get() = findViewById(android.R.id.content)
   lateinit var view: ViewGroup
 
   override fun onCreate(savedInstanceState: Bundle?) {

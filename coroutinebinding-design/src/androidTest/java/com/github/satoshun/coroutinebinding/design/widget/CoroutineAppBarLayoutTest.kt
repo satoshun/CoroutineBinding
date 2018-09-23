@@ -1,10 +1,9 @@
 package com.github.satoshun.coroutinebinding.design.widget
 
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CoordinatorLayout
-import android.support.test.annotation.UiThreadTest
-import android.support.v7.view.ContextThemeWrapper
 import android.view.View
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.design.R
 import com.github.satoshun.coroutinebinding.design.ViewActivity
@@ -12,6 +11,7 @@ import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiRunBlocking
+import com.google.android.material.appbar.AppBarLayout
 import org.junit.Before
 import org.junit.Test
 

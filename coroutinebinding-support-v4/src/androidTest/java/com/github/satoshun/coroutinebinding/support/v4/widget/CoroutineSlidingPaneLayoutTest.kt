@@ -1,11 +1,11 @@
 package com.github.satoshun.coroutinebinding.support.v4.widget
 
 import android.graphics.Color
-import android.support.test.annotation.UiThreadTest
-import android.support.v4.widget.SlidingPaneLayout
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
+import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isGreaterThan

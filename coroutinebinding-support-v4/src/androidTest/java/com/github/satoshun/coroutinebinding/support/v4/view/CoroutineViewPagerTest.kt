@@ -1,14 +1,14 @@
 package com.github.satoshun.coroutinebinding.support.v4.view
 
-import android.support.test.annotation.UiThreadTest
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.swipeLeft
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.test.annotation.UiThreadTest
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.swipeLeft
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull

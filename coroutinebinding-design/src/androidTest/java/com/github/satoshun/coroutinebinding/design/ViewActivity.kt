@@ -2,9 +2,9 @@ package com.github.satoshun.coroutinebinding.design
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v7.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.appcompat.view.ContextThemeWrapper
 
 class ViewActivity : Activity() {
   lateinit var view: ViewGroup

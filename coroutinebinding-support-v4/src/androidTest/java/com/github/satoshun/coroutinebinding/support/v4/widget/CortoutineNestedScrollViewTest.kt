@@ -1,10 +1,10 @@
 package com.github.satoshun.coroutinebinding.support.v4.widget
 
-import android.support.test.annotation.UiThreadTest
-import android.support.v4.widget.NestedScrollView
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ScrollView
+import androidx.core.widget.NestedScrollView
+import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
