@@ -76,10 +76,12 @@ class MainActivity : AppCompatActivity(),
     }
 
     launch {
+      var i = 1
       while (true) {
         button2.awaitClick()
-        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@MainActivity, "clicked $i", Toast.LENGTH_SHORT).show()
         delay(300)
+        i += 1
       }
     }
   }

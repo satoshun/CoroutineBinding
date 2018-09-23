@@ -43,9 +43,13 @@ android {
 
 dependencies {
   api project(':coroutinebinding')
-  api Libs.support_v4_core
+  api Libs.core
+  api Libs.viewpager
+  api Libs.drawerlayout
+  api Libs.slidingpanelayout
+  api Libs.swiperefreshlayout
   implementation Libs.ui_coroutine
-  implementation Libs.support_annotations
+  implementation Libs.annotations
 
   androidTestImplementation project(":testing-utils")
 }

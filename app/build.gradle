@@ -14,7 +14,7 @@ android {
 
   defaultConfig {
     applicationId "com.github.satoshun.coroutinebinding.example"
-    minSdkVersion Vers.min_sdk
+    minSdkVersion 18
     targetSdkVersion Vers.target_sdk
     versionCode 1
     versionName "1.0"
@@ -48,7 +48,7 @@ dependencies {
   implementation Libs.coroutine
   implementation Libs.ui_coroutine
 
-  implementation Libs.appcompat_v7
+  implementation Libs.appcompat
   implementation Libs.constraint_layout
 }
 

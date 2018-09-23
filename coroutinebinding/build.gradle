@@ -45,7 +45,7 @@ dependencies {
   api Libs.kotlin
   api Libs.coroutine
   implementation Libs.ui_coroutine
-  implementation Libs.support_annotations
+  implementation Libs.annotations
 
   androidTestImplementation project(":testing-utils")
 }
