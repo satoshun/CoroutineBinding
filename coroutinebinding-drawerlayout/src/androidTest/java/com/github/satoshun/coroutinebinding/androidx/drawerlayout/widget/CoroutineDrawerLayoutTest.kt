@@ -6,10 +6,10 @@ import android.widget.FrameLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.test.annotation.UiThreadTest
 import com.github.satoshun.coroutinebinding.AndroidTest
+import com.github.satoshun.coroutinebinding.androidx.drawerlayout.ViewActivity
 import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isTrue
-import com.github.satoshun.coroutinebinding.support.v4.ViewActivity
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking

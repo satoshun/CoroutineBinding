@@ -43,7 +43,7 @@ android {
 
 dependencies {
   api project(':coroutinebinding')
-  api Libs.core
+  api Libs.drawerlayout
   implementation Libs.ui_coroutine
   implementation Libs.annotations
 
