@@ -7,6 +7,7 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel of child attach state change events on RecyclerView.
@@ -34,6 +35,38 @@ fun RecyclerView.childAttachStateChangeEvents(capacity: Int = 0): ReceiveChannel
         }
       }
       invokeOnCloseOnMain {
+        removeOnChildAttachStateChangeListener(listener)
+      }
+      addOnChildAttachStateChangeListener(listener)
+    }
+
+/**
+ * Suspend a of child attach state change event on RecyclerView.
+ */
+suspend fun RecyclerView.awaitChildAttachStateChangeEvent(): RecyclerViewChildAttachStateChangeEvent =
+    suspendCancellableCoroutine { cont ->
+      val listener = object : RecyclerView.OnChildAttachStateChangeListener {
+        override fun onChildViewDetachedFromWindow(view: View) {
+          cont.resume(
+              RecyclerViewChildDetachEvent(
+                  this@awaitChildAttachStateChangeEvent,
+                  view
+              )
+          )
+          removeOnChildAttachStateChangeListener(this)
+        }
+
+        override fun onChildViewAttachedToWindow(view: View) {
+          cont.resume(
+              RecyclerViewChildAttachEvent(
+                  this@awaitChildAttachStateChangeEvent,
+                  view
+              )
+          )
+          removeOnChildAttachStateChangeListener(this)
+        }
+      }
+      cont.invokeOnCancellation {
         removeOnChildAttachStateChangeListener(listener)
       }
       addOnChildAttachStateChangeListener(listener)
@@ -87,6 +120,29 @@ fun RecyclerView.scrollEvents(capacity: Int = 0): ReceiveChannel<RecyclerViewScr
     }
 
 /**
+ * Suspend a observable of scroll event on RecyclerView.
+ */
+suspend fun RecyclerView.awaitScrollEvent(): RecyclerViewScrollEvent =
+    suspendCancellableCoroutine { cont ->
+      val listener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+          cont.resume(
+              RecyclerViewScrollEvent(
+                  recyclerView,
+                  dx,
+                  dy
+              )
+          )
+          removeOnScrollListener(this)
+        }
+      }
+      cont.invokeOnCancellation {
+        removeOnScrollListener(listener)
+      }
+      addOnScrollListener(listener)
+    }
+
+/**
  * A scroll event on RecyclerView.
  */
 data class RecyclerViewScrollEvent(
@@ -107,6 +163,23 @@ fun RecyclerView.scrollStateChanges(capacity: Int = 0): ReceiveChannel<Int> =
         }
       }
       invokeOnCloseOnMain {
+        removeOnScrollListener(listener)
+      }
+      addOnScrollListener(listener)
+    }
+
+/**
+ * Suspend a of scroll state changed on RecyclerView.
+ */
+suspend fun RecyclerView.awaitScrollStateChange(): Int =
+    suspendCancellableCoroutine { cont ->
+      val listener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+          cont.resume(newState)
+          removeOnScrollListener(this)
+        }
+      }
+      cont.invokeOnCancellation {
         removeOnScrollListener(listener)
       }
       addOnScrollListener(listener)
