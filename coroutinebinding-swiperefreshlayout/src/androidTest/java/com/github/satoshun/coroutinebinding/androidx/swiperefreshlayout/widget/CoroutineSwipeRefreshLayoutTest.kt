@@ -18,8 +18,7 @@ import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
 import org.junit.Test
 
-class CoroutineSwipeRefreshLayoutTest : AndroidTest<ViewActivity>(
-    ViewActivity::class.java) {
+class CoroutineSwipeRefreshLayoutTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
   private lateinit var view: SwipeRefreshLayout
 
   @Before @UiThreadTest
