@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v4.widget
+package com.github.satoshun.coroutinebinding.androidx.slidingpanelayout.widget
 
 import android.view.View
 import androidx.annotation.CheckResult

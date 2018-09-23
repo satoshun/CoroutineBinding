@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v4.view
+package com.github.satoshun.coroutinebinding.androidx.viewpager.widget
 
 import androidx.annotation.CheckResult
 import androidx.viewpager.widget.ViewPager

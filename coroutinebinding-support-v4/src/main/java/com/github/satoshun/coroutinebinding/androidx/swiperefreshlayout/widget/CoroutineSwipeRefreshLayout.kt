@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v4.widget
+package com.github.satoshun.coroutinebinding.androidx.swiperefreshlayout.widget
 
 import androidx.annotation.CheckResult
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout

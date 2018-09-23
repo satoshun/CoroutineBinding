@@ -1,4 +1,4 @@
-package com.github.satoshun.coroutinebinding.support.v4.widget
+package com.github.satoshun.coroutinebinding.androidx.drawerlayout.widget
 
 import android.view.Gravity
 import android.view.ViewGroup
