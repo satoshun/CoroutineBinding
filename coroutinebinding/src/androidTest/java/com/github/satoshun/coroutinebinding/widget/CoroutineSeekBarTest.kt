@@ -6,6 +6,8 @@ import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
@@ -52,5 +54,17 @@ class CoroutineSeekBarTest : AndroidTest<ViewActivity>(ViewActivity::class.java)
   @Test
   fun changeEvents() = testRunBlocking {
     val changeEvents = uiRunBlocking { seekBar.changeEvents() }
+  }
+
+  @Test
+  fun awaitChange() = testRunBlocking {
+    val job = uiLaunch { seekBar.awaitChange().isEqualTo(85) }
+    uiLaunch { seekBar.progress = 85 }
+    job.joinAndIsCompleted()
+
+    val jobCancel = uiLaunch { seekBar.awaitChange() }
+    jobCancel.cancel()
+    uiRunBlocking { seekBar.progress = 50 }
+    jobCancel.isCancelled.isTrue()
   }
 }
