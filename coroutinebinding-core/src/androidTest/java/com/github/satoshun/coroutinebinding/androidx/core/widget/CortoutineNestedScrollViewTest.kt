@@ -10,7 +10,10 @@ import com.github.satoshun.coroutinebinding.androidx.core.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
@@ -29,14 +32,20 @@ class CortoutineNestedScrollViewTest : AndroidTest<ViewActivity>(ViewActivity::c
     val emptyParams = ViewGroup.LayoutParams(50000, 50000)
 
     view.addView(emptyView, emptyParams)
-    scrollView.addView(view, ViewGroup.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.MATCH_PARENT
-    ))
-    rule.activity.view.addView(scrollView, ViewGroup.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.MATCH_PARENT
-    ))
+    scrollView.addView(
+        view,
+        ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+    )
+    rule.activity.view.addView(
+        scrollView,
+        ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+    )
   }
 
   @Test
@@ -54,5 +63,23 @@ class CortoutineNestedScrollViewTest : AndroidTest<ViewActivity>(ViewActivity::c
     scrollChangeEvents.cancel()
     uiRunBlocking { view.scrollTo(1000, 0) }
     scrollChangeEvents.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitScrollChangeEvent() = testRunBlocking {
+    val job = uiLaunch {
+      val event = view.awaitScrollChangeEvent()
+      event.view.isSame(view)
+      event.scrollX.isEqualTo(1000)
+      event.scrollY.isEqualTo(0)
+      event.oldScrollX.isEqualTo(0)
+      event.oldScrollY.isEqualTo(0)
+    }
+    uiLaunch { view.scrollTo(1000, 0) }
+    job.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { view.awaitScrollChangeEvent() }
+    uiRunBlocking { view.scrollTo(1000, 0) }
+    cancelJob.isCancelled.isTrue()
   }
 }
