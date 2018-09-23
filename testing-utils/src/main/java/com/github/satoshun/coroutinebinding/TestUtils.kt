@@ -55,6 +55,15 @@ fun CoroutineScope.uiLaunch(block: suspend CoroutineScope.() -> Unit): Job {
   return launch(context = Dispatchers.Main, block = block)
 }
 
+fun CoroutineScope.toBeCancelLaunch(
+  block: suspend CoroutineScope.() -> Unit
+): Job {
+  return launch(context = Dispatchers.Main, block = {
+    block()
+    throw Exception("should be cancel")
+  })
+}
+
 fun ActivityTestRule<out Activity>.createListView(): Pair<ListView, ListAdapter> {
   val listView = ListView(activity)
   val adapter = MyListAdapter()

@@ -99,7 +99,7 @@ data class AdapterViewItemSelectionEvent(
 /**
  * Suspend a item selection event on AdapterView.
  */
-  suspend fun <T : Adapter> AdapterView<T>.awaitSelectionEvent(): AdapterViewSelectionEvent =
+suspend fun <T : Adapter> AdapterView<T>.awaitSelectionEvent(): AdapterViewSelectionEvent =
     suspendCancellableCoroutine { cont ->
       val listener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>) {
@@ -141,6 +141,21 @@ fun <T : Adapter> AdapterView<T>.itemClickEvents(capacity: Int = 0): ReceiveChan
         safeOffer(AdapterViewItemClickEvent(parent, view, position, id))
       }
       invokeOnCloseOnMain {
+        setOnItemClickListener(null)
+      }
+      setOnItemClickListener(listener)
+    }
+
+/**
+ * Suspend a item click event on AdapterView
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemClickEvent(): AdapterViewItemClickEvent =
+    suspendCancellableCoroutine { cont ->
+      val listener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        cont.resume(AdapterViewItemClickEvent(parent, view, position, id))
+        setOnItemClickListener(null)
+      }
+      cont.invokeOnCancellation {
         setOnItemClickListener(null)
       }
       setOnItemClickListener(listener)
