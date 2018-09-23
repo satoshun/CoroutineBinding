@@ -15,8 +15,12 @@ import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.test.R
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
+import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
@@ -63,5 +67,34 @@ class CoroutineAutoCompleteTextViewTest : AndroidTest<ViewActivity>(ViewActivity
         .inRoot(withDecorView(not(`is`(rule.activity.window.decorView))))
         .perform(click())
     itemClickEvents.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitClickEvent() = testRunBlocking {
+    uiRunBlocking {
+      autoCompleteTextView.threshold = 1
+      val values = listOf("Two", "Three", "Twenty")
+      autoCompleteTextView.setAdapter(
+          ArrayAdapter(autoCompleteTextView.context, android.R.layout.simple_list_item_1, values)
+      )
+    }
+
+    val job = uiLaunch {
+      val event = autoCompleteTextView.awaitItemClickEvent()
+      event.position.isEqualTo(1)
+    }
+    onView(withId(R.id.auto_complete)).perform(typeText("Tw"))
+    onData(startsWith("Twenty"))
+        .inRoot(withDecorView(not(`is`(rule.activity.window.decorView))))
+        .perform(click())
+    job.joinAndIsCompleted()
+
+    val jobCancel = toBeCancelLaunch { autoCompleteTextView.awaitItemClickEvent() }
+    onView(withId(R.id.auto_complete))
+        .perform(clearText(), typeText("Tw"))
+    onData(startsWith("Twenty"))
+        .inRoot(withDecorView(not(`is`(rule.activity.window.decorView))))
+        .perform(click())
+    jobCancel.isCancelled.isTrue()
   }
 }

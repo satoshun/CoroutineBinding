@@ -8,7 +8,10 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isFalse
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
+import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
 import org.junit.Test
@@ -36,5 +39,20 @@ class CoroutineCompoundButtonTest : AndroidTest<ViewActivity>(ViewActivity::clas
     checkedChanges.cancel()
     uiRunBlocking { compoundButton.isChecked = false }
     checkedChanges.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitCheckedChange() = testRunBlocking {
+    val job = uiLaunch { compoundButton.awaitCheckedChange().isTrue() }
+    uiLaunch { compoundButton.isChecked = true }
+    job.joinAndIsCompleted()
+
+    val job2 = uiLaunch { compoundButton.awaitCheckedChange().isFalse() }
+    uiRunBlocking { compoundButton.isChecked = false }
+    job2.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { compoundButton.awaitCheckedChange() }
+    uiRunBlocking { compoundButton.isChecked = false }
+    cancelJob.isCancelled.isTrue()
   }
 }

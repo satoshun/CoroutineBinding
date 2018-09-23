@@ -6,6 +6,8 @@ import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
@@ -37,6 +39,18 @@ class CoroutineRatingBarTest : AndroidTest<ViewActivity>(ViewActivity::class.jav
   }
 
   @Test
+  fun awaitRatingChange() = testRunBlocking {
+    val job = uiLaunch { ratingBar.awaitRatingChange().isEqualTo(1f) }
+    uiLaunch { ratingBar.rating = 1f }
+    job.joinAndIsCompleted()
+
+    val cancelJob = uiLaunch { ratingBar.awaitRatingChange() }
+    cancelJob.cancel()
+    uiRunBlocking { ratingBar.rating = 5f }
+    cancelJob.isCancelled.isTrue()
+  }
+
+  @Test
   fun ratingChangeEvents() = testRunBlocking {
     val ratingChangeEvents = uiRunBlocking { ratingBar.ratingChangeEvents() }
 
@@ -49,5 +63,17 @@ class CoroutineRatingBarTest : AndroidTest<ViewActivity>(ViewActivity::class.jav
     ratingChangeEvents.cancel()
     uiLaunch { ratingBar.rating = 5f }
     ratingChangeEvents.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitRatingChangeEvent() = testRunBlocking {
+    val job = uiLaunch { ratingBar.awaitRatingChangeEvent().rating.isEqualTo(1f) }
+    uiLaunch { ratingBar.rating = 1f }
+    job.joinAndIsCompleted()
+
+    val cancelJob = uiLaunch { ratingBar.awaitRatingChangeEvent() }
+    cancelJob.cancel()
+    uiRunBlocking { ratingBar.rating = 5f }
+    cancelJob.isCancelled.isTrue()
   }
 }

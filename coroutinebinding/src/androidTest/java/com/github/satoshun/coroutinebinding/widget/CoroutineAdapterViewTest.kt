@@ -9,7 +9,11 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.createListView
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
+import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
 import org.junit.Ignore
@@ -48,6 +52,25 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
   }
 
   @Test
+  fun awaitItemSelection() = testRunBlocking {
+    val job = uiLaunch {
+      spinner.awaitItemSelection().isEqualTo(2)
+    }
+    uiRunBlocking { spinner.setSelection(2) }
+    job.joinAndIsCompleted()
+
+    val job2 = uiLaunch {
+      spinner.awaitItemSelection().isEqualTo(0)
+    }
+    uiRunBlocking { spinner.setSelection(0) }
+    job2.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { spinner.awaitItemSelection() }
+    uiRunBlocking { spinner.setSelection(1) }
+    cancelJob.isCancelled.isTrue()
+  }
+
+  @Test
   fun selectionEvents() = testRunBlocking {
     val selectionEvents = listView.selectionEvents()
 
@@ -60,6 +83,20 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
     selectionEvents.cancel()
     uiRunBlocking { listView.setSelection(1) }
     selectionEvents.poll().isNull()
+  }
+
+  @Test
+  fun awaitSelectionEvent() = testRunBlocking {
+    val job = uiLaunch {
+      val event = listView.awaitSelectionEvent()
+      (event as AdapterViewItemSelectionEvent).position.isEqualTo(2)
+    }
+    uiRunBlocking { listView.setSelection(2) }
+    job.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { listView.awaitSelectionEvent() }
+    uiRunBlocking { listView.setSelection(1) }
+    cancelJob.isCancelled.isTrue()
   }
 
   @Test
@@ -92,6 +129,17 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
     itemClickEvents.poll().isNull()
   }
 
+  @Test
+  fun awaitItemClickEvent() = testRunBlocking {
+    val job = uiLaunch { listView.awaitItemClickEvent().position.isEqualTo(2) }
+    uiRunBlocking { listView.performItemClick(listView.getChildAt(2), 2, 2) }
+    job.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { listView.awaitItemClickEvent() }
+    uiRunBlocking { listView.performItemClick(listView.getChildAt(2), 2, 2) }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Ignore("todo")
   @Test
   fun itemLongClicks() = testRunBlocking {
@@ -100,7 +148,19 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
 
   @Ignore("todo")
   @Test
+  fun awaitItemLongClick() = testRunBlocking {
+    listView.awaitItemLongClick()
+  }
+
+  @Ignore("todo")
+  @Test
   fun itemLongClickEvents() = testRunBlocking {
     val itemLongClickEvents = listView.itemLongClickEvents(1)
+  }
+
+  @Ignore("todo")
+  @Test
+  fun awaitItemLongClickEvent() = testRunBlocking {
+    listView.awaitItemLongClickEvent()
   }
 }

@@ -6,6 +6,7 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel of hierarchy change events for ViewGroup.
@@ -50,3 +51,24 @@ class ViewGroupHierarchyChildViewRemoveEvent(
   override val view: ViewGroup,
   override val child: View
 ) : ViewGroupHierarchyChangeEvent()
+
+/**
+ * Suspend a hierarchy change event for ViewGroup
+ */
+suspend fun ViewGroup.awaitChangeEvent(): ViewGroupHierarchyChangeEvent = suspendCancellableCoroutine { cont ->
+  val listener = object : ViewGroup.OnHierarchyChangeListener {
+    override fun onChildViewRemoved(parent: View, child: View) {
+      cont.resume(ViewGroupHierarchyChildViewRemoveEvent(this@awaitChangeEvent, child))
+      setOnHierarchyChangeListener(null)
+    }
+
+    override fun onChildViewAdded(parent: View, child: View) {
+      cont.resume(ViewGroupHierarchyChildViewAddEvent(this@awaitChangeEvent, child))
+      setOnHierarchyChangeListener(null)
+    }
+  }
+  cont.invokeOnCancellation {
+    setOnHierarchyChangeListener(null)
+  }
+  setOnHierarchyChangeListener(listener)
+}

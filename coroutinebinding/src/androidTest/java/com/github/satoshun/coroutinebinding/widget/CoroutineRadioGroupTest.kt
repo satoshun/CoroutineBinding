@@ -7,6 +7,8 @@ import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
@@ -46,5 +48,17 @@ class CoroutineRadioGroupTest : AndroidTest<ViewActivity>(ViewActivity::class.ja
     checkedChanges.cancel()
     uiLaunch { radioGroup.check(1) }
     checkedChanges.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitCheckedChange() = testRunBlocking {
+    val job = uiLaunch { radioGroup.awaitCheckedChange().isEqualTo(1) }
+    uiLaunch { radioGroup.check(1) }
+    job.joinAndIsCompleted()
+
+    val cancelJob = uiLaunch { radioGroup.awaitCheckedChange() }
+    cancelJob.cancel()
+    uiRunBlocking { radioGroup.check(1) }
+    cancelJob.isCancelled.isTrue()
   }
 }

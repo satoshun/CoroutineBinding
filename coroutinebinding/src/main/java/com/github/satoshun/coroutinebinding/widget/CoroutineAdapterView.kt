@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.github.satoshun.coroutinebinding.widget
 
 import android.view.View
@@ -10,6 +8,7 @@ import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import com.github.satoshun.coroutinebinding.view.Callable
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel of item selection events on AdapterView.
@@ -25,6 +24,27 @@ fun <T : Adapter> AdapterView<T>.itemSelections(capacity: Int = 0): ReceiveChann
     }
   }
   invokeOnCloseOnMain {
+    setOnItemSelectedListener(null)
+  }
+  setOnItemSelectedListener(listener)
+}
+
+/**
+ * Suspend a item selection event on AdapterView.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemSelection(): Int = suspendCancellableCoroutine { cont ->
+  val listener = object : AdapterView.OnItemSelectedListener {
+    override fun onNothingSelected(parent: AdapterView<*>) {
+      cont.resume(AdapterView.INVALID_POSITION)
+      onItemSelectedListener = null
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+      cont.resume(position)
+      onItemSelectedListener = null
+    }
+  }
+  cont.invokeOnCancellation {
     setOnItemSelectedListener(null)
   }
   setOnItemSelectedListener(listener)
@@ -60,7 +80,9 @@ sealed class AdapterViewSelectionEvent {
 /**
  * A nothing select event on AdapterView
  */
-class AdapterViewNothingSelectionEvent(override val parent: AdapterView<*>) : AdapterViewSelectionEvent()
+data class AdapterViewNothingSelectionEvent(
+  override val parent: AdapterView<*>
+) : AdapterViewSelectionEvent()
 
 /**
  * A select event on AdapterView
@@ -73,17 +95,40 @@ data class AdapterViewItemSelectionEvent(
 ) : AdapterViewSelectionEvent()
 
 /**
+ * Suspend a item selection event on AdapterView.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitSelectionEvent(): AdapterViewSelectionEvent =
+    suspendCancellableCoroutine { cont ->
+      val listener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>) {
+          cont.resume(AdapterViewNothingSelectionEvent(parent))
+          onItemSelectedListener = null
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>, selectedView: View, position: Int, id: Long) {
+          cont.resume(AdapterViewItemSelectionEvent(parent, selectedView, position, id))
+          onItemSelectedListener = null
+        }
+      }
+      cont.invokeOnCancellation {
+        setOnItemSelectedListener(null)
+      }
+      setOnItemSelectedListener(listener)
+    }
+
+/**
  * Create an channel of item click events on AdapterView.
  */
-fun <T : Adapter> AdapterView<T>.itemClicks(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) {
-  val listener = AdapterView.OnItemClickListener { _, _, position, _ ->
-    safeOffer(position)
-  }
-  invokeOnCloseOnMain {
-    setOnItemClickListener(null)
-  }
-  setOnItemClickListener(listener)
-}
+fun <T : Adapter> AdapterView<T>.itemClicks(capacity: Int = 0): ReceiveChannel<Int> =
+    cancelableChannel(capacity) {
+      val listener = AdapterView.OnItemClickListener { _, _, position, _ ->
+        safeOffer(position)
+      }
+      invokeOnCloseOnMain {
+        setOnItemClickListener(null)
+      }
+      setOnItemClickListener(listener)
+    }
 
 /**
  * Create an channel of item click events on AdapterView
@@ -100,9 +145,24 @@ fun <T : Adapter> AdapterView<T>.itemClickEvents(capacity: Int = 0): ReceiveChan
     }
 
 /**
+ * Suspend a item click event on AdapterView
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemClickEvent(): AdapterViewItemClickEvent =
+    suspendCancellableCoroutine { cont ->
+      val listener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        cont.resume(AdapterViewItemClickEvent(parent, view, position, id))
+        setOnItemClickListener(null)
+      }
+      cont.invokeOnCancellation {
+        setOnItemClickListener(null)
+      }
+      setOnItemClickListener(listener)
+    }
+
+/**
  * Create an channel of the position of item long-clicks for view.
  */
-inline fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0): ReceiveChannel<Int> =
+fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0): ReceiveChannel<Int> =
     itemLongClicks(capacity) { true }
 
 /**
@@ -124,9 +184,34 @@ fun <T : Adapter> AdapterView<T>.itemLongClicks(capacity: Int = 0, handled: Call
     }
 
 /**
+ * Suspend a position of item long-click for view.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemLongClick(): Int = awaitItemLongClick { true }
+
+/**
+ * Suspend a position of item long-click for view.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemLongClick(handled: Callable): Int =
+    suspendCancellableCoroutine { cont ->
+      val listener = AdapterView.OnItemLongClickListener { _, _, position, _ ->
+        if (handled()) {
+          cont.resume(position)
+          onItemLongClickListener = null
+          true
+        } else {
+          false
+        }
+      }
+      cont.invokeOnCancellation {
+        setOnItemLongClickListener(null)
+      }
+      setOnItemLongClickListener(listener)
+    }
+
+/**
  * Create an channel of the item long-click events for view.
  */
-inline fun <T : Adapter> AdapterView<T>.itemLongClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemLongClickEvent> =
+fun <T : Adapter> AdapterView<T>.itemLongClickEvents(capacity: Int = 0): ReceiveChannel<AdapterViewItemLongClickEvent> =
     itemLongClickEvents(capacity) { true }
 
 /**
@@ -158,3 +243,30 @@ data class AdapterViewItemLongClickEvent(
   val position: Int,
   val id: Long
 )
+
+/**
+ * Suspend a item long-click event for view.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemLongClickEvent(): AdapterViewItemLongClickEvent =
+    awaitItemLongClickEvent { true }
+
+/**
+ * Suspend a item long-click event for view.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemLongClickEvent(
+  handled: Callable
+): AdapterViewItemLongClickEvent = suspendCancellableCoroutine { cont ->
+  val listener = AdapterView.OnItemLongClickListener { parent, view, position, id ->
+    if (handled()) {
+      cont.resume(AdapterViewItemLongClickEvent(parent, view, position, id))
+      onItemLongClickListener = null
+      true
+    } else {
+      false
+    }
+  }
+  cont.invokeOnCancellation {
+    setOnItemLongClickListener(null)
+  }
+  setOnItemLongClickListener(listener)
+}

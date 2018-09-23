@@ -55,6 +55,17 @@ fun CoroutineScope.uiLaunch(block: suspend CoroutineScope.() -> Unit): Job {
   return launch(context = Dispatchers.Main, block = block)
 }
 
+fun CoroutineScope.toBeCancelLaunch(
+  block: suspend CoroutineScope.() -> Unit
+): Job {
+  return launch(context = Dispatchers.Main, block = {
+    block()
+    throw Exception("should be cancel")
+  }).apply {
+    cancel()
+  }
+}
+
 fun ActivityTestRule<out Activity>.createListView(): Pair<ListView, ListAdapter> {
   val listView = ListView(activity)
   val adapter = MyListAdapter()
@@ -78,4 +89,9 @@ class MyListAdapter : BaseAdapter() {
   }
 
   override fun getCount(): Int = 100
+}
+
+suspend fun Job.joinAndIsCompleted() {
+  join()
+  isCompleted.isTrue()
 }
