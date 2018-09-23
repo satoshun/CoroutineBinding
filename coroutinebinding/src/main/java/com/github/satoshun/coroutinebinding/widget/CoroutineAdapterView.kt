@@ -10,6 +10,7 @@ import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import com.github.satoshun.coroutinebinding.view.Callable
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel of item selection events on AdapterView.
@@ -25,6 +26,25 @@ fun <T : Adapter> AdapterView<T>.itemSelections(capacity: Int = 0): ReceiveChann
     }
   }
   invokeOnCloseOnMain {
+    setOnItemSelectedListener(null)
+  }
+  setOnItemSelectedListener(listener)
+}
+
+/**
+ * Suspend a item selection event on AdapterView.
+ */
+suspend fun <T : Adapter> AdapterView<T>.awaitItemSelection(): Int = suspendCancellableCoroutine { cont ->
+  val listener = object : AdapterView.OnItemSelectedListener {
+    override fun onNothingSelected(parent: AdapterView<*>) {
+      cont.resume(AdapterView.INVALID_POSITION)
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+      cont.resume(position)
+    }
+  }
+  cont.invokeOnCancellation {
     setOnItemSelectedListener(null)
   }
   setOnItemSelectedListener(listener)

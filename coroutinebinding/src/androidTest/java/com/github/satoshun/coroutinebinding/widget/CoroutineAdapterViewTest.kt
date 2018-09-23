@@ -9,7 +9,10 @@ import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.createListView
 import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
 import org.junit.Ignore
@@ -45,6 +48,26 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
     itemSelections.cancel()
     uiRunBlocking { spinner.setSelection(1) }
     itemSelections.poll().isNull()
+  }
+
+  @Test
+  fun awaitItemSelection() = testRunBlocking {
+    val job = uiLaunch {
+      spinner.awaitItemSelection().isEqualTo(2)
+    }
+    uiRunBlocking { spinner.setSelection(2) }
+    job.joinAndIsCompleted()
+
+    val job2 = uiLaunch {
+      spinner.awaitItemSelection().isEqualTo(0)
+    }
+    uiRunBlocking { spinner.setSelection(0) }
+    job2.joinAndIsCompleted()
+
+    val cancelJob = uiLaunch { spinner.awaitItemSelection() }
+    cancelJob.cancel()
+    uiRunBlocking { spinner.setSelection(1) }
+    cancelJob.isCancelled.isTrue()
   }
 
   @Test

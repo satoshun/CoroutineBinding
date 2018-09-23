@@ -79,3 +79,8 @@ class MyListAdapter : BaseAdapter() {
 
   override fun getCount(): Int = 100
 }
+
+suspend fun Job.joinAndIsCompleted() {
+  join()
+  isCompleted.isTrue()
+}
