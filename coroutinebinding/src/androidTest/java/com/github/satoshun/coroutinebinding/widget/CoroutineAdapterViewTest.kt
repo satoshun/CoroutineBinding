@@ -66,7 +66,6 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
     job2.joinAndIsCompleted()
 
     val cancelJob = toBeCancelLaunch { spinner.awaitItemSelection() }
-    cancelJob.cancel()
     uiRunBlocking { spinner.setSelection(1) }
     cancelJob.isCancelled.isTrue()
   }
@@ -96,7 +95,6 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
     job.joinAndIsCompleted()
 
     val cancelJob = toBeCancelLaunch { listView.awaitSelectionEvent() }
-    cancelJob.cancel()
     uiRunBlocking { listView.setSelection(1) }
     cancelJob.isCancelled.isTrue()
   }
@@ -138,7 +136,6 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
     job.joinAndIsCompleted()
 
     val cancelJob = toBeCancelLaunch { listView.awaitItemClickEvent() }
-    cancelJob.cancel()
     uiRunBlocking { listView.performItemClick(listView.getChildAt(2), 2, 2) }
     cancelJob.isCancelled.isTrue()
   }

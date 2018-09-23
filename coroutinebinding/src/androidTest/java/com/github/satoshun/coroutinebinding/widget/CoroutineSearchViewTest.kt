@@ -83,7 +83,6 @@ class CoroutineSearchViewTest : AndroidTest<ViewActivity>(ViewActivity::class.ja
     job3.joinAndIsCompleted()
 
     val jobCancel = toBeCancelLaunch { searchView.awaitQueryTextChangeEvent() }
-    jobCancel.cancel()
     uiRunBlocking { searchView.setQuery("HHH", false) }
     jobCancel.isCancelled.isTrue()
   }
@@ -99,7 +98,6 @@ class CoroutineSearchViewTest : AndroidTest<ViewActivity>(ViewActivity::class.ja
     job.joinAndIsCompleted()
 
     val jobCancel = toBeCancelLaunch { searchView.awaitSubmitQueryTextEvent() }
-    jobCancel.cancel()
     uiRunBlocking { searchView.setQuery("HHH", true) }
     jobCancel.isCancelled.isTrue()
   }

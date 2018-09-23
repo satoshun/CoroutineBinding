@@ -61,7 +61,9 @@ fun CoroutineScope.toBeCancelLaunch(
   return launch(context = Dispatchers.Main, block = {
     block()
     throw Exception("should be cancel")
-  })
+  }).apply {
+    cancel()
+  }
 }
 
 fun ActivityTestRule<out Activity>.createListView(): Pair<ListView, ListAdapter> {

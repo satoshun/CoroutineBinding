@@ -52,7 +52,6 @@ class CoroutineCompoundButtonTest : AndroidTest<ViewActivity>(ViewActivity::clas
     job2.joinAndIsCompleted()
 
     val cancelJob = toBeCancelLaunch { compoundButton.awaitCheckedChange() }
-    cancelJob.cancel()
     uiRunBlocking { compoundButton.isChecked = false }
     cancelJob.isCancelled.isTrue()
   }

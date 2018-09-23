@@ -90,7 +90,6 @@ class CoroutineAutoCompleteTextViewTest : AndroidTest<ViewActivity>(ViewActivity
     job.joinAndIsCompleted()
 
     val jobCancel = toBeCancelLaunch { autoCompleteTextView.awaitItemClickEvent() }
-    jobCancel.cancel()
     onView(withId(R.id.auto_complete))
         .perform(clearText(), typeText("Tw"))
     onData(startsWith("Twenty"))
