@@ -14,10 +14,14 @@ import com.github.satoshun.coroutinebinding.isEqualTo
 import com.github.satoshun.coroutinebinding.isInstanceOf
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 class CoroutineRecyclerViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
@@ -53,6 +57,28 @@ class CoroutineRecyclerViewTest : AndroidTest<ViewActivity>(ViewActivity::class.
   }
 
   @Test
+  fun awaitChildAttachStateChangeEvent() = testRunBlocking {
+    val job = uiLaunch {
+      view.awaitChildAttachStateChangeEvent().isInstanceOf(RecyclerViewChildAttachEvent::class)
+    }
+    uiLaunch { view.adapter = SimpleAdapter(child) }
+    job.joinAndIsCompleted()
+
+//    val job2 = uiLaunch {
+//      view.awaitChildAttachStateChangeEvent().isInstanceOf(RecyclerViewChildDetachEvent::class)
+//    }
+//    uiLaunch { view.adapter = null }
+//    job2.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch {
+      view.awaitChildAttachStateChangeEvent()
+    }
+    uiRunBlocking { view.adapter = SimpleAdapter(child) }
+    cancelJob.isCancelled.isTrue()
+  }
+
+  @Ignore("flaky")
+  @Test
   fun scrollEvents() = testRunBlocking {
     uiRunBlocking {
       view.adapter = Adapter()
@@ -70,6 +96,26 @@ class CoroutineRecyclerViewTest : AndroidTest<ViewActivity>(ViewActivity::class.
     scrollEvents.receiveOrNull().isNull()
   }
 
+  @Ignore("flaky")
+  @Test
+  fun awaitScrollEvent() = testRunBlocking {
+    uiRunBlocking {
+      view.adapter = Adapter()
+    }
+
+    val job = uiLaunch { view.awaitScrollEvent().dy.isEqualTo(50) }
+    uiLaunch { view.scrollBy(0, 50) }
+    job.joinAndIsCompleted()
+
+    val job2 = uiLaunch { view.awaitScrollEvent().dy.isEqualTo(-50) }
+    uiLaunch { view.scrollBy(0, -50) }
+    job2.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { view.awaitScrollEvent() }
+    uiRunBlocking { view.scrollBy(0, 50) }
+    cancelJob.isCancelled.isTrue()
+  }
+
   @Test
   fun scrollStateChanges() = testRunBlocking {
     uiRunBlocking { view.adapter = Adapter() }
@@ -84,6 +130,26 @@ class CoroutineRecyclerViewTest : AndroidTest<ViewActivity>(ViewActivity::class.
     scrollStateChanges.cancel()
     uiRunBlocking { view.scrollBy(0, -50) }
     scrollStateChanges.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitScrollStateChange() = testRunBlocking {
+    uiRunBlocking { view.adapter = Adapter() }
+
+    val job = uiLaunch {
+      view.awaitScrollStateChange()
+    }
+    uiLaunch {
+      view.smoothScrollBy(0, 100)
+      view.stopScroll()
+    }
+    job.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch {
+      view.awaitScrollStateChange()
+    }
+    uiRunBlocking { view.scrollBy(0, -50) }
+    cancelJob.isCancelled.isTrue()
   }
 }
 

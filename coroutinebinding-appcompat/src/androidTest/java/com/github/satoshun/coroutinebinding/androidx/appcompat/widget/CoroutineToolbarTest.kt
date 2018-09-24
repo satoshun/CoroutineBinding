@@ -9,12 +9,14 @@ import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.androidx.appcompat.R
 import com.github.satoshun.coroutinebinding.androidx.appcompat.ViewActivity
-import com.github.satoshun.coroutinebinding.androidx.appcompat.itemClicks
-import com.github.satoshun.coroutinebinding.androidx.appcompat.navigationClicks
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isSame
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
+import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
 import org.junit.Test
@@ -57,6 +59,25 @@ class CoroutineToolbarTest : AndroidTest<ViewActivity>(ViewActivity::class.java)
   }
 
   @Test
+  fun awaitItemClick() = testRunBlocking {
+    val (menu, item1, item2) = uiRunBlocking {
+      val menu = toolbar.menu
+      Triple(
+          menu,
+          menu.add(0, 1, 0, "Hi"),
+          menu.add(0, 2, 0, "Hey")
+      )
+    }
+    val job = uiLaunch { toolbar.awaitItemClick().isSame(item2) }
+    uiLaunch { menu.performIdentifierAction(2, 0) }
+    job.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { toolbar.awaitItemClick() }
+    uiRunBlocking { menu.performIdentifierAction(2, 0) }
+    cancelJob.isCancelled.isTrue()
+  }
+
+  @Test
   fun navigationClicks() = testRunBlocking {
     val navigationClicks = uiRunBlocking { toolbar.navigationClicks(1) }
 
@@ -69,5 +90,16 @@ class CoroutineToolbarTest : AndroidTest<ViewActivity>(ViewActivity::class.java)
     navigationClicks.cancel()
     onView(withContentDescription(NAVIGATION_CONTENT_DESCRIPTION)).perform(click())
     navigationClicks.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitNavigationClick() = testRunBlocking {
+    val job = uiLaunch { toolbar.awaitNavigationClick() }
+    onView(withContentDescription(NAVIGATION_CONTENT_DESCRIPTION)).perform(click())
+    job.joinAndIsCompleted()
+
+    val jobCancel = toBeCancelLaunch { toolbar.awaitNavigationClick() }
+    onView(withContentDescription(NAVIGATION_CONTENT_DESCRIPTION)).perform(click())
+    jobCancel.isCancelled.isTrue()
   }
 }

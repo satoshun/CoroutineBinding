@@ -7,6 +7,7 @@ import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel which emits the selected item in view.
@@ -31,4 +32,19 @@ fun BottomNavigationView.itemSelections(capacity: Int = 0): ReceiveChannel<MenuI
       break
     }
   }
+}
+
+/**
+ * Suspend a which emits the selected item in view.
+ */
+suspend fun BottomNavigationView.awaitItemSelection(): MenuItem = suspendCancellableCoroutine { cont ->
+  val listener = BottomNavigationView.OnNavigationItemSelectedListener {
+    cont.resume(it)
+    setOnNavigationItemSelectedListener(null)
+    true
+  }
+  cont.invokeOnCancellation {
+    setOnNavigationItemSelectedListener(null)
+  }
+  setOnNavigationItemSelectedListener(listener)
 }

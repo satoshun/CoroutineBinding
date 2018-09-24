@@ -9,8 +9,12 @@ import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.androidx.recyclerview.ViewActivity
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
+import com.github.satoshun.coroutinebinding.uiRunBlocking
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -46,6 +50,18 @@ class CoroutineRecyclerViewAdapterTest : AndroidTest<ViewActivity>(ViewActivity:
     dataChanges.cancel()
     uiLaunch { adapter.notifyDataSetChanged() }
     dataChanges.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitDataChange() = testRunBlocking {
+    val job = uiLaunch { adapter.awaitDataChange() }
+    uiLaunch { adapter.notifyDataSetChanged() }
+    job.joinAndIsCompleted()
+
+
+    val cancelJob = toBeCancelLaunch { adapter.awaitDataChange() }
+    uiRunBlocking { adapter.notifyDataSetChanged() }
+    cancelJob.isCancelled.isTrue()
   }
 }
 

@@ -6,6 +6,7 @@ import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel which emits the selected tab in view.
@@ -34,6 +35,28 @@ fun TabLayout.selections(capacity: Int = 0): ReceiveChannel<TabLayout.Tab> =
         safeOffer(getTabAt(index)!!)
       }
     }
+
+/**
+ * Suspend a which emits the selected tab in view.s
+ */
+suspend fun TabLayout.awaitSelection(): TabLayout.Tab = suspendCancellableCoroutine { cont ->
+  val listener = object : TabLayout.OnTabSelectedListener {
+    override fun onTabReselected(tab: TabLayout.Tab?) {
+    }
+
+    override fun onTabUnselected(tab: TabLayout.Tab?) {
+    }
+
+    override fun onTabSelected(tab: TabLayout.Tab) {
+      cont.resume(tab)
+      removeOnTabSelectedListener(this)
+    }
+  }
+  cont.invokeOnCancellation {
+    removeOnTabSelectedListener(listener)
+  }
+  addOnTabSelectedListener(listener)
+}
 
 /**
  * Create an channel which emits selection, reselection, and unselection events for the tabs in view.
@@ -83,6 +106,48 @@ fun TabLayout.selectionEvents(capacity: Int = 0): ReceiveChannel<TabLayoutSelect
             )
         )
       }
+    }
+
+/**
+ * Suspend a which emits selection, reselection, and unselection event for the tabs in view.
+ */
+suspend fun TabLayout.awaitSelectionEvent(): TabLayoutSelectionEvent =
+    suspendCancellableCoroutine { cont ->
+      val listener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabReselected(tab: TabLayout.Tab) {
+          cont.resume(
+              TabLayoutSelectionReselectedEvent(
+                  this@awaitSelectionEvent,
+                  tab
+              )
+          )
+          removeOnTabSelectedListener(this)
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab) {
+          cont.resume(
+              TabLayoutSelectionUnselectedEvent(
+                  this@awaitSelectionEvent,
+                  tab
+              )
+          )
+          removeOnTabSelectedListener(this)
+        }
+
+        override fun onTabSelected(tab: TabLayout.Tab) {
+          cont.resume(
+              TabLayoutSelectionSelectedEvent(
+                  this@awaitSelectionEvent,
+                  tab
+              )
+          )
+          removeOnTabSelectedListener(this)
+        }
+      }
+      cont.invokeOnCancellation {
+        removeOnTabSelectedListener(listener)
+      }
+      addOnTabSelectedListener(listener)
     }
 
 /**

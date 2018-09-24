@@ -13,7 +13,11 @@ import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.androidx.swiperefreshlayout.ViewActivity
 import com.github.satoshun.coroutinebinding.isNotNull
 import com.github.satoshun.coroutinebinding.isNull
+import com.github.satoshun.coroutinebinding.isTrue
+import com.github.satoshun.coroutinebinding.joinAndIsCompleted
 import com.github.satoshun.coroutinebinding.testRunBlocking
+import com.github.satoshun.coroutinebinding.toBeCancelLaunch
+import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import org.junit.Before
 import org.junit.Test
@@ -43,5 +47,16 @@ class CoroutineSwipeRefreshLayoutTest : AndroidTest<ViewActivity>(ViewActivity::
     refreshes.cancel()
     onView(withId(1)).perform(swipeDown())
     refreshes.receiveOrNull().isNull()
+  }
+
+  @Test
+  fun awaitRefresh() = testRunBlocking {
+    val job = uiLaunch { view.awaitRefresh() }
+    onView(withId(1)).perform(swipeDown())
+    job.joinAndIsCompleted()
+
+    val cancelJob = toBeCancelLaunch { view.awaitRefresh() }
+    onView(withId(1)).perform(swipeDown())
+    cancelJob.isCancelled.isTrue()
   }
 }

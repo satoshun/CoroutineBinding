@@ -6,6 +6,7 @@ import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 
 /**
  * Create an channel of scroll state change events on view.
@@ -30,7 +31,7 @@ fun ViewPager.pageScrollStateChanges(capacity: Int = 0): ReceiveChannel<Int> = c
 }
 
 /**
- * CreateCreate an channel of page selected events on view.
+ * Create an channel of page selected events on view.
  */
 @CheckResult
 fun ViewPager.pageSelections(capacity: Int = 0): ReceiveChannel<Int> = cancelableChannel(capacity) {
@@ -46,6 +47,28 @@ fun ViewPager.pageSelections(capacity: Int = 0): ReceiveChannel<Int> = cancelabl
     }
   }
   invokeOnCloseOnMain {
+    removeOnPageChangeListener(listener)
+  }
+  addOnPageChangeListener(listener)
+}
+
+/**
+ * Suspend a of page selected event on view.
+ */
+suspend fun ViewPager.awaitPageSelection(): Int = suspendCancellableCoroutine { cont ->
+  val listener = object : ViewPager.OnPageChangeListener {
+    override fun onPageScrollStateChanged(state: Int) {
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+    }
+
+    override fun onPageSelected(position: Int) {
+      cont.resume(position)
+      removeOnPageChangeListener(this)
+    }
+  }
+  cont.invokeOnCancellation {
     removeOnPageChangeListener(listener)
   }
   addOnPageChangeListener(listener)
