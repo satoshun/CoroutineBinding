@@ -13,24 +13,49 @@ Platform bindings:
 implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:{latest-version}'
 ```
 
-'support-v4' library bindings:
+'appcompat' library bindings:
 ```groovy
-implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-support-v4:{latest-version}'
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-appcompat:{latest-version}'
 ```
 
-'appcompat-v7' library bindings:
+'constraintLayout' library bindings:
 ```groovy
-implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-appcompat-v7:{latest-version}'
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-constraintlayout:{latest-version}'
 ```
 
-'design' library bindings:
+'androidx core' library bindings:
 ```groovy
-implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-design:{latest-version}'
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-core:{latest-version}'
 ```
 
-'recyclerview-v7' library bindings:
+'DrawerLayout' library bindings:
 ```groovy
-implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-recyclerview-v7:{latest-version}'
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-drawerlayout:{latest-version}'
+```
+
+'Material component' library bindings:
+```groovy
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-material:{latest-version}'
+```
+
+'RecyclerView' library bindings:
+```groovy
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-recyclerview:{latest-version}'
+```
+
+'SlidingPaneLayout' library bindings:
+```groovy
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-slidingpanelayout:{latest-version}'
+```
+
+'SwipeRefreshLayout' library bindings:
+```groovy
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-swiperefreshlayout:{latest-version}'
+```
+
+'ViewPager' library bindings:
+```groovy
+implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-viewpager:{latest-version}'
 ```
 
 ## what is this?

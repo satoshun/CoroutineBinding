@@ -38,11 +38,16 @@ android {
 dependencies {
   implementation project(':coroutinebinding')
   implementation project(':coroutinebinding-recyclerview')
-//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:0.1.0'
-//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-recyclerview-v7:0.1.0'
-//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-design:0.1.0'
-//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-appcompat-v7:0.1.0'
-//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-support-v4:0.1.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding:0.2.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-appcompat:0.2.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-constraintlayout:0.2.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-core:0.2.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-drawerlayout:0.2.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-material:0.2.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-recyclerview:0.2.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-slidingpanelayout:0.2.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-swiperefreshlayout:0.2.0'
+//  implementation 'com.github.satoshun.coroutinebinding:coroutinebinding-viewpager:0.2.0'
 
   implementation Libs.kotlin
   implementation Libs.coroutine
