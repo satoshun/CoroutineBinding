@@ -4,6 +4,7 @@ buildscript {
     classpath Libs.kotlin_plugin
     classpath Libs.ktlint_plugin
     classpath Libs.dokka_plugin
+    classpath Libs.publish_plugin
   }
 
   repositories {
@@ -15,6 +16,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'org.jetbrains.dokka-android'
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
   compileSdkVersion Vers.compile_sdk
@@ -53,5 +55,3 @@ dependencies {
 kotlin {
   experimental { coroutines 'enable' }
 }
-
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
