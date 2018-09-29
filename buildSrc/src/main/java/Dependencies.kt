@@ -39,7 +39,6 @@ object Libs {
   val test_rule = "androidx.test:rules:1.1.0-alpha4"
   val espresso = "androidx.test.espresso:espresso-core:3.1.0-alpha4"
   val espresso_contrib = "androidx.test.espresso:espresso-contrib:3.1.0-alpha4"
-  val arch_test = "android.arch.core:core-testing:1.1.1"
 
   val truth = "com.google.truth:truth:0.42"
   val mockito_kotlin = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
