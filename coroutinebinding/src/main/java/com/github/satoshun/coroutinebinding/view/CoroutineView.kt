@@ -52,7 +52,6 @@ suspend fun View.awaitAttach(): Unit = suspendCancellableCoroutine { cont ->
   }
 
   cont.invokeOnCancellation {
-    // todo check mainthread?
     removeOnAttachStateChangeListener(listener)
   }
   addOnAttachStateChangeListener(listener)
@@ -93,7 +92,6 @@ suspend fun View.awaitDetach(): Unit = suspendCancellableCoroutine { cont ->
     }
   }
   cont.invokeOnCancellation {
-    // todo check mainthread?
     removeOnAttachStateChangeListener(listener)
   }
   addOnAttachStateChangeListener(listener)
@@ -122,7 +120,6 @@ suspend fun View.awaitClick(): Unit = suspendCancellableCoroutine { cont ->
     setOnClickListener(null)
   }
   cont.invokeOnCancellation {
-    // todo check mainthread?
     setOnClickListener(null)
   }
   setOnClickListener(listener)
