@@ -5,7 +5,7 @@ object Vers {
   val agp = "3.2.0"
 
   val kotlin = "1.2.71"
-  val couroutine = "0.26.1"
+  val couroutine = "0.30.0"
 }
 
 object Libs {
@@ -13,7 +13,7 @@ object Libs {
   val kotlin_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Vers.kotlin}"
   val ktlint_plugin = "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:4.1.0"
   val dokka_plugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.17"
-  val publish_plugin = "com.vanniktech:gradle-maven-publish-plugin:0.5.0"
+  val publish_plugin = "com.vanniktech:gradle-maven-publish-plugin:0.6.0"
 
   val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Vers.kotlin}"
   val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Vers.couroutine}"
@@ -36,10 +36,10 @@ object Libs {
   val lifecycle_compiler = "androidx.lifecycle:lifecycle-compiler:2.0.0"
 
   val junit = "junit:junit:4.12"
-  val test_runner = "androidx.test:runner:1.1.0-alpha4"
-  val test_rule = "androidx.test:rules:1.1.0-alpha4"
-  val espresso = "androidx.test.espresso:espresso-core:3.1.0-alpha4"
-  val espresso_contrib = "androidx.test.espresso:espresso-contrib:3.1.0-alpha4"
+  val test_runner = "androidx.test:runner:1.1.0-beta01"
+  val test_rule = "androidx.test:rules:1.1.0-beta01"
+  val espresso = "androidx.test.espresso:espresso-core:3.1.0-beta01"
+  val espresso_contrib = "androidx.test.espresso:espresso-contrib:3.1.0-beta01"
 
   val truth = "com.google.truth:truth:0.42"
   val mockito_kotlin = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
