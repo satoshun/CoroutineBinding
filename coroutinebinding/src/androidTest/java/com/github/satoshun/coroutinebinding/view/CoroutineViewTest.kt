@@ -16,7 +16,7 @@ import com.github.satoshun.coroutinebinding.isTrue
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.junit.Ignore
 import org.junit.Test
 
@@ -186,7 +186,7 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     job.isCompleted.isTrue()
 
     val cancelJob = uiLaunch { view.awaitGlobalLayout() }
-    cancelJob.cancel().isTrue()
+    cancelJob.cancel()
     uiRunBlocking { view.viewTreeObserver.dispatchOnGlobalLayout() }
     cancelJob.isCancelled.isTrue()
   }

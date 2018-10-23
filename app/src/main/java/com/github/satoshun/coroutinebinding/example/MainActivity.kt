@@ -10,15 +10,13 @@ import com.github.satoshun.coroutinebinding.view.awaitClick
 import com.github.satoshun.coroutinebinding.view.awaitDetach
 import com.github.satoshun.coroutinebinding.view.detaches
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import java.util.concurrent.TimeUnit
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity(),
     CoroutineScope {
@@ -46,7 +44,7 @@ class MainActivity : AppCompatActivity(),
 
     launch {
       while (true) {
-        delay(5000, TimeUnit.MILLISECONDS)
+        delay(5000)
         try {
           root.addView(hello)
         } catch (e: Exception) {

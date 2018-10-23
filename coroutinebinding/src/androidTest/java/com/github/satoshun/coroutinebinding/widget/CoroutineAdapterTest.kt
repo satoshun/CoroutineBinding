@@ -40,7 +40,7 @@ class CoroutineAdapterTest : AndroidTest<ViewActivity>(ViewActivity::class.java)
     job.isCompleted.isTrue()
 
     val cancelJob = uiLaunch { testAdapter.awaitDataChange() }
-    cancelJob.cancel().isTrue()
+    cancelJob.cancel()
     uiRunBlocking { testAdapter.notifyDataSetChanged() }
   }
 }
