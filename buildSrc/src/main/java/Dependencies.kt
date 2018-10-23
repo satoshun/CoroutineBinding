@@ -32,10 +32,11 @@ object Libs {
   val swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
   val junit = "junit:junit:4.12"
-  val test_runner = "androidx.test:runner:1.1.0-beta01"
-  val test_rule = "androidx.test:rules:1.1.0-beta01"
-  val espresso = "androidx.test.espresso:espresso-core:3.1.0-beta01"
-  val espresso_contrib = "androidx.test.espresso:espresso-contrib:3.1.0-beta01"
+  val test_runner = "androidx.test:runner:1.1.0-beta02"
+  val test_rule = "androidx.test:rules:1.1.0-beta02"
+  val test_junit_runner = "androidx.test.ext:junit:1.0.0-beta02"
+  val espresso = "androidx.test.espresso:espresso-core:3.1.0-beta02"
+  val espresso_contrib = "androidx.test.espresso:espresso-contrib:3.1.0-beta02"
 
   val truth = "com.google.truth:truth:0.42"
   val multidex = "androidx.multidex:multidex:2.0.0"
