@@ -31,10 +31,6 @@ object Libs {
   val slidingpanelayout = "androidx.slidingpanelayout:slidingpanelayout:1.0.0"
   val swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-  val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
-  val livedata = "androidx.lifecycle:lifecycle-livedata:2.0.0"
-  val lifecycle_compiler = "androidx.lifecycle:lifecycle-compiler:2.0.0"
-
   val junit = "junit:junit:4.12"
   val test_runner = "androidx.test:runner:1.1.0-beta01"
   val test_rule = "androidx.test:rules:1.1.0-beta01"
@@ -42,6 +38,5 @@ object Libs {
   val espresso_contrib = "androidx.test.espresso:espresso-contrib:3.1.0-beta01"
 
   val truth = "com.google.truth:truth:0.42"
-  val mockito_kotlin = "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
   val multidex = "androidx.multidex:multidex:2.0.0"
 }
