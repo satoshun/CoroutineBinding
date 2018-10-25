@@ -32,7 +32,7 @@ fun RadioGroup.checkedChanges(capacity: Int = 0): ReceiveChannel<Int> = cancelab
  * Suspend a which emits the checked event.
  */
 suspend fun RadioGroup.awaitCheckedChange(): Int = suspendCancellableCoroutine { cont ->
-  val listener = RadioGroup.OnCheckedChangeListener { group, checkedId ->
+  val listener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
     cont.resume(checkedId)
     setOnCheckedChangeListener(null)
   }
