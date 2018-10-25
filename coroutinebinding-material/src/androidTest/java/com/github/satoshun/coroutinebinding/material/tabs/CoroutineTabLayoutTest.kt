@@ -14,7 +14,7 @@ import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import com.google.android.material.tabs.TabLayout
-import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.delay
 import org.junit.Before
 import org.junit.Test
 

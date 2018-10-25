@@ -74,10 +74,10 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
   fun selectionEvents() = testRunBlocking {
     val selectionEvents = uiRunBlocking { listView.selectionEvents(1) }
 
-    uiLaunch { listView.setSelection(2) }
+    uiRunBlocking { listView.setSelection(2) }
     (selectionEvents.receive() as AdapterViewItemSelectionEvent).position.isEqualTo(2)
 
-    uiLaunch { listView.setSelection(0) }
+    uiRunBlocking { listView.setSelection(0) }
     (selectionEvents.receive() as AdapterViewItemSelectionEvent).position.isEqualTo(0)
 
     selectionEvents.cancel()
