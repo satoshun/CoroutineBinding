@@ -41,6 +41,7 @@ suspend fun View.awaitDismiss(): View = suspendCancellableCoroutine { cont ->
   val listener = object : SwipeDismissBehavior.OnDismissListener {
     override fun onDismiss(view: View) {
       cont.resume(view)
+      behavior.setListener(null)
     }
 
     override fun onDragStateChanged(state: Int) {
