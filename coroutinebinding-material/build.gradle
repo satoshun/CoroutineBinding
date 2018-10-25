@@ -51,7 +51,3 @@ dependencies {
 
   androidTestImplementation project(":testing-utils")
 }
-
-kotlin {
-  experimental { coroutines 'enable' }
-}

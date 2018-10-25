@@ -41,7 +41,3 @@ dependencies {
   api Libs.truth
   api Libs.multidex
 }
-
-kotlin {
-  experimental { coroutines 'enable' }
-}

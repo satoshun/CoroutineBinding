@@ -63,9 +63,3 @@ dependencies {
   implementation Libs.appcompat
   implementation Libs.constraint_layout
 }
-
-kotlin {
-  experimental {
-    coroutines 'enable'
-  }
-}
