@@ -35,12 +35,9 @@ dependencies {
   api Libs.junit
   api Libs.test_runner
   api Libs.test_rule
+  api Libs.test_junit_runner
   api Libs.espresso
   api Libs.espresso_contrib
   api Libs.truth
   api Libs.multidex
-}
-
-kotlin {
-  experimental { coroutines 'enable' }
 }

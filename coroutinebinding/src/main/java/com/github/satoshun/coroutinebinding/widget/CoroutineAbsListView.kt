@@ -5,8 +5,9 @@ import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE
 import com.github.satoshun.coroutinebinding.cancelableChannel
 import com.github.satoshun.coroutinebinding.invokeOnCloseOnMain
 import com.github.satoshun.coroutinebinding.safeOffer
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
-import kotlinx.coroutines.experimental.suspendCancellableCoroutine
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 /**
  * Create an channel of scroll events on AbsListView.
