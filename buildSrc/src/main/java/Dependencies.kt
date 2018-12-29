@@ -4,8 +4,8 @@ object Vers {
   const val target_sdk = 28
   const val agp = "3.2.1"
 
-  const val kotlin = "1.3.0-rc-190"
-  const val couroutine = "1.0.0-RC1"
+  const val kotlin = "1.3.11"
+  const val couroutine = "1.1.0"
 }
 
 object Libs {
@@ -32,11 +32,11 @@ object Libs {
   const val swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
   const val junit = "junit:junit:4.12"
-  const val test_runner = "androidx.test:runner:1.1.0-beta02"
-  const val test_rule = "androidx.test:rules:1.1.0-beta02"
-  const val test_junit_runner = "androidx.test.ext:junit:1.0.0-beta02"
-  const val espresso = "androidx.test.espresso:espresso-core:3.1.0-beta02"
-  const val espresso_contrib = "androidx.test.espresso:espresso-contrib:3.1.0-beta02"
+  const val test_runner = "androidx.test:runner:1.1.0"
+  const val test_rule = "androidx.test:rules:1.1.0"
+  const val test_junit_runner = "androidx.test.ext:junit:1.0.0"
+  const val espresso = "androidx.test.espresso:espresso-core:3.1.0"
+  const val espresso_contrib = "androidx.test.espresso:espresso-contrib:3.1.0"
 
   const val truth = "com.google.truth:truth:0.42"
   const val multidex = "androidx.multidex:multidex:2.0.0"
