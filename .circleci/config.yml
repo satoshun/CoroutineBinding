@@ -18,26 +18,16 @@ references:
         - coroutinebinding/build/outputs/apk
         - coroutinebinding/build/test-results
         - coroutinebinding/build/reports
-        - coroutinebinding-support-v4/build/intermediates
-        - coroutinebinding-support-v4/build/outputs/androidTest-results
-        - coroutinebinding-support-v4/build/outputs/apk
-        - coroutinebinding-support-v4/build/test-results
-        - coroutinebinding-support-v4/build/reports
-        - coroutinebinding-appcompat-v7/build/intermediates
-        - coroutinebinding-appcompat-v7/build/outputs/androidTest-results
-        - coroutinebinding-appcompat-v7/build/outputs/apk
-        - coroutinebinding-appcompat-v7/build/test-results
-        - coroutinebinding-appcompat-v7/build/reports
-        - coroutinebinding-recyclerview-v7/build/intermediates
-        - coroutinebinding-recyclerview-v7/build/outputs/androidTest-results
-        - coroutinebinding-recyclerview-v7/build/outputs/apk
-        - coroutinebinding-recyclerview-v7/build/test-results
-        - coroutinebinding-recyclerview-v7/build/reports
-        - coroutinebinding-design/build/intermediates
-        - coroutinebinding-design/build/outputs/androidTest-results
-        - coroutinebinding-design/build/outputs/apk
-        - coroutinebinding-design/build/test-results
-        - coroutinebinding-design/build/reports
+        - coroutinebinding-recyclerview/build/intermediates
+        - coroutinebinding-recyclerview/build/outputs/androidTest-results
+        - coroutinebinding-recyclerview/build/outputs/apk
+        - coroutinebinding-recyclerview/build/test-results
+        - coroutinebinding-recyclerview/build/reports
+        - coroutinebinding-material/build/intermediates
+        - coroutinebinding-material/build/outputs/androidTest-results
+        - coroutinebinding-material/build/outputs/apk
+        - coroutinebinding-material/build/test-results
+        - coroutinebinding-material/build/reports
         - coroutinebinding-constraintlayout/build/intermediates
         - coroutinebinding-constraintlayout/build/outputs/androidTest-results
         - coroutinebinding-constraintlayout/build/outputs/apk
@@ -71,14 +61,14 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "buildSrc/src/main/java/Dependencies.kt" }}-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-appcompat-v7/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}-{{ checksum  "coroutinebinding-design/build.gradle" }}-{{ checksum  "coroutinebinding-support-v4/build.gradle" }}-{{ checksum  "coroutinebinding-constraintlayout/build.gradle" }}
+          key: jars-{{ checksum "buildSrc/src/main/java/Dependencies.kt" }}-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview/build.gradle" }}-{{ checksum  "coroutinebinding-material/build.gradle" }}-{{ checksum  "coroutinebinding-constraintlayout/build.gradle" }}
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "buildSrc/src/main/java/Dependencies.kt" }}-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-appcompat-v7/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview-v7/build.gradle" }}-{{ checksum  "coroutinebinding-design/build.gradle" }}-{{ checksum  "coroutinebinding-support-v4/build.gradle" }}-{{ checksum  "coroutinebinding-constraintlayout/build.gradle" }}
+          key: jars-{{ checksum "buildSrc/src/main/java/Dependencies.kt" }}-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "coroutinebinding/build.gradle" }}-{{ checksum  "coroutinebinding-recyclerview/build.gradle" }}-{{ checksum  "coroutinebinding-material/build.gradle" }}-{{ checksum  "coroutinebinding-constraintlayout/build.gradle" }}
       - run:
           name: Build
           command: ./gradlew :app:assembleDebug assembleAndroidTest -Dorg.gradle.parallel=false
@@ -95,70 +85,6 @@ jobs:
       - run:
           name: Run test
           command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding/build/outputs/apk/androidTest/debug/coroutinebinding-debug-androidTest.apk --timeout 5m
-      # - *persist_firebase_workspace
-      - store_artifacts:
-          path: firebase/
-          destination: /firebase/
-  firebase_test_appcompat_v7:
-    working_directory: *workspace
-    docker:
-      - image: google/cloud-sdk:latest
-    steps:
-      - *attach_debug_workspace
-      - <<: *prepare_firebase_test_1
-      - <<: *prepare_firebase_test_2
-      - <<: *prepare_firebase_test_3
-      - run:
-          name: Run test
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding-appcompat-v7/build/outputs/apk/androidTest/debug/coroutinebinding-appcompat-v7-debug-androidTest.apk --timeout 5m
-      # - *persist_firebase_workspace
-      - store_artifacts:
-          path: firebase/
-          destination: /firebase/
-  firebase_test_support_v4:
-    working_directory: *workspace
-    docker:
-      - image: google/cloud-sdk:latest
-    steps:
-      - *attach_debug_workspace
-      - <<: *prepare_firebase_test_1
-      - <<: *prepare_firebase_test_2
-      - <<: *prepare_firebase_test_3
-      - run:
-          name: Run test
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding-support-v4/build/outputs/apk/androidTest/debug/coroutinebinding-support-v4-debug-androidTest.apk --timeout 5m
-      # - *persist_firebase_workspace
-      - store_artifacts:
-          path: firebase/
-          destination: /firebase/
-  firebase_test_recyclerview_v7:
-    working_directory: *workspace
-    docker:
-      - image: google/cloud-sdk:latest
-    steps:
-      - *attach_debug_workspace
-      - <<: *prepare_firebase_test_1
-      - <<: *prepare_firebase_test_2
-      - <<: *prepare_firebase_test_3
-      - run:
-          name: Run test
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding-recyclerview-v7/build/outputs/apk/androidTest/debug/coroutinebinding-recyclerview-v7-debug-androidTest.apk --timeout 5m
-      # - *persist_firebase_workspace
-      - store_artifacts:
-          path: firebase/
-          destination: /firebase/
-  firebase_test_design:
-    working_directory: *workspace
-    docker:
-      - image: google/cloud-sdk:latest
-    steps:
-      - *attach_debug_workspace
-      - <<: *prepare_firebase_test_1
-      - <<: *prepare_firebase_test_2
-      - <<: *prepare_firebase_test_3
-      - run:
-          name: Run test
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test coroutinebinding-recyclerview-v7/build/outputs/apk/androidTest/debug/coroutinebinding-recyclerview-v7-debug-androidTest.apk --timeout 5m
       # - *persist_firebase_workspace
       - store_artifacts:
           path: firebase/
@@ -187,18 +113,6 @@ workflows:
       - firebase_test:
           requires:
             - build
-#      - firebase_test_support_v4:
-#          requires:
-#            - build
-#      - firebase_test_appcompat_v7:
-#          requires:
-#            - build
-#      - firebase_test_design:
-#          requires:
-#            - build
-#      - firebase_test_recyclerview_v7:
-#          requires:
-#            - build
 #      - firebase_test_constraintlayout:
 #          requires:
 #            - build
