@@ -30,7 +30,7 @@ inline fun Boolean?.isTrue() = Truth.assertThat(this).isTrue()
 inline fun Boolean?.isFalse() = Truth.assertThat(this).isFalse()
 inline fun Float?.isGreaterThan(other: Float) = Truth.assertThat(this).isGreaterThan(other)
 inline fun Float?.isLessThan(other: Float) = Truth.assertThat(this).isLessThan(other)
-inline fun Any?.isSame(other: Any?) = Truth.assertThat(this).isSameAs(other)
+inline fun Any?.isSame(other: Any?) = Truth.assertThat(this).isSameInstanceAs(other)
 
 fun testRunBlocking(
   context: CoroutineContext = EmptyCoroutineContext,
