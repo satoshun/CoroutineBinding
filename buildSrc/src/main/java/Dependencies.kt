@@ -2,7 +2,7 @@ object Vers {
   const val compile_sdk = 28
   const val min_sdk = 15
   const val target_sdk = 28
-  const val agp = "3.2.1"
+  const val agp = "3.4.2"
 
   const val kotlin = "1.3.11"
   const val couroutine = "1.1.0"
