@@ -35,9 +35,24 @@ fun MotionLayout.transitionChanged(capacity: Int = 0): ReceiveChannel<MotionLayo
       }
 
       override fun onTransitionTrigger(motionLayout: MotionLayout, triggerId: Int, positive: Boolean, progress: Float) {
+        safeOffer(
+          MotionLayoutTransitionTrigger(
+            motionLayout,
+            triggerId,
+            positive,
+            progress
+          )
+        )
       }
 
       override fun onTransitionStarted(motionLayout: MotionLayout, startId: Int, endId: Int) {
+        safeOffer(
+          MotionLayoutTransitionStarted(
+            motionLayout,
+            startId,
+            endId
+          )
+        )
       }
     }
     invokeOnCloseOnMain {
@@ -65,4 +80,10 @@ data class MotionLayoutTransitionTrigger(
   val triggerId: Int,
   val positive: Boolean,
   val progress: Float
+) : MotionLayoutTransition()
+
+data class MotionLayoutTransitionStarted(
+  val view: MotionLayout,
+  val startId: Int,
+  val endId: Int
 ) : MotionLayoutTransition()
