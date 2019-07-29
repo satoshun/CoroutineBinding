@@ -23,7 +23,7 @@ object Libs {
   const val appcompat = "androidx.appcompat:appcompat:1.0.2"
   const val annotations = "androidx.annotation:annotation:1.0.0"
   const val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
-  const val constraint_layout = "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
+  const val constraint_layout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
 
   const val core = "androidx.core:core:1.0.0"
   const val viewpager = "androidx.viewpager:viewpager:1.0.0"

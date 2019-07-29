@@ -12,33 +12,39 @@ import kotlinx.coroutines.channels.ReceiveChannel
  */
 @CheckResult
 fun MotionLayout.transitionChanged(capacity: Int = 0): ReceiveChannel<MotionLayoutTransition> =
-    cancelableChannel(capacity) {
-      val listener = object : MotionLayout.TransitionListener {
-        override fun onTransitionChange(motionLayout: MotionLayout, startId: Int, endId: Int, progress: Float) {
-          safeOffer(
-              MotionLayoutTransitionChanged(
-                  motionLayout,
-                  startId,
-                  endId,
-                  progress
-              )
+  cancelableChannel(capacity) {
+    val listener = object : MotionLayout.TransitionListener {
+      override fun onTransitionChange(motionLayout: MotionLayout, startId: Int, endId: Int, progress: Float) {
+        safeOffer(
+          MotionLayoutTransitionChanged(
+            motionLayout,
+            startId,
+            endId,
+            progress
           )
-        }
+        )
+      }
 
-        override fun onTransitionCompleted(motionLayout: MotionLayout, currentId: Int) {
-          safeOffer(
-              MotionLayoutTransitionCompleted(
-                  motionLayout,
-                  currentId
-              )
+      override fun onTransitionCompleted(motionLayout: MotionLayout, currentId: Int) {
+        safeOffer(
+          MotionLayoutTransitionCompleted(
+            motionLayout,
+            currentId
           )
-        }
+        )
       }
-      invokeOnCloseOnMain {
-        setTransitionListener(null)
+
+      override fun onTransitionTrigger(motionLayout: MotionLayout, triggerId: Int, positive: Boolean, progress: Float) {
       }
-      setTransitionListener(listener)
+
+      override fun onTransitionStarted(motionLayout: MotionLayout, startId: Int, endId: Int) {
+      }
     }
+    invokeOnCloseOnMain {
+      setTransitionListener(null)
+    }
+    setTransitionListener(listener)
+  }
 
 sealed class MotionLayoutTransition
 
@@ -52,4 +58,11 @@ data class MotionLayoutTransitionChanged(
 data class MotionLayoutTransitionCompleted(
   val view: MotionLayout,
   val currentId: Int
+) : MotionLayoutTransition()
+
+data class MotionLayoutTransitionTrigger(
+  val view: MotionLayout,
+  val triggerId: Int,
+  val positive: Boolean,
+  val progress: Float
 ) : MotionLayoutTransition()
