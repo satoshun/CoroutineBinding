@@ -91,7 +91,7 @@ class CoroutineTextViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java
     textChanges.receive().toString().isEqualTo("BBB")
 
     textChanges.cancel()
-    uiLaunch { textView.text = "HHHHH" }
+    uiLaunch { textView.text = "AAAAA" }
     textChanges.receiveOrNull().isNull()
   }
 
