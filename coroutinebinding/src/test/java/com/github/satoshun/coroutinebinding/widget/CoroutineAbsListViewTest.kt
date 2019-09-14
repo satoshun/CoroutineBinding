@@ -29,6 +29,7 @@ class CoroutineAbsListViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
     rule.activity.view.addView(listView)
   }
 
+  @Ignore("todo")
   @Test
   fun scrollEvents() = testRunBlocking {
     val scrollEvents = uiRunBlocking {
