@@ -49,5 +49,7 @@ dependencies {
   implementation Libs.ui_coroutine
   implementation Libs.annotations
 
+  testImplementation Libs.robolectric
+
   androidTestImplementation project(":testing-utils")
 }

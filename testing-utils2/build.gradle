@@ -13,10 +13,12 @@ android {
 
   defaultConfig {
     minSdkVersion Vers.min_sdk
+
+    multiDexEnabled true // for test
   }
 
   packagingOptions {
-    exclude "META-INF/**"
+    exclude "META-INF/main.kotlin_module"
   }
 
   compileOptions {
@@ -34,8 +36,8 @@ dependencies {
   api Libs.test_runner
   api Libs.test_rule
   api Libs.test_junit_runner
-  api Libs.robolectric
   api Libs.espresso
   api Libs.espresso_contrib
   api Libs.truth
+  api Libs.multidex
 }
