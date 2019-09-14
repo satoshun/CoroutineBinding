@@ -17,6 +17,7 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.fail
 import org.junit.Ignore
 import org.junit.Test
 
@@ -33,7 +34,11 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
     attaches.cancel()
     view.addView(child)
-    attaches.poll().isNull()
+    try {
+      attaches.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -60,7 +65,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     detaches.cancel()
     view.addView(child)
     view.removeView(child)
-    detaches.poll().isNull()
+
+    try {
+      detaches.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -90,7 +100,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
     clicks.cancel()
     view.performClick()
-    clicks.poll().isNull()
+
+    try {
+      clicks.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -143,7 +158,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
     focus.cancel()
     view.requestFocus()
-    focus.poll().isNull()
+
+    try {
+      focus.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -174,7 +194,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
     layouts.cancel()
     view.viewTreeObserver.dispatchOnGlobalLayout()
-    layouts.poll().isNull()
+
+    try {
+      layouts.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -211,7 +236,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
     layoutChange.cancel()
     view.layout(0, 0, 0, 0)
-    layoutChange.poll().isNull()
+
+    try {
+      layoutChange.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Ignore("todo")
@@ -235,15 +265,20 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     val oldBottom = view.bottom
     view.layout(0, 0, 0, 100)
     layoutChange.poll().isEqualTo(
-        ViewLayoutChangeEvent(
-            0, 0, 0, 100,
-            0, 0, oldRight, oldBottom
-        )
+      ViewLayoutChangeEvent(
+        0, 0, 0, 100,
+        0, 0, oldRight, oldBottom
+      )
     )
 
     layoutChange.cancel()
     view.layout(0, 0, 0, 0)
-    layoutChange.poll().isNull()
+
+    try {
+      layoutChange.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -253,10 +288,10 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     val job = uiLaunch {
       val event = view.awaitLayoutChangeEvent()
       event.isEqualTo(
-          ViewLayoutChangeEvent(
-              0, 0, 0, 100,
-              0, 0, oldRight, oldBottom
-          )
+        ViewLayoutChangeEvent(
+          0, 0, 0, 100,
+          0, 0, oldRight, oldBottom
+        )
       )
     }
     uiRunBlocking { view.layout(0, 0, 0, 100) }
@@ -278,7 +313,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
     longClicks.cancel()
     view.performLongClick()
-    longClicks.poll().isNull()
+
+    try {
+      longClicks.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -303,7 +343,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
 
     preDraws.cancel()
     view.viewTreeObserver.dispatchOnPreDraw()
-    preDraws.poll().isNull()
+
+    try {
+      preDraws.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -390,7 +435,12 @@ class CoroutineViewTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
     uiRunBlocking {
       editView.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R))
     }
-    keys.poll().isNull()
+
+    try {
+      keys.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test

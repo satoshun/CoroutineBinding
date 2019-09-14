@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import com.github.satoshun.coroutinebinding.AndroidTest
 import com.github.satoshun.coroutinebinding.ViewActivity
 import com.github.satoshun.coroutinebinding.isInstanceOf
-import com.github.satoshun.coroutinebinding.isNull
 import com.github.satoshun.coroutinebinding.isTrue
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
+import org.junit.Assert.fail
 import org.junit.Test
 
 class CoroutineViewGroupTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
@@ -28,8 +28,13 @@ class CoroutineViewGroupTest : AndroidTest<ViewActivity>(ViewActivity::class.jav
     changeEvents.receive().isInstanceOf(ViewGroupHierarchyChildViewRemoveEvent::class)
 
     changeEvents.cancel()
+
     uiLaunch { view.addView(child) }
-    changeEvents.poll().isNull()
+    try {
+      changeEvents.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test

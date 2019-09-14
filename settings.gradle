@@ -8,5 +8,8 @@ include ':coroutinebinding-viewpager'
 include ':coroutinebinding-swiperefreshlayout'
 include ':coroutinebinding-slidingpanelayout'
 include ':coroutinebinding-drawerlayout'
+
 include ':testing-utils'
+include ':testing-utils2'
+
 include ':app'

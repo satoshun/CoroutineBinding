@@ -24,9 +24,13 @@ android {
   defaultConfig {
     minSdkVersion Vers.min_sdk
 
-    multiDexEnabled true // for test
-
     testInstrumentationRunner "com.github.satoshun.coroutinebinding.MyTestRunner"
+  }
+
+  testOptions {
+    unitTests {
+      includeAndroidResources = true
+    }
   }
 
   packagingOptions {
@@ -46,8 +50,11 @@ android {
 dependencies {
   api Libs.kotlin
   api Libs.coroutine
+
   implementation Libs.ui_coroutine
   implementation Libs.annotations
+
+  testImplementation project(":testing-utils2")
 
   androidTestImplementation project(":testing-utils")
 }
