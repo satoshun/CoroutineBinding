@@ -54,7 +54,7 @@ dependencies {
   implementation Libs.ui_coroutine
   implementation Libs.annotations
 
-  testImplementation project(":testing-utils")
+  testImplementation project(":testing-utils2")
 
   androidTestImplementation project(":testing-utils")
 }

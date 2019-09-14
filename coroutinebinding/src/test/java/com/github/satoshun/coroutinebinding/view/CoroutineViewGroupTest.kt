@@ -9,10 +9,7 @@ import com.github.satoshun.coroutinebinding.isTrue
 import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
-import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.CancellationException
-import org.junit.Assert
-import org.junit.Assert.*
+import org.junit.Assert.fail
 import org.junit.Test
 
 class CoroutineViewGroupTest : AndroidTest<ViewActivity>(ViewActivity::class.java) {
