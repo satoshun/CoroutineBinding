@@ -37,6 +37,8 @@ dependencies {
   api Libs.espresso
   api Libs.espresso_contrib
   api Libs.truth
-  api Libs.robolectric
+  api(Libs.robolectric) {
+    exclude group: "com.google.auto.service", module: "auto-service"
+  }
   api Libs.test_coroutine
 }

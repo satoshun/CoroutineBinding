@@ -42,5 +42,5 @@ object Libs {
   const val truth = "com.google.truth:truth:1.0"
   const val multidex = "androidx.multidex:multidex:2.0.1"
 
-  const val robolectric = "org.robolectric:robolectric:4.2.1"
+  const val robolectric = "org.robolectric:robolectric:4.3"
 }
