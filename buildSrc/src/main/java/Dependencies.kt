@@ -33,9 +33,9 @@ object Libs {
   const val swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
   const val junit = "junit:junit:4.12"
-  const val test_runner = "androidx.test:runner:1.1.1"
-  const val test_rule = "androidx.test:rules:1.1.1"
-  const val test_junit_runner = "androidx.test.ext:junit:1.0.0"
+  const val test_runner = "androidx.test:runner:1.2.0"
+  const val test_rule = "androidx.test:rules:1.2.0"
+  const val test_junit_runner = "androidx.test.ext:junit-ktx:1.1.1"
   const val espresso = "androidx.test.espresso:espresso-core:3.2.0"
   const val espresso_contrib = "androidx.test.espresso:espresso-contrib:3.2.0"
 
