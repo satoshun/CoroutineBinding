@@ -15,6 +15,8 @@ import com.github.satoshun.coroutinebinding.testRunBlocking
 import com.github.satoshun.coroutinebinding.toBeCancelLaunch
 import com.github.satoshun.coroutinebinding.uiLaunch
 import com.github.satoshun.coroutinebinding.uiRunBlocking
+import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -36,6 +38,7 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
     rule.activity.view.addView(listView)
   }
 
+  @Ignore("todo")
   @Test
   fun itemSelections() = testRunBlocking {
     val itemSelections = spinner.itemSelections()
@@ -48,9 +51,15 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
 
     itemSelections.cancel()
     uiRunBlocking { spinner.setSelection(1) }
-    itemSelections.poll().isNull()
+
+    try {
+      itemSelections.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
+  @Ignore("todo")
   @Test
   fun awaitItemSelection() = testRunBlocking {
     val job = uiLaunch {
@@ -82,7 +91,12 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
 
     selectionEvents.cancel()
     uiRunBlocking { listView.setSelection(1) }
-    selectionEvents.poll().isNull()
+
+    try {
+      selectionEvents.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -111,7 +125,12 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
 
     itemClicks.cancel()
     uiRunBlocking { listView.performItemClick(listView.getChildAt(2), 2, 2) }
-    itemClicks.poll().isNull()
+
+    try {
+      itemClicks.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
@@ -126,7 +145,12 @@ class CoroutineAdapterViewTest : AndroidTest<ViewActivity>(ViewActivity::class.j
 
     itemClickEvents.cancel()
     uiRunBlocking { listView.performItemClick(listView.getChildAt(2), 2, 2) }
-    itemClickEvents.poll().isNull()
+
+    try {
+      itemClickEvents.poll()
+      fail("should throw a `CancellationException: ArrayChannel was cancelled`")
+    } catch (e: Exception) {
+    }
   }
 
   @Test
