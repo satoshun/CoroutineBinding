@@ -18,6 +18,7 @@ object Libs {
   const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Vers.kotlin}"
   const val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Vers.couroutine}"
   const val ui_coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Vers.couroutine}"
+  const val test_coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Vers.couroutine}"
 
   const val material = "com.google.android.material:material:1.0.0"
   const val appcompat = "androidx.appcompat:appcompat:1.0.2"
@@ -41,5 +42,5 @@ object Libs {
   const val truth = "com.google.truth:truth:1.0"
   const val multidex = "androidx.multidex:multidex:2.0.1"
 
-  const val robolectric = "org.robolectric:robolectric:4.3"
+  const val robolectric = "org.robolectric:robolectric:4.2.1"
 }

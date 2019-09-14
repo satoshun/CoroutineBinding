@@ -13,12 +13,10 @@ android {
 
   defaultConfig {
     minSdkVersion Vers.min_sdk
-
-    multiDexEnabled true // for test
   }
 
   packagingOptions {
-    exclude "META-INF/main.kotlin_module"
+    exclude "META-INF/**"
   }
 
   compileOptions {
@@ -39,5 +37,5 @@ dependencies {
   api Libs.espresso
   api Libs.espresso_contrib
   api Libs.truth
-  api Libs.multidex
+  api Libs.test_coroutine
 }
